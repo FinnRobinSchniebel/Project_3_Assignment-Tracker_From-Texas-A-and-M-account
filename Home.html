@@ -155,10 +155,19 @@
             <input type="text" class="form-control" id="ManualInputAssignmentName" placeholder="Ex. 'HW 1'">
           </div>
           <div class="form-group">
-            <label for="ManualInputAssignmentDueDate">Due Date</label>
-            <input type="ManualInputAssignmentDueDate" class="form-control" id="ManualInputAssignmentDueDate">
+            <label for="ManualInputDueDate">Due Date</label>
+            <input type="text" class="form-control" id="ManualInputDueDate" placeholder="Ex. 'MM/DD/YY'">
           </div>
-
+          <div class="form-group">
+            <label for="ManualInputPriority">Priority</label>
+            <input type="text" class="form-control" id="ManualInputPriority" placeholder="" aria-describedby="InputPriorityHelp">
+            <div id="InputPriorityHelp" class="form-text">Scale: 1 is highest priority</div>
+          </div>
+          <div class="form-group">
+            <label for="ManualInputEstimatedTime">Estimated Time Required</label>
+            <input type="text" class="form-control" id="ManualInputEstimatedTime" placeholder="" aria-describedby="ManualInputEstimatedTimeHelp">
+            <div id="InputPriorityHelp" class="form-text">How long will this assignment take? (in hours) </div>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
