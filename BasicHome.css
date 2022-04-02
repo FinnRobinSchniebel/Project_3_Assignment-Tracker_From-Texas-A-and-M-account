@@ -8,16 +8,17 @@
     height: 125px;
     text-align: center; 
 
-    background-color: rgb(90, 89, 139);
+    background-color: rgb(97, 206, 161);
     color: rgb(0, 0, 0);
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 35px;
+    border-bottom-left-radius: 35px;
 }
 .button{
-    background-color: rgb(90, 89, 139);
+    background-color: rgb(144, 233, 225);
     margin: 15px;
-    border: 3px solid rgb(138, 138, 138);
-    color: rgb(255, 255, 255);
+    margin-top: 30px;
+    border: 3px solid rgb(15, 136, 173);
+    color: rgb(0, 0, 0);
     border-radius: 10px;
     text-align: center;
     display: inline;
@@ -52,7 +53,7 @@
 .ClassSection{
 
     background-color: rgb(15, 157, 201);
-    border-radius: 50px;
+    border-radius: 30px;
     color: rgb(0, 0, 0);
     cursor: pointer;
     padding: 10px;
@@ -69,6 +70,8 @@
 .ClassName{
     float: left;
     margin: 15px;
+    margin-top: 7px;
+    margin-bottom: 7px;
     background-color: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
     cursor: pointer;
@@ -87,6 +90,8 @@
     float: left;
     width: 20%;
     margin: 15px;
+    margin-top: 7px;
+    margin-bottom: 7px;
     background-color: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
     cursor: pointer;
@@ -100,8 +105,33 @@
     border: 3px solid rgb(138, 138, 138);
     border-radius: 10px;
 }
+.ClassAssignmentsOutline{
+    
+    background-color: rgb(105, 181, 204);
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    color: rgb(0, 0, 0);
+    padding: 5px;
+    width: 90%;
+    margin-top: -25px;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
 .ClassAssignments{
-    display: none;
-    overflow: hidden;
-
+    background-color: rgb(105, 181, 204);
+    border-radius: 50px;
+    color: rgb(0, 0, 0);
+    padding: 5px;
+    width: 90%;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
 }
