@@ -43,8 +43,17 @@
               <!-- Buttons in Course drop down -->
               <div class="btn-group" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddAssignmentModal">Add Assignment</button>
-                <button type="button" class="btn btn-secondary">Edit Assignment</button>
-                <button type="button" class="btn btn-secondary">Right</button>
+                <!-- Dropdown button to select how to sort assignments-->
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Sort By
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="#">Due Date</a></li>
+                    <li><a class="dropdown-item" href="#">Priority</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  </ul>
+                </div>
               </div>
 
               <table class="table table-hover table-light" id="TableCourseX">
@@ -118,7 +127,7 @@
         <form>
           <div class="form-group">
             <label for="InputCourseName">Course Name</label>
-            <input type="InputCourseName" class="form-control" id="InputCourseName" aria-describedby="emailHelp" placeholder="Ex. 'CSCE 315'">
+            <input type="text" class="form-control" id="InputCourseName" placeholder="Ex. 'CSCE 315'">
           </div>
         </form>
       </div>
@@ -142,9 +151,14 @@
         <!-- Prompt for Course info -->
         <form>
           <div class="form-group">
-            <label for="ManualInputAssignmentName">Course Name</label>
-            <input type="ManualInputAssignmentName" class="form-control" id="ManualInputAssignmentName" aria-describedby="emailHelp" placeholder="Ex. 'HW 1'">
+            <label for="ManualInputAssignmentName">Assignment Name</label>
+            <input type="text" class="form-control" id="ManualInputAssignmentName" placeholder="Ex. 'HW 1'">
           </div>
+          <div class="form-group">
+            <label for="ManualInputAssignmentDueDate">Due Date</label>
+            <input type="ManualInputAssignmentDueDate" class="form-control" id="ManualInputAssignmentDueDate">
+          </div>
+
         </form>
       </div>
       <div class="modal-footer">
@@ -153,6 +167,9 @@
       </div>
     </div>
   </div>
+
+
+
 </div>
 
 
