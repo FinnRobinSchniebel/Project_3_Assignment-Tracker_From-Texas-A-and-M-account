@@ -17,12 +17,14 @@
 
         <!-- Navigation Bar -->
         <div class=Mynavbar>
-            <button class="button" onclick="location.href='Home.html'">Home </button>
+            <button class="button" onclick="location.href='Home2.html'">Home </button>
             <button class="button" onclick="location.href='Quick_View.html'"> Quick View</button>
             <button class="button" onclick="location.href='AddLocation.html'"> view and Add Assignment locations</button> 
             
         </div>
 
+
+        <!-- demo class section -->
         <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseCourse" aria-expanded="false" aria-controls="CollapseCourse">
             <div class="ClassName">
                 Demo Class 1
@@ -31,77 +33,84 @@
                 dd/mm hh:minmin
             </div>
         </button>
+
         <div class="collapse" id="CollapseCourse">
             <div class="ClassAssignmentsOutline">
                 <div class="ClassAssignments">
                     <!-- Buttons in Course drop down -->
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <!-- <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddAssignmentModal">Add Assignment</button> -->
-                        <!-- Dropdown button to select how to sort assignments-->
+                    <div align="left"> 
                         <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            Sort By
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">Due Date</a></li>
-                            <li><a class="dropdown-item" href="#">Priority</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                              Sort By
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="SortByDropDown">
+                              <li><a class="dropdown-item" href="#">Due Date</a></li>
+                              <li><a class="dropdown-item" href="#">Priority</a></li>
+                              <li><a class="dropdown-item" href="#">Completed</a></li>
+                            </ul>
                         </div>
                     </div>
+                   
+                    
 
-                    <table class="table table-hover table-light" id="TableCourseX">
-                        <thead>
-                        <tr>
-                            <th scope="col">Priority</th>
-                            <th scope="col">Assignment Name</th>
-                            <th scope="col">Start Date</th>
-                            <th scope="col">Time Left</th>
-                            <th scope="col">Due Date</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Test</td>
-                            <td>MM/DD/YY</td>
-                            <td>
-                            Time Value
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                    <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAssignment" aria-expanded="false" aria-controls="CollapseCourse">
+                        <div class="AssignmentName">
+                            <p class="AssignmentPriority">
+                                1
+                            </p>
+                            Demo Assignment 1
+                        </div>
+                        <div class="DueDateSection">
+                            Start date: dd/mm hh:minmin
+                        </div>
+                    </button>
+
+                    <div class="collapse" id="CollapseAssignment">
+                        <div class="AssignmentOutline">
+                            <section>
+                                <div class="AssignmentInfo">
+                                    <div class="AssignmentLink">
+                                        <p> 
+                                            <div>
+                                                Assignment Link:
+                                            </div>
+                                            <div contenteditable="true" id="Assignment1 Link">
+
+                                            </div>
+                                             
+                                        </p>
+                                        
+                                    </div>
+                                    <div class="AssignmentRelatedLinks">
+                                        <p>
+                                            Related Links:
+                                            <div contenteditable="true" id="Assignment1 relatedLinks">
+                                                
+                                            </div>
+                                        </p>
+                                        
+                                    </div>
+                                    <div class="AssignmentDetails">
+                                        <p>
+                                            Details: This is a demo assignment. 
+                                            <div contenteditable="true" id="Assignment1 details">
+                                                
+                                            </div>
+                                        </p>
+                                       
+
+                                    </div>
+                            </section>
+                            
                             </div>
-                            </td>
-                            <td>MM/DD/YY</td>
-                            <td>  
-                            <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="AssignmentStatus">
-                            <label class="form-check-label" for="exampleCheck1">Complete</label>
-                            </div></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Test</td>
-                            <td>MM/DD/YY</td>
-                            <td>
-                            Time Value
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 15%"></div>
-                            </div>
-                            </td>
-                            <td>MM/DD/YY</td>
-                            <td>  
-                            <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="AssignmentStatus">
-                            <label class="form-check-label" for="exampleCheck1">Complete</label>
-                            </div></td>
-                        </tr>
-                        </tr>
-                        </tbody>
-                    </table>
+                            
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
+         <!-- demo class section end -->
 
     </div>
 </body>
