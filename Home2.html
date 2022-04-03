@@ -52,15 +52,16 @@
                     </div>
                    
                     
-
+                    <!-- demo assignment start-->
                     <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAssignment" aria-expanded="false" aria-controls="CollapseCourse">
+                        <p class="AssignmentPriority">
+                            Priority: 1
+                        </p>
                         <div class="AssignmentName">
-                            <p class="AssignmentPriority">
-                                1
-                            </p>
+                            
                             Demo Assignment 1
                         </div>
-                        <div class="DueDateSection">
+                        <div class="AssignmentDuedate">
                             Start date: dd/mm hh:minmin
                         </div>
                     </button>
@@ -92,9 +93,9 @@
                                     </div>
                                     <div class="AssignmentDetails">
                                         <p>
-                                            Details: This is a demo assignment. 
+                                            Details: 
                                             <div contenteditable="true" id="Assignment1 details">
-                                                
+                                                This is a demo assignment. 
                                             </div>
                                         </p>
                                        
@@ -107,6 +108,72 @@
                         </div>
 
                     </div>
+                    <!-- demo assignment end-->
+
+                    <!-- add new assignment -->
+                    <button class="AddAssignmentTop" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseNewAssignment" aria-expanded="false" aria-controls="CollapseCourse">
+                        <div class="AddAssignmentText">
+                            Add new Assignment
+                        </div>
+                    </button>
+
+                    <div class="collapse" id="CollapseNewAssignment">
+                        <div class="AssignmentOutline">
+                            <section>
+                                <div class="AssignmentInfo">
+                                    <div class="NewAssignmentInfoBox">
+                                        <p> 
+                                            <div>
+                                                Assignment Name:
+                                            </div>
+                                            <div contenteditable="true" id="NewAssignment link">
+
+                                            </div>
+                                             
+                                        </p>
+                                        
+                                    </div>
+                                    <div class="NewAssignmentInfoBox">
+                                        <p>
+                                            Assignment Links:
+                                            <div contenteditable="true" id="NewAssignmentLink">
+                                                
+                                            </div>
+                                        </p>
+                                        
+                                    </div>
+                                    <div class="NewAssignmentInfoBox">
+                                        <p>
+                                            Notes: 
+                                            <div contenteditable="true" id="NewAssignmentNotes">
+                                                Add notes
+                                            </div>
+                                        </p>
+                                    </div>
+                                    <div class="NewAssignmentInfoBox">
+                                        <p>
+                                            Start date/ time: 
+                                            <div contenteditable="true" id="NewAssignmentStart">
+                                                MM/DD/YYYY hh:mm
+                                            </div>
+                                        </p>
+                                    </div>
+                                    <div class="NewAssignmentInfoBox">
+                                        <p>
+                                            Start date/ time: 
+                                            <div contenteditable="true" id="NewAssignmentEnd">
+                                                MM/DD/YYYY hh:mm
+                                            </div>
+                                        </p>
+                                    </div>
+                            </section>
+                            
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
         </div>
