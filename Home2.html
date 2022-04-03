@@ -32,6 +32,7 @@
             <div class="DueDateSection">
                 dd/mm hh:minmin
             </div>
+            
         </button>
 
         <div class="collapse" id="CollapseCourse">
@@ -61,9 +62,20 @@
                             
                             Demo Assignment 1
                         </div>
-                        <div class="AssignmentDuedate">
+                        <div class="AssignmentDuedate" id="Assignment1StartDate">
                             Start date: dd/mm hh:minmin
                         </div>
+                        <div class="progress justify-content-end" style="width: 25%; float: left; margin-top: 15px">
+                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
+                                <div id="Assignment1TimeLeft">
+                                    2 days
+                                </div>
+                            </div>
+                        </div>
+                        <div class="AssignmentDuedate" id="Assignment1EndDate">
+                            End date: dd/mm hh:minmin
+                        </div>
+            
                     </button>
 
                     <div class="collapse" id="CollapseAssignment">
@@ -177,7 +189,7 @@
                 </div>
             </div>
         </div>
-         <!-- demo class section end -->
+        <!-- demo class section end -->
 
     </div>
 </body>
