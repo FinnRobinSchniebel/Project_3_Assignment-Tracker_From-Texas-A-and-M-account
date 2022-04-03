@@ -23,16 +23,20 @@
             
         </div>
 
+        <div class="Classes" id="Classes">
         <!-- demo class section -->
-        <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseCourse" aria-expanded="false" aria-controls="CollapseCourse">
-            <div class="ClassName">
-                Demo Class 1
-            </div>
-            <div class="DueDateSection">
-                dd/mm hh:minmin
-            </div>
-            
-        </button>
+            <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseCourse" aria-expanded="false" aria-controls="CollapseCourse">
+                <div class="ClassName">
+                    Demo Class 1
+                </div>
+                <div class="DueDateSection">
+                    dd/mm hh:minmin
+                </div> 
+            </button>
+
+
+
+        </div>
 
         <div class="collapse" id="CollapseCourse">
             <div class="ClassAssignmentsOutline">
@@ -112,9 +116,8 @@
                                        
 
                                     </div>
+                                </div>
                             </section>
-                            
-                            </div>
                             
                         </div>
 
@@ -137,7 +140,7 @@
                                             <div>
                                                 Assignment Name:
                                             </div>
-                                            <div contenteditable="true" id="NewAssignment link">
+                                            <div contenteditable="true" id="NewAssignmentName">
 
                                             </div>
                                              
@@ -177,12 +180,9 @@
                                             </div>
                                         </p>
                                     </div>
+                                </div>
                             </section>
-                            
-                            </div>
-                            
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -200,7 +200,7 @@
             <div class="ClassAssignmentsOutline">
                 <div class="NewClassName">
                     <form>
-                        Enter Class Name: <input type="text" name="NewClassName" placeholder="Ex. 'CSCE 315'">
+                        Enter Class Name: <input type="text" name="InputClassName" placeholder="Ex. 'CSCE 315'">
                         <button class="SubmitButton"  onclick="AddClass()">Submit</button>
                     </form>
             </div>

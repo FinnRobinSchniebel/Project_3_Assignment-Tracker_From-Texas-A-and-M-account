@@ -1,6 +1,6 @@
 function addAssignment(){
     // inputs taken from user
-    var newAssignment = document.getElementById("NewAssignment name").innerHTML;
+    var newAssignment = document.getElementById("NewAssignmentName").innerHTML;
     var startTime = document.getElementById("NewAssignmentStart").innerHTML;
 
     //create new div with assignment name 
@@ -71,4 +71,31 @@ function addAssignment(){
     // appends new div to the classes' assignments
     document.getElementById("demoAssignments").appendChild(div);
 }
+
+function AddClass(){
+    // input from user
+    var inputClassName =  document.getElementByName("InputClassName")[0].innerText;
+
+    //create new div with assignment name 
+    var newDiv = document.createElement('div');
+    newDiv.id = inputClassName;
+
+    //appends to content
+    document.getElementsByTagName('body')[0].appendChild(newDiv);
+
+    // add code into new div need to use `` as quotes 
+    // need to input dynamic info where needed - not all finished 
+    newDiv.innerHTML += `
+    <button class="ClassSection" type="button">
+    <div class="ClassName">
+        `+inputClassName+`
+    </div>
+    <div class="DueDateSection">
+        No Upcoming Assignments
+    </div>
+    </button>
+    `
+    var ClassesDiv = document.getElementById("Classes");
+    ClassesDiv.appendChild(newDiv);        
+} 
 
