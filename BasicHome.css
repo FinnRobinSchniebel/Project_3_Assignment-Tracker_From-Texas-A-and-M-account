@@ -342,3 +342,54 @@
     outline: none;
     font-size: 15px;
 }
+
+.AddCourse{
+    float: left;
+    margin: 15px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    width: 98%;
+    padding: 15px;
+    margin-left: 1%;
+    margin-right: 1%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 25px;
+    border: 3px solid rgb(138, 138, 138);
+    border-radius: 10px;
+}
+
+.NewCourseInfoBox{
+    border: 1px solid gray;
+    background-color: rgb(250, 250, 250);
+    border-radius: 2px;
+    color: rgb(0, 0, 0);
+    padding: 5px;
+    width: 35%;
+    margin-top: 10px;
+    margin-left: 50px;
+
+    border: 1px solid teal;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.NewCourseNameContainer{
+    background-color: rgb(105, 181, 204);
+    border-radius: 50px;
+    color: rgb(0, 0, 0);
+    padding: 3px;
+    width: 50%;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 15px;
+}
