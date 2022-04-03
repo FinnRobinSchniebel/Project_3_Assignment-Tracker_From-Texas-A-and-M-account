@@ -23,7 +23,6 @@
             
         </div>
 
-
         <!-- demo class section -->
         <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseCourse" aria-expanded="false" aria-controls="CollapseCourse">
             <div class="ClassName">
@@ -185,35 +184,27 @@
                         </div>
 
                     </div>
-
                 </div>
             </div>
         </div>
         <!-- demo class section end -->
 
         <!-- Add Class Button **This section was copy pasted in** -->
-         <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAddCourse" aria-expanded="false" aria-controls="CollapseCourse">
-            <div class="AddCourse">
-                Add Course
+         <button class="AddClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAddClass" aria-expanded="false" aria-controls="CollapseCourse">
+            <div class="AddClass">
+                Add Class
             </div>
         </button>
 
-        <div class="collapse" id="CollapseAddCourse">
+        <div class="collapse" id="CollapseAddClass">
             <div class="ClassAssignmentsOutline">
-                <div class="NewCourseName">
-                        <div class="NewCourseInfoBox">
-                            <p>
-                                Enter Course Name: 
-                                <div contenteditable="true" id="NewCourseName">
-                                    Ex. "CSCE 315"
-                                </div>
-                            </p>
-                        </div>
-                </div>
+                <div class="NewClassName">
+                    <form>
+                        Enter Class Name: <input type="text" name="NewClassName">
+                        <button class="SubmitButton"  onclick="AddClass()">Submit</button>
+                    </form>
             </div>
         </div>
-
-
         <!-- Add Class Button End-->
     </div>
 </body>

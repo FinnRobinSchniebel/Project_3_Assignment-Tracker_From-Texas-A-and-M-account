@@ -343,7 +343,7 @@
     font-size: 15px;
 }
 
-.AddCourse{
+.AddClass{
     float: left;
     margin: 15px;
     margin-top: 7px;
@@ -363,7 +363,7 @@
     border-radius: 10px;
 }
 
-.NewCourseInfoBox{
+.NewClassInfoBox{
     border: 1px solid gray;
     background-color: rgb(250, 250, 250);
     border-radius: 2px;
@@ -379,7 +379,7 @@
     font-size: 15px;
 }
 
-.NewCourseName{
+.NewClassName{
     background-color: rgb(105, 181, 204);
     border-radius: 50px;
     color: rgb(0, 0, 0);
@@ -392,4 +392,37 @@
     text-align: center;
     outline: none;
     font-size: 15px;
+}
+
+.AddClassSection{
+
+    background-color: rgb(15, 157, 201);
+    border-radius: 30px;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    padding: 10px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.SubmitButton{
+    background-color: rgb(144, 233, 225);
+    margin: 15px;
+    margin-top: 30px;
+    border: 3px solid rgb(15, 136, 173);
+    color: rgb(0, 0, 0);
+    border-radius: 10px;
+    text-align: center;
+    display: inline;
+    font-size: 20px;
+    transition-duration: 5ms;
+    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+
 }
