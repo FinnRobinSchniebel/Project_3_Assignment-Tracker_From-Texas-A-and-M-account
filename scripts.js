@@ -269,7 +269,7 @@ function AddClass(){
                                     </div>
                                 </p>
                             </div>
-                            <button class="btn btn-primary" onclick="addAssignment(className)" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-primary" onclick="addAssignment(`+inputClassName+`Assignments)" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 submit
                             </button>
                         </div>
