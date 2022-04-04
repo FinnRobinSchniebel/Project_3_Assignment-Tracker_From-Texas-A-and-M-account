@@ -60,7 +60,7 @@
                             <!-- Class to dynamically add assignments to class -->
                             <div class="demoAssignments" id="demoAssignments">
                                 <!-- demo assignment start-->
-                                <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAssignment1" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+                                <button class="AssignmentOverview" id="ClassNameAssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAssignment1" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
                                     <p class="AssignmentPriority">
                                         Priority: 1
                                     </p>
@@ -120,9 +120,9 @@
                                                     </p>
                                                 </div>
 
-                                                <div class="AssignmentStatus" id="AssignmentCheckBox"> <!-- Will need unique id in future-->
-                                                    <input type="checkbox" class="btn-check" id="AssignmentComplete" autocomplete="off">
-                                                    <label class="btn btn-outline-success" for="AssignmentComplete">Complete</label><br>
+                                                <div class="AssignmentStatus" id="AssignmentCheckBox"> <!-- Will need unique ids in future-->
+                                                    <input type="checkbox" class="btn-check" id="DemoAssignmentCheckBox" autocomplete="off" onclick="completeButton('ClassNameAssignmentOverview', 'DemoAssignmentCheckBox')">
+                                                    <label class="btn btn-outline-success" for="DemoAssignmentCheckBox">Complete</label><br>
                                                 </div>
                                             </div>
 
@@ -199,7 +199,7 @@
                                                     </div>
                                                 </p>
                                             </div>
-                                            <button class="btn btn-primary" onclick="addAssignment(className)" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-primary" onclick="addAssignment()" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                 submit
                                             </button>
                                         </div>

@@ -283,3 +283,46 @@ function AddClass(){
     ClassesDiv.innerHTML += newDiv.innerHTML; 
 } 
 
+function completeButton(assignmentID, checkBoxID){
+
+        //checks if checkbox is checked
+    if(document.getElementById(checkBoxID).checked){
+        //this reassigns cssText for that specific box to change to gray
+        document.getElementById(assignmentID).style.cssText =`    
+        background-color: rgb(110, 108, 117); 
+        border-radius: 20px;
+        color: rgb(0, 0, 0);
+        cursor: pointer;
+        box-shadow: 0px 3px 6px rgba(6, 70, 90, 0.932);
+
+        padding: 10px;
+        width: 95%;
+        margin-top: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid gray;
+        text-align: left;
+        outline: none;
+        font-size: 15px;`;        
+    } else {
+        //this reverts it back to our original blueish color
+        document.getElementById(assignmentID).style.cssText =`    
+        background-color: rgb(75, 139, 158);
+        border-radius: 20px;
+        color: rgb(0, 0, 0);
+        cursor: pointer;
+        box-shadow: 0px 3px 6px rgba(6, 70, 90, 0.932);
+
+        padding: 10px;
+        width: 95%;
+        margin-top: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid gray;
+        text-align: left;
+        outline: none;
+        font-size: 15px;`;
+    }
+
+}
+
