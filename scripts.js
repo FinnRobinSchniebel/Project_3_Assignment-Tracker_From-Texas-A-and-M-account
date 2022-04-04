@@ -1,4 +1,4 @@
-function addAssignment(){
+function addDemo(){
     // inputs taken from user
     var newAssignment = document.getElementById("NewAssignmentName").innerHTML;
     var startTime = document.getElementById("NewAssignmentStart").innerHTML;
@@ -14,14 +14,102 @@ function addAssignment(){
 
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed - not all finished 
-    // "Collaspe`+newAssignment+`" is not working? so i put collapse2 for now to test stuff
+    // "Collaspe`+newAssignment+`" is not working? so i put collapseDEMO for now to test stuff
     div.innerHTML += `
-    <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse2" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+    <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseDEMO" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+        <p class="AssignmentPriority">
+            Priority: 1
+        </p>
+        <div class="AssignmentName">  
+            `+newAssignment+`
+
+        </div>
+        <div class="AssignmentDuedate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
+            Start date: `+startTime+`
+        </div>
+        <div class="progress justify-content-end" style="width: 25%; float: left; margin-top: 15px">
+            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
+                <div id="Assignment1TimeLeft">
+                    2 days
+                </div>
+            </div>
+        </div>
+        <div class="AssignmentDuedate" id="`+newAssignment+`EndDate"> <!-- Will need unique id in future-->
+            End date: `+endTime+`
+        </div>
+        
+    </button>
+    <div class="collapse" id="CollapseDEMO"> <!-- Will need unique id in future-->
+        <div class="AssignmentOutline clearfix">
+                <div class="AssignmentInfo">
+                    <div class="leftside">
+                        <div class="AssignmentLink"> 
+                            <p> 
+                                <div>
+                                    Assignment Link:
+                                </div>
+                                <div class="genericWrittingBox" contenteditable="true"  id="`+newAssignment+`Link"> <!-- Will need unique id in future-->
+                                </div>
+                                
+                            </p>
+                            
+                        </div>
+                        <div class="AssignmentRelatedLinks" >
+                            <p>
+                                Related Links:
+                                <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`RelatedLinks"> <!-- Will need unique id in future-->
+                                    
+                                </div>
+                            </p>
+                            
+                        </div>
+                    </div>
+                    <div class="rightside">
+                        <div class="AssignmentDetails" >
+                            <p>
+                                Details: 
+                                <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`Details"> <!-- Will need unique id in future-->
+                                    This is a demo assignment. 
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            
+        </div>
+    </div>`;
+
+    
+    // appends new div to the classes' assignments
+    document.getElementById("demoAssignments").appendChild(div);
+}
+
+
+function addAssignment(className){
+    // inputs taken from user 
+    // to make it dynamic, takes className from Parameter and is used to find the -
+    // associated ID for variables
+    var newAssignment = document.getElementById(''+className+'Name').innerHTML;
+    var startTime = document.getElementById(''+className+'Start').innerHTML;
+    var endTime = document.getElementById(''+className+'End').innerHTML;
+    //var className = document.getElementById("NewAssignmentName").innerHTML;
+
+    //create new div with assignment name 
+    var div = document.createElement('div');
+    div.id = newAssignment;
+
+    // need to remember what this does again 
+    document.getElementsByTagName('body')[0].appendChild(div);
+
+    // add code into new div need to use `` as quotes 
+    // need to input dynamic info where needed - not all finished 
+    // "Collaspe`+newAssignment+`" is not working? so i put collapseTEST for now to test stuff
+    div.innerHTML += `
+    <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseTEST" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
         <p class="AssignmentPriority">
             Priority: 1
         </p>
         <div class="AssignmentName">
-            
             `+newAssignment+`
 
         </div>
@@ -41,7 +129,7 @@ function addAssignment(){
         
     </button>
 
-    <div class="collapse" id="Collapse2"> <!-- Will need unique id in future-->
+    <div class="collapse" id="CollapseTEST"> <!-- Will need unique id in future-->
         <div class="AssignmentOutline clearfix">
                 <div class="AssignmentInfo">
                     <div class="leftside">
@@ -72,7 +160,7 @@ function addAssignment(){
                             <p>
                                 Details: 
                                 <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`Details"> <!-- Will need unique id in future-->
-                                    This is a demo assignment. 
+                                    Add details here. 
                                 </div>
                             </p>
                         </div>
@@ -85,7 +173,7 @@ function addAssignment(){
 
     
     // appends new div to the classes' assignments
-    document.getElementById("demoAssignments").appendChild(div);
+    document.getElementById(''+className+'Assignments').appendChild(div);
 }
 
 function AddClass(){
@@ -135,70 +223,7 @@ function AddClass(){
         
             <!-- Class to dynamically add assignments to class -->
             <div class="demoAssignments" id="`+inputClassName+`Assignments">
-                <!-- demo assignment start-->
-                <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#`+inputClassName+`Assignments" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
-                    <p class="AssignmentPriority">
-                        Priority: 1
-                    </p>
-                    <div class="AssignmentName">
-                        
-                        Demo Assignment 1
-                    </div>
-                    <div class="AssignmentDuedate" id="Assignment1StartDate"> <!-- Will need unique id in future-->
-                        Start date: dd/mm hh:minmin
-                    </div>
-                    <div class="progress justify-content-end" style="width: 25%; float: left; margin-top: 15px">
-                        <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
-                            <div id="Assignment1TimeLeft">
-                                2 days
-                            </div>
-                        </div>
-                    </div>
-                    <div class="AssignmentDuedate" id="Assignment1EndDate"> <!-- Will need unique id in future-->
-                        End date: dd/mm hh:minmin
-                    </div>
-                    
-                </button>
 
-                <div class="collapse" id="`+inputClassName+`Assignments"> <!-- Will need unique id in future-->
-                    <div class="AssignmentOutline clearfix">
-                        <div class="AssignmentInfo">
-                            <div class="leftside">
-                                <div class="AssignmentLink"> 
-                                    <p> 
-                                        <div>
-                                            Assignment Link:
-                                        </div>
-                                        <div class="genericWrittingBox" contenteditable="true" id="Assignment1 Link"> <!-- Will need unique id in future-->
-
-                                        </div>
-                                        
-                                    </p>
-                                    
-                                </div>
-                                <div class="AssignmentRelatedLinks">
-                                    <p>
-                                        Related Links:
-                                        <div class="genericWrittingBox" contenteditable="true" id="Assignment1 relatedLinks"> <!-- Will need unique id in future-->
-                                            
-                                        </div>
-                                    </p>
-                                    
-                                </div>
-                            </div>
-                            <div class="rightside">
-                                <div class="AssignmentDetails">
-                                    <p>
-                                        Details: 
-                                        <div class="genericWrittingBox" contenteditable="true" id="Assignment1 details"> <!-- Will need unique id in future-->
-                                            This is a demo assignment. 
-                                        </div>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             <!-- demo assignment end -->
             
@@ -213,12 +238,12 @@ function AddClass(){
                 <div class="AssignmentOutline ">
                     <div class="AssignmentInfo clearfix">
                         <div class="leftside">
-                            <div class="NewAssignmentInfoBox">
+                            <div class="NewAssignmentInfoBox" id="`+inputClassName+`InfoBox">
                                 <p> 
                                     <div>
                                         Assignment Name:
                                     </div>
-                                    <div class="genericWrittingBox" contenteditable="true" id="NewAssignmentName"> <!-- Will need unique id in the future-->
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Name"> <!-- Will need unique id in the future-->
                                         Add Name
                                     </div>
                                     
@@ -228,7 +253,7 @@ function AddClass(){
                             <div class="NewAssignmentInfoBox">
                                 <p>
                                     Assignment Link:
-                                    <div class="genericWrittingBox" contenteditable="true" id="NewAssignmentLink"> <!-- Will need unique id in the future-->
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Link"> <!-- Will need unique id in the future-->
                                         Add link
                                     </div>
                                 </p>
@@ -237,7 +262,7 @@ function AddClass(){
                             <div class="NewAssignmentInfoBox">
                                 <p>
                                     Related Links:
-                                    <div class="genericWrittingBox" contenteditable="true" id="NewAssignmentRelatedLinks" style=" min-height: 100px"> <!-- Will need unique id in the future-->
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`RelatedLinks" style=" min-height: 100px"> <!-- Will need unique id in the future-->
                                         Add links
                                     </div>
                                 </p>
@@ -248,7 +273,7 @@ function AddClass(){
                             <div class="NewAssignmentInfoRightSideAreas leftside">
                                 <p>
                                     Start date/ time: 
-                                    <div class="genericWrittingBox" contenteditable="true" id="NewAssignmentStart"> <!-- Will need unique id in the future-->
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Start"> <!-- Will need unique id in the future-->
                                         MM/DD/YYYY hh:mm
                                     </div>
                                 </p>
@@ -256,7 +281,7 @@ function AddClass(){
                             <div class="NewAssignmentInfoRightSideAreas rightside">
                                 <p>
                                     End date/ time: 
-                                    <div class="genericWrittingBox" contenteditable="true" id="NewAssignmentEnd"> <!-- Will need unique id in the future-->
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`End"> <!-- Will need unique id in the future-->
                                         MM/DD/YYYY hh:mm
                                     </div>
                                 </p>
@@ -264,12 +289,12 @@ function AddClass(){
                             <div class="NewAssignmentNotes">
                                 <p>
                                     Notes: 
-                                    <div class="genericWrittingBox" contenteditable="true" id="NewAssignmentNotes" style="min-height: 100px;"> <!-- Will need unique id in the future-->
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Notes" style="min-height: 100px;"> <!-- Will need unique id in the future-->
                                         Add notes
                                     </div>
                                 </p>
                             </div>
-                            <button class="btn btn-primary" onclick="addAssignment(`+inputClassName+`Assignments)" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-primary" onclick="addAssignment('`+inputClassName+`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 submit
                             </button>
                         </div>
@@ -282,47 +307,4 @@ function AddClass(){
     var ClassesDiv = document.getElementById("classList");
     ClassesDiv.innerHTML += newDiv.innerHTML; 
 } 
-
-function completeButton(assignmentID, checkBoxID){
-
-        //checks if checkbox is checked
-    if(document.getElementById(checkBoxID).checked){
-        //this reassigns cssText for that specific box to change to gray
-        document.getElementById(assignmentID).style.cssText =`    
-        background-color: rgb(110, 108, 117); 
-        border-radius: 20px;
-        color: rgb(0, 0, 0);
-        cursor: pointer;
-        box-shadow: 0px 3px 6px rgba(6, 70, 90, 0.932);
-
-        padding: 10px;
-        width: 95%;
-        margin-top: 10px;
-        margin-left: auto;
-        margin-right: auto;
-        border: 1px solid gray;
-        text-align: left;
-        outline: none;
-        font-size: 15px;`;        
-    } else {
-        //this reverts it back to our original blueish color
-        document.getElementById(assignmentID).style.cssText =`    
-        background-color: rgb(75, 139, 158);
-        border-radius: 20px;
-        color: rgb(0, 0, 0);
-        cursor: pointer;
-        box-shadow: 0px 3px 6px rgba(6, 70, 90, 0.932);
-
-        padding: 10px;
-        width: 95%;
-        margin-top: 10px;
-        margin-left: auto;
-        margin-right: auto;
-        border: 1px solid gray;
-        text-align: left;
-        outline: none;
-        font-size: 15px;`;
-    }
-
-}
 

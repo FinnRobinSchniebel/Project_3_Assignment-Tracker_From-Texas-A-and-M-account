@@ -28,7 +28,7 @@
             <div class=demoClass id=demoClass>
                 <!-- demo class section -->
                 <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseCourse" aria-expanded="false" aria-controls="CollapseCourse">
-                    <div class="ClassName">
+                    <div class="ClassName" id="demo1">
                         Demo1
                     </div>
                     <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
@@ -60,7 +60,7 @@
                             <!-- Class to dynamically add assignments to class -->
                             <div class="demoAssignments" id="demoAssignments">
                                 <!-- demo assignment start-->
-                                <button class="AssignmentOverview" id="ClassNameAssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAssignment1" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+                                <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAssignment1" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
                                     <p class="AssignmentPriority">
                                         Priority: 1
                                     </p>
@@ -81,7 +81,7 @@
                                     <div class="AssignmentDuedate" id="Assignment1EndDate"> <!-- Will need unique id in future-->
                                         End date: dd/mm hh:minmin
                                     </div>
-
+                                    
                                 </button>
 
                                 <div class="collapse" id="CollapseAssignment1"> <!-- Will need unique id in future-->
@@ -119,13 +119,7 @@
                                                         </div>
                                                     </p>
                                                 </div>
-
-                                                <div class="AssignmentStatus" id="AssignmentCheckBox"> <!-- Will need unique ids in future-->
-                                                    <input type="checkbox" class="btn-check" id="DemoAssignmentCheckBox" autocomplete="off" onclick="completeButton('ClassNameAssignmentOverview', 'DemoAssignmentCheckBox')">
-                                                    <label class="btn btn-outline-success" for="DemoAssignmentCheckBox">Complete</label><br>
-                                                </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -199,7 +193,7 @@
                                                     </div>
                                                 </p>
                                             </div>
-                                            <button class="btn btn-primary" onclick="addAssignment()" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-primary" onclick="addDemo()" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                 submit
                                             </button>
                                         </div>
