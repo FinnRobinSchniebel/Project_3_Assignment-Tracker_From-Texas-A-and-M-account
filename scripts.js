@@ -1,9 +1,9 @@
 function addDemo(){
     // inputs taken from user
-    var newAssignment = document.getElementById("NewAssignmentName").innerHTML;
-    var startTime = document.getElementById("NewAssignmentStart").innerHTML;
-    var endTime = document.getElementById("NewAssignmentEnd").innerHTML;
-    var className = document.getElementById("NewAssignmentName").innerHTML;
+    var newAssignment = document.getElementById("NewAssignmentName").innerText;
+    var startTime = document.getElementById("NewAssignmentStart").innerText;
+    var endTime = document.getElementById("NewAssignmentEnd").innerText;
+    var className = document.getElementById("NewAssignmentName").innerText;
 
     //create new div with assignment name 
     var div = document.createElement('div');
@@ -16,7 +16,7 @@ function addDemo(){
     // need to input dynamic info where needed - not all finished 
     // "Collaspe`+newAssignment+`" is not working? so i put collapseDEMO for now to test stuff
     div.innerHTML += `
-    <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseDEMO" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseDEMO" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
         <p class="AssignmentPriority">
             Priority: 1
         </p>
@@ -73,6 +73,10 @@ function addDemo(){
                                 </div>
                             </p>
                         </div>
+                        <div class="AssignmentStatus" id="`+newAssignment+`CheckBox"> <!-- Will need unique ids in future-->
+                            <input type="checkbox" class="btn-check" id="`+newAssignment+`AssignmentCheckBox" autocomplete="off" onclick="completeButton('`+newAssignment+`AssignmentOverview', '`+newAssignment+`AssignmentCheckBox')">
+                            <label class="btn btn-outline-success" for="`+newAssignment+`AssignmentCheckBox">Complete</label><br>
+                        </div>
                     </div>
                 </div>
             
@@ -89,9 +93,9 @@ function addAssignment(className){
     // inputs taken from user 
     // to make it dynamic, takes className from Parameter and is used to find the -
     // associated ID for variables
-    var newAssignment = document.getElementById(''+className+'Name').innerHTML;
-    var startTime = document.getElementById(''+className+'Start').innerHTML;
-    var endTime = document.getElementById(''+className+'End').innerHTML;
+    var newAssignment = document.getElementById(''+className+'Name').innerText;
+    var startTime = document.getElementById(''+className+'Start').innerText;
+    var endTime = document.getElementById(''+className+'End').innerText;
     //var className = document.getElementById("NewAssignmentName").innerHTML;
 
     //create new div with assignment name 
@@ -104,8 +108,9 @@ function addAssignment(className){
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed - not all finished 
     // "Collaspe`+newAssignment+`" is not working? so i put collapseTEST for now to test stuff
+    // fixed complete boxes by changing "innerHTML" to "innerText"
     div.innerHTML += `
-    <button class="AssignmentOverview" id="`+className+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseTEST" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseTEST" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
         <p class="AssignmentPriority">
             Priority: 1
         </p>
@@ -165,7 +170,7 @@ function addAssignment(className){
                             </p>
                         </div>
                         <div class="AssignmentStatus" id="`+newAssignment+`CheckBox"> <!-- Will need unique ids in future-->
-                            <input type="checkbox" class="btn-check" id="`+newAssignment+`AssignmentCheckBox" autocomplete="off" onclick="completeButton('`+className+`AssignmentOverview', '`+newAssignment+`AssignmentCheckBox')">
+                            <input type="checkbox" class="btn-check" id="`+newAssignment+`AssignmentCheckBox" autocomplete="off" onclick="completeButton('`+newAssignment+`AssignmentOverview', '`+newAssignment+`AssignmentCheckBox')">
                             <label class="btn btn-outline-success" for="`+newAssignment+`AssignmentCheckBox">Complete</label><br>
                         </div>
                     </div>
