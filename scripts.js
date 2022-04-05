@@ -200,7 +200,7 @@ function AddClass(){
     // need to input dynamic info where needed - not all finished 
     //TODO: fix add assignment portion
     newDiv.innerHTML += `
-    <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
+    <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
     <div class="ClassName">
         `+inputClassName+`
     </div>
@@ -225,11 +225,17 @@ function AddClass(){
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="SortByDropDown">  <!-- Will need unique id in future (different classes)-->
                     <li><a class="dropdown-item" href="#">Due Date</a></li>
                     <li><a class="dropdown-item" href="#">Priority</a></li>
+                    <li><a class="dropdown-item" href="#">Incomplete</a></li>
                     <li><a class="dropdown-item" href="#">Completed</a></li>
                     </ul>
                 </div>
             </div>
         
+            <div align="right" >
+                <label for="colorpicker">Color Picker:</label>
+                <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#0f9dc9>
+            </div>
+
             <!-- Class to dynamically add assignments to class -->
             <div class="demoAssignments" id="`+inputClassName+`Assignments">
 
