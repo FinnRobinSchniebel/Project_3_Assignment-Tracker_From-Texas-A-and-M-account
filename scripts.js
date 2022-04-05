@@ -357,3 +357,8 @@ function completeButton(assignmentID, checkBoxID){
     }
 
 }
+
+function changeClassColor(className){
+    let color = document.getElementById(className+'ColorPicker').value;
+    document.getElementById(className+'Section').style.backgroundColor = color;
+}

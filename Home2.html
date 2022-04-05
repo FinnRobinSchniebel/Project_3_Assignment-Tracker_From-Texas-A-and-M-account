@@ -27,7 +27,7 @@
         <div class="Classes" id="classList">
             <div class=demoClass id=demoClass>
                 <!-- demo class section -->
-                <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseCourse" aria-expanded="false" aria-controls="CollapseCourse">
+                <button class="ClassSection" id = "demoClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseCourse" aria-expanded="false" aria-controls="CollapseCourse">
                     <div class="ClassName" id="demo1">
                         Demo1
                     </div>
@@ -41,7 +41,7 @@
     
 
                 <div class="collapse" id="CollapseCourse">
-                    <div class="ClassAssignmentsOutline">
+                    <div class="ClassAssignmentsOutline" id = "demoClassAssignmentOutline">
                         <div class="ClassAssignments">
                             <!-- Buttons in Course drop down -->
                             <div align="left"> 
@@ -56,7 +56,12 @@
                                     </ul>
                                 </div>
                             </div>
-                        
+                
+                            <div align="right" >
+                                <label for="colorpicker">Color Picker:</label>
+                                <input type="color" id="demoClassColorPicker" onchange="changeClassColor('demoClass')" value=#0f9dc9>
+                            </div>
+
                             <!-- Class to dynamically add assignments to class -->
                             <div class="demoAssignments" id="demoAssignments">
                                 <!-- demo assignment start-->
