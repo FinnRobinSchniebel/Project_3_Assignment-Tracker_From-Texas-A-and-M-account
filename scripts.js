@@ -16,7 +16,7 @@ function addDemo(){
     // need to input dynamic info where needed - not all finished 
     // "Collaspe`+newAssignment+`" is not working? so i put collapseDEMO for now to test stuff
     div.innerHTML += `
-    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseDEMO" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
         <p class="AssignmentPriority">
             Priority: 1
         </p>
@@ -39,7 +39,7 @@ function addDemo(){
         </div>
         
     </button>
-    <div class="collapse" id="CollapseDEMO"> <!-- Will need unique id in future-->
+    <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
         <div class="AssignmentOutline clearfix">
                 <div class="AssignmentInfo">
                     <div class="leftside">
@@ -110,7 +110,7 @@ function addAssignment(className){
     // "Collaspe`+newAssignment+`" is not working? so i put collapseTEST for now to test stuff
     // fixed complete boxes by changing "innerHTML" to "innerText"
     div.innerHTML += `
-    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseTEST" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
         <p class="AssignmentPriority">
             Priority: 1
         </p>
@@ -134,7 +134,7 @@ function addAssignment(className){
         
     </button>
 
-    <div class="collapse" id="CollapseTEST"> <!-- Will need unique id in future-->
+    <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
         <div class="AssignmentOutline clearfix">
                 <div class="AssignmentInfo">
                     <div class="leftside">
