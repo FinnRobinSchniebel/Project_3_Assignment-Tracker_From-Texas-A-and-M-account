@@ -426,3 +426,50 @@ function changeClassColor(className){
     document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
     //WIP need to Change Add new Assignments and individual assignments
 }
+
+// WIP STORE CLASSES AND ASSIGNMENTS
+function storeClass(className, Assignments){
+
+}
+function storeAssignment(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
+    let newAssignment ={
+        name: assignmentName,                   //text
+        class: className,                       //text
+        priority: assignmentPriority,           //int
+        dueDate: assignmentDueDate,             //datetime w/hour min
+        startDate: assignmentStartDate,         //datetime w/hour min
+        link: assignmentLink,                   //text
+        relatedLinks: assignmentRelatedLinks,   //text
+        notes: assignmentNotes,                 //text
+    };
+
+    var jsonObj = JSON.stringify(newAssignment); //creates JSON for assignment
+    localStorage.setItem(className+":"+assignmentName, jsonObj); //stores assignment in local storage as item "className+assignmentName"
+}
+
+function getClassNames(){ //returns array of ClassNames
+    var classList = [];
+    var keys = Object.keys(localStorage);
+    var i = keys.length;
+
+    while(i--){
+        classList.push(localStorage.getItem(keys[i]).class);
+    }
+
+    return classList;
+}
+
+function getAssignments(inputClassName){ //takes in class name and returns array of assignment objects in that class
+    var assignmentList = [];
+    var keys = Object.keys(localStorage);
+    var i = keys.length;
+
+    while(i--){
+        if(localStorage.getItem(keys[i]).className == inputClassName)
+            assignmentList.push(localStorage.getItem(keys[i]));
+    }
+
+    return assignmentList;
+}
+
+
