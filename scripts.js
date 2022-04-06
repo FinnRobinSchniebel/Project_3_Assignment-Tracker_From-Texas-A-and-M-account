@@ -11,7 +11,7 @@ function addDemo(){
 
     // need to remember what this does again 
     document.getElementsByTagName('body')[0].appendChild(div);
-
+    
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed - not all finished 
     // "Collaspe`+newAssignment+`" is not working? so i put collapseDEMO for now to test stuff
