@@ -1,7 +1,7 @@
 src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"
 
-function sortAssignmentByTimeLeft(){
-    $('.Assignment').sort(function(a, b){
+function sortAssignmentByTimeLeft(location){
+    location.find(('.Assignment')).sort(function(a, b){
         var contentA = parseInt( $(a).data('timeleft'));
         
         var contentB = parseInt( $(b).data('timeleft'));
@@ -9,10 +9,10 @@ function sortAssignmentByTimeLeft(){
         console.debug(contentB);
         return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
     
-    }).appendTo($('.Assignments'));
+    }).appendTo(location);
 }
-function sortAssignmentByPriority(){
-    $('.Assignment').sort(function(a, b){
+function sortAssignmentByPriority(location){
+    location.find(('.Assignment')).sort(function(a, b){
         var contentA = parseInt( $(a).data('priority'));
         
         var contentB = parseInt( $(b).data('priority'));
@@ -20,10 +20,10 @@ function sortAssignmentByPriority(){
         console.debug(contentB);
         return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
     
-    }).appendTo($('.Assignments'));
+    }).appendTo(location);
 }
-function sortAssignmentByDueDate(){
-    $('.Assignment').sort(function(a, b){
+function sortAssignmentByDueDate(location){
+    location.find(('.Assignment')).sort(function(a, b){
         var contentA = parseInt( $(a).data('due'));
         
         var contentB = parseInt( $(b).data('due'));
@@ -31,5 +31,5 @@ function sortAssignmentByDueDate(){
         console.debug(contentB);
         return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
     
-    }).appendTo($('.Assignments'));
+    }).appendTo(location);
 }
