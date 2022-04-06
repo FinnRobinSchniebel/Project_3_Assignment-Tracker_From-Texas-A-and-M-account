@@ -1,9 +1,13 @@
 function addDemo(){
     // inputs taken from user
-    var newAssignment = document.getElementById("NewAssignmentName").innerText;
+    var newAssignmentDisplay = document.getElementById("NewAssignmentName").innerText;
+    // takes the space away to ensure variables are properly named
+    newAssignment = newAssignmentDisplay.replaceAll(" ", "_");
+    // newAssignment = newAssignmentDisplay.replace(" ", "_");
+    //var newAssignment = newAssignmentDisplay.replace(" ", "_");
     var startTime = document.getElementById("NewAssignmentStart").innerText;
     var endTime = document.getElementById("NewAssignmentEnd").innerText;
-    var className = document.getElementById("NewAssignmentName").innerText;
+    // var className = document.getElementById("NewAssignmentName").innerText;
 
     //create new div with assignment name 
     var div = document.createElement('div');
@@ -14,14 +18,13 @@ function addDemo(){
 
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed - not all finished 
-    // "Collaspe`+newAssignment+`" is not working? so i put collapseDEMO for now to test stuff
     div.innerHTML += `
     <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
         <p class="AssignmentPriority">
             Priority: 1
         </p>
         <div class="AssignmentName">  
-            `+newAssignment+`
+            `+newAssignmentDisplay+`
 
         </div>
         <div class="AssignmentDuedate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
@@ -93,7 +96,9 @@ function addAssignment(className){
     // inputs taken from user 
     // to make it dynamic, takes className from Parameter and is used to find the -
     // associated ID for variables
-    var newAssignment = document.getElementById(''+className+'Name').innerText;
+    var newAssignmentDisplay = document.getElementById(''+className+'Name').innerText;
+    // takes the space away to ensure variables are properly named
+    var newAssignment = newAssignmentDisplay.replaceAll(" ", "_");
     var startTime = document.getElementById(''+className+'Start').innerText;
     var endTime = document.getElementById(''+className+'End').innerText;
     //var className = document.getElementById("NewAssignmentName").innerHTML;
@@ -107,7 +112,6 @@ function addAssignment(className){
 
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed - not all finished 
-    // "Collaspe`+newAssignment+`" is not working? so i put collapseTEST for now to test stuff
     // fixed complete boxes by changing "innerHTML" to "innerText"
     div.innerHTML += `
     <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
@@ -115,7 +119,7 @@ function addAssignment(className){
             Priority: 1
         </p>
         <div class="AssignmentName">
-            `+newAssignment+`
+            `+newAssignmentDisplay+`
 
         </div>
         <div class="AssignmentDuedate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
@@ -187,8 +191,9 @@ function addAssignment(className){
 
 function AddClass(){
     // input from user
-    var inputClassName =  document.getElementById("InputClassName").value;
-
+    var inputClassNameDisplay =  document.getElementById("InputClassName").value;
+    // takes the space away to ensure variables are properly named
+    var inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
     //create new div with assignment name 
     var newDiv = document.createElement('div');
     newDiv.id = inputClassName;
@@ -200,9 +205,9 @@ function AddClass(){
     // need to input dynamic info where needed - not all finished 
     //TODO: fix add assignment portion
     newDiv.innerHTML += `
-    <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
+    <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
     <div class="ClassName">
-        `+inputClassName+`
+        `+inputClassNameDisplay+`
     </div>
     <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
         No Upcoming Assignments
@@ -214,8 +219,8 @@ function AddClass(){
 
 
 <div class="collapse" id="Collapse`+inputClassName+`">
-    <div class="ClassAssignmentsOutline" id = "`+inputClassName+`AssignmentsOutline">
-        <div class="ClassAssignments" id = "`+inputClassName+`Assignments">
+    <div class="ClassAssignmentsOutline">
+        <div class="ClassAssignments">
             <!-- Buttons in Course drop down -->
             <div align="left"> 
                 <div class="dropdown">
@@ -225,17 +230,11 @@ function AddClass(){
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="SortByDropDown">  <!-- Will need unique id in future (different classes)-->
                     <li><a class="dropdown-item" href="#">Due Date</a></li>
                     <li><a class="dropdown-item" href="#">Priority</a></li>
-                    <li><a class="dropdown-item" href="#">Incomplete</a></li>
                     <li><a class="dropdown-item" href="#">Completed</a></li>
                     </ul>
                 </div>
             </div>
         
-            <div align="right" >
-                <label for="colorpicker">Color Picker:</label>
-                <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#0f9dc9>
-            </div>
-
             <!-- Class to dynamically add assignments to class -->
             <div class="demoAssignments" id="`+inputClassName+`Assignments">
 
