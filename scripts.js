@@ -214,8 +214,8 @@ function AddClass(){
 
 
 <div class="collapse" id="Collapse`+inputClassName+`">
-    <div class="ClassAssignmentsOutline">
-        <div class="ClassAssignments">
+    <div class="ClassAssignmentsOutline" id = "`+inputClassName+`AssignmentsOutline">
+        <div class="ClassAssignments" id = "`+inputClassName+`Assignments">
             <!-- Buttons in Course drop down -->
             <div align="left"> 
                 <div class="dropdown">
@@ -364,7 +364,58 @@ function completeButton(assignmentID, checkBoxID){
 
 }
 
+function parseColor(sixDigitHexString){ //converts 6 digit hex color to array [R, G, B]
+    var m = sixDigitHexString.match(/^#([0-9a-f]{6})$/i)[1];
+    if(m){
+        return[
+            parseInt(m.substr(0,2),16),
+            parseInt(m.substr(2,2),16),
+            parseInt(m.substr(4,2),16)
+        ];
+    }
+}
+
+//takes input of array in format [R, G, B]
+//adds 20 to each rgb value to make lighter version
+function lightColor(RGB){ 
+    var lighter = [RGB[0]+20, RGB[1]+20, RGB[2]+20];
+    if(lighter[0] > 255){
+        lighter[0] = 255;
+    }
+    if(lighter[1] > 255){
+        lighter[1] = 255;
+    }
+    if(lighter[2] > 255){
+        lighter[2] = 255;
+    }
+    return [lighter[0], lighter[1], lighter[2]];
+}
+
+//takes input of array in format [R, G, B]
+//subtracts 20 to each rgb value to make darker version
+function darkColor(RGB){ 
+    var darker = [RGB[0]-20, RGB[1]-20, RGB[2]-20];
+    if(darker[0] < 0){
+        darker[0] = 0;
+    }
+    if(darker[1] > 0){
+        darker[1] = 0;
+    }
+    if(darker[2] > 0){
+        darker[2] = 0;
+    }
+    return [darker[0], darker[1], darker[2]];
+}
+
+
+
+//takes in name of a class (Ex. "demoClass") and edits color values respectively
 function changeClassColor(className){
     let color = document.getElementById(className+'ColorPicker').value;
+    var RGB = parseColor(color);
+    var lighter = lightColor(RGB);
     document.getElementById(className+'Section').style.backgroundColor = color;
+    document.getElementById(className+'Assignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    //WIP need to Change Add new Assignments and individual assignments
 }
