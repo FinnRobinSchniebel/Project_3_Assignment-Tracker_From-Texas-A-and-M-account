@@ -27,7 +27,7 @@
         <div class="Classes" id="classList">
             <div class=demoClass id=demoClass>
                 <!-- demo class section -->
-                <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseCourse" aria-expanded="false" aria-controls="CollapseCourse"> 
+                <button class="ClassSection" id = "demoClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseCourse" aria-expanded="false" aria-controls="CollapseCourse">
                     <div class="ClassName" id="demo1">
                         Demo1
                     </div>
@@ -41,8 +41,8 @@
     
 
                 <div class="collapse" id="CollapseCourse">
-                    <div class="ClassAssignmentsOutline">
-                        <div class="ClassAssignments">
+                    <div class="ClassAssignmentsOutline" id = "demoClassAssignmentsOutline">
+                        <div class="ClassAssignments" id= "demoClassAssignments">
                             <!-- Buttons in Course drop down -->
                             <div align="left"> 
                                 <div class="dropdown">
@@ -50,12 +50,20 @@
                                     Sort By
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="SortByDropDown">  <!-- Will need unique id in future (different classes)-->
-                                    <li><a class="dropdown-item" onclick="sortAssignmentByDueDate($('.assignments'))">Due Date</a></li>             <!--Sort: needs reference to the outside wrapper around all the assignments in the list-->
-                                    <li><a class="dropdown-item" onclick="sortAssignmentByPriority($('.assignments'))">Priority</a></li>
-                                    <li><a class="dropdown-item" onclick="sortAssignmentByTimeLeft($('.assignments'))">Time Left</a></li>
+                                        <li><a class="dropdown-item" onclick="sortAssignmentByDueDate($('.assignments'))">Due Date</a></li>             <!--Sort: needs reference to the outside wrapper around all the assignments in the list-->
+                                        <li><a class="dropdown-item" onclick="sortAssignmentByPriority($('.assignments'))">Priority</a></li>
+                                        <li><a class="dropdown-item" onclick="sortAssignmentByTimeLeft($('.assignments'))">Time Left</a></li>
+                                        <li><a class="dropdown-item" href="#">Incomplete</a></li>
+                                        <li><a class="dropdown-item" href="#">Complete</a></li>
                                     </ul>
                                 </div>
                             </div>
+                
+                            <div align="right" >
+                                <label for="colorpicker">Color Picker:</label>
+                                <input type="color" id="demoClassColorPicker" onchange="changeClassColor('demoClass')" value=#0f9dc9>
+                            </div>
+
                             <!-- Class to dynamically add assignments to class -->
                             <div class="Assignments" id="demoAssignments"> <!-- Sort: Outside wrapper class changed from demo-->
                                 <!-- demo assignment start-->

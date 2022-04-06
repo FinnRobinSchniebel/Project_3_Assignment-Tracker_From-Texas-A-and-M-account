@@ -1,9 +1,13 @@
 function addDemo(){
     // inputs taken from user
-    var newAssignment = document.getElementById("NewAssignmentName").innerText;
+    var newAssignmentDisplay = document.getElementById("NewAssignmentName").innerText;
+    // takes the space away to ensure variables are properly named
+    newAssignment = newAssignmentDisplay.replaceAll(" ", "_");
+    // newAssignment = newAssignmentDisplay.replace(" ", "_");
+    //var newAssignment = newAssignmentDisplay.replace(" ", "_");
     var startTime = document.getElementById("NewAssignmentStart").innerText;
     var endTime = document.getElementById("NewAssignmentEnd").innerText;
-    var className = document.getElementById("NewAssignmentName").innerText;
+    // var className = document.getElementById("NewAssignmentName").innerText;
 
     //create new div with assignment name 
     var div = document.createElement('div');
@@ -14,14 +18,13 @@ function addDemo(){
     
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed - not all finished 
-    // "Collaspe`+newAssignment+`" is not working? so i put collapseDEMO for now to test stuff
     div.innerHTML += `
-    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseDEMO" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
         <p class="AssignmentPriority">
             Priority: 1
         </p>
         <div class="AssignmentName">  
-            `+newAssignment+`
+            `+newAssignmentDisplay+`
 
         </div>
         <div class="AssignmentDuedate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
@@ -39,7 +42,7 @@ function addDemo(){
         </div>
         
     </button>
-    <div class="collapse" id="CollapseDEMO"> <!-- Will need unique id in future-->
+    <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
         <div class="AssignmentOutline clearfix">
                 <div class="AssignmentInfo">
                     <div class="leftside">
@@ -93,7 +96,9 @@ function addAssignment(className){
     // inputs taken from user 
     // to make it dynamic, takes className from Parameter and is used to find the -
     // associated ID for variables
-    var newAssignment = document.getElementById(''+className+'Name').innerText;
+    var newAssignmentDisplay = document.getElementById(''+className+'Name').innerText;
+    // takes the space away to ensure variables are properly named
+    var newAssignment = newAssignmentDisplay.replaceAll(" ", "_");
     var startTime = document.getElementById(''+className+'Start').innerText;
     var endTime = document.getElementById(''+className+'End').innerText;
     //var className = document.getElementById("NewAssignmentName").innerHTML;
@@ -107,15 +112,14 @@ function addAssignment(className){
 
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed - not all finished 
-    // "Collaspe`+newAssignment+`" is not working? so i put collapseTEST for now to test stuff
     // fixed complete boxes by changing "innerHTML" to "innerText"
     div.innerHTML += `
-    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseTEST" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
         <p class="AssignmentPriority">
             Priority: 1
         </p>
         <div class="AssignmentName">
-            `+newAssignment+`
+            `+newAssignmentDisplay+`
 
         </div>
         <div class="AssignmentDuedate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
@@ -134,7 +138,7 @@ function addAssignment(className){
         
     </button>
 
-    <div class="collapse" id="CollapseTEST"> <!-- Will need unique id in future-->
+    <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
         <div class="AssignmentOutline clearfix">
                 <div class="AssignmentInfo">
                     <div class="leftside">
@@ -187,8 +191,9 @@ function addAssignment(className){
 
 function AddClass(){
     // input from user
-    var inputClassName =  document.getElementById("InputClassName").value;
-
+    var inputClassNameDisplay =  document.getElementById("InputClassName").value;
+    // takes the space away to ensure variables are properly named
+    var inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
     //create new div with assignment name 
     var newDiv = document.createElement('div');
     newDiv.id = inputClassName;
@@ -202,7 +207,7 @@ function AddClass(){
     newDiv.innerHTML += `
     <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
     <div class="ClassName">
-        `+inputClassName+`
+        `+inputClassNameDisplay+`
     </div>
     <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
         No Upcoming Assignments
@@ -356,4 +361,60 @@ function completeButton(assignmentID, checkBoxID){
         font-size: 15px;`;
     }
 
+}
+
+function parseColor(sixDigitHexString){ //converts 6 digit hex color to array [R, G, B]
+    var m = sixDigitHexString.match(/^#([0-9a-f]{6})$/i)[1];
+    if(m){
+        return[
+            parseInt(m.substr(0,2),16),
+            parseInt(m.substr(2,2),16),
+            parseInt(m.substr(4,2),16)
+        ];
+    }
+}
+
+//takes input of array in format [R, G, B]
+//adds 20 to each rgb value to make lighter version
+function lightColor(RGB){ 
+    var lighter = [RGB[0]+20, RGB[1]+20, RGB[2]+20];
+    if(lighter[0] > 255){
+        lighter[0] = 255;
+    }
+    if(lighter[1] > 255){
+        lighter[1] = 255;
+    }
+    if(lighter[2] > 255){
+        lighter[2] = 255;
+    }
+    return [lighter[0], lighter[1], lighter[2]];
+}
+
+//takes input of array in format [R, G, B]
+//subtracts 20 to each rgb value to make darker version
+function darkColor(RGB){ 
+    var darker = [RGB[0]-20, RGB[1]-20, RGB[2]-20];
+    if(darker[0] < 0){
+        darker[0] = 0;
+    }
+    if(darker[1] > 0){
+        darker[1] = 0;
+    }
+    if(darker[2] > 0){
+        darker[2] = 0;
+    }
+    return [darker[0], darker[1], darker[2]];
+}
+
+
+
+//takes in name of a class (Ex. "demoClass") and edits color values respectively
+function changeClassColor(className){
+    let color = document.getElementById(className+'ColorPicker').value;
+    var RGB = parseColor(color);
+    var lighter = lightColor(RGB);
+    document.getElementById(className+'Section').style.backgroundColor = color;
+    document.getElementById(className+'Assignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    //WIP need to Change Add new Assignments and individual assignments
 }
