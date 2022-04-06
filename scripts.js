@@ -207,7 +207,7 @@ function AddClass(){
     // need to input dynamic info where needed - not all finished 
     //TODO: fix add assignment portion
     newDiv.innerHTML += `
-    <button class="ClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
+    <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
     <div class="ClassName">
         `+inputClassNameDisplay+`
     </div>
@@ -221,8 +221,8 @@ function AddClass(){
 
 
 <div class="collapse" id="Collapse`+inputClassName+`">
-    <div class="ClassAssignmentsOutline">
-        <div class="ClassAssignments">
+    <div class="ClassAssignmentsOutline" id = "`+inputClassName+`AssignmentsOutline">
+        <div class="ClassAssignments" id= "`+inputClassName+`ColorAssignments">
             <!-- Buttons in Course drop down -->
             <div align="left"> 
                 <div class="dropdown">
@@ -232,11 +232,17 @@ function AddClass(){
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="SortByDropDown">  <!-- Will need unique id in future (different classes)-->
                     <li><a class="dropdown-item" href="#">Due Date</a></li>
                     <li><a class="dropdown-item" href="#">Priority</a></li>
+                    <li><a class="dropdown-item" href="#">Incomplete</a></li>
                     <li><a class="dropdown-item" href="#">Completed</a></li>
                     </ul>
                 </div>
             </div>
-        
+
+            <div align="right" >
+                <label for="colorpicker">Color Picker:</label>
+                <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#0f9dc9>
+            </div>
+
             <!-- Class to dynamically add assignments to class -->
             <div class="demoAssignments" id="`+inputClassName+`Assignments">
 
@@ -416,7 +422,7 @@ function changeClassColor(className){
     var RGB = parseColor(color);
     var lighter = lightColor(RGB);
     document.getElementById(className+'Section').style.backgroundColor = color;
-    document.getElementById(className+'Assignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(className+'ColorAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
     document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
     //WIP need to Change Add new Assignments and individual assignments
 }
