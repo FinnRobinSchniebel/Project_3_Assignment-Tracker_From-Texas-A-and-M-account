@@ -478,7 +478,8 @@ function getAssignment(inputClassName, inputAssignmentName){
     var i = assignmentList.length;
 
     while(i--){
-        if
+        if(assignmentList[i].class == inputClassName && assignmentList[i].name == inputAssignmentName)
+        return assignmentList[i];
     }
 
 }
