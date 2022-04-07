@@ -50,9 +50,9 @@
                                     Sort By
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="SortByDropDown">  <!-- Will need unique id in future (different classes)-->
-                                        <li><a class="dropdown-item" onclick="sortAssignmentByDueDate(('.Assignments'))">Due Date</a></li>             <!--Sort: needs reference to the outside wrapper around all the assignments in the list-->
-                                        <li><a class="dropdown-item" onclick="sortAssignmentByPriority(document.getElementById('demoAssignments'))">Priority</a></li>
-                                        <li><a class="dropdown-item" onclick="sortAssignmentByTimeLeft(document.getElementById('demoAssignments'))">Time Left</a></li>
+                                        <li><a class="dropdown-item" onclick="sortAssignmentByDueDate(('.Assignments', 'due'))">Due Date</a></li>             <!--Sort: needs reference to the outside wrapper around all the assignments in the list-->
+                                        <li><a class="dropdown-item" onclick="sortAssignmentByPriority(document.getElementById('demoAssignments', 'priority'))">Priority</a></li>
+                                        <li><a class="dropdown-item" onclick="sortAssignmentByTimeLeft(document.getElementById('demoAssignments', 'timeleft'))">Time Left</a></li>
                                         <li><a class="dropdown-item" href="">Incomplete</a></li>
                                         <li><a class="dropdown-item" href="">Complete</a></li>
                                     </ul>
