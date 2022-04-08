@@ -428,10 +428,29 @@ function changeClassColor(className){
 }
 
 // WIP STORE CLASSES AND ASSIGNMENTS
-function storeClass(className, Assignments){
-
+//storeClass: takes in user inputted className and an array of assignments to store in local storage
+function storeClass(className, arrayAssignments){
+    let newClass = {
+        name: className, //text
+        assignments: arrayAssignments, //array of assignment objs
+    };
+    var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
+    localStorage.setItem("CLASS:"+className, jsonObj); //stores assignment in local storage as item "CLASS:className"
 }
-function storeAssignment(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
+
+function getClassList(){ //returns array of ClassNames
+    var classList = [];
+    var keys = Object.keys(localStorage);
+    var i = keys.length;
+
+    while(i--){
+        if(keys[i].startsWith("CLASS:"))
+            classList.push(localStorage.getItem(keys[i]).name);
+    }
+    return classList;
+}
+
+function addAssignment(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
     let newAssignment ={
         name: assignmentName,                   //text
         class: className,                       //text
@@ -443,33 +462,24 @@ function storeAssignment(assignmentName, className, assignmentPriority, assignme
         notes: assignmentNotes,                 //text
     };
 
-    var jsonObj = JSON.stringify(newAssignment); //creates JSON for assignment
-    localStorage.setItem(className+":"+assignmentName, jsonObj); //stores assignment in local storage as item "className+assignmentName"
+    var classList = getClassList();
+    var classListLength = classList.length;
+    while(classListLength--){
+        if(className == classList[i].name)
+            classList[i].assignments.push(newAssignment);
+    }
 }
 
-function getClassNames(){ //returns array of ClassNames
-    var classList = [];
-    var keys = Object.keys(localStorage);
-    var i = keys.length;
+//takes in class name and assignment name
+//returns assignment obj in that class
+function getAssignment(inputClassName, inputAssignmentName){ 
+    var classObj = localStorage.getItem("CLASS:"+inputClassName); 
+    var assignmentList = classObj.assignments;
+    var i = assignmentList.length;
 
     while(i--){
-        classList.push(localStorage.getItem(keys[i]).class);
+        if(assignmentList[i].class == inputClassName && assignmentList[i].name == inputAssignmentName)
+        return assignmentList[i];
     }
 
-    return classList;
 }
-
-function getAssignments(inputClassName){ //takes in class name and returns array of assignment objects in that class
-    var assignmentList = [];
-    var keys = Object.keys(localStorage);
-    var i = keys.length;
-
-    while(i--){
-        if(localStorage.getItem(keys[i]).className == inputClassName)
-            assignmentList.push(localStorage.getItem(keys[i]));
-    }
-
-    return assignmentList;
-}
-
-
