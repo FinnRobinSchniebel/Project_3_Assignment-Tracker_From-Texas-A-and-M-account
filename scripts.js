@@ -17,9 +17,10 @@ function addAssignment(className){
     //************************************** */
     var relatedLinks = document.getElementById(''+className+'RelatedLinks').innerText;
     var link = document.getElementById(''+className+'Link').innerText;
+    var priority = 4; //test, still needs to be implemented
 
-
-    //var className = document.getElementById("NewAssignmentName").innerHTML;
+    //adds assignment to class in localstorage
+    addAssignmentToClass(newAssignment,className,priority,endTime, startTime, link, relatedLinks,noteDetails);
 
     //create new div with assignment name 
     var div = document.createElement('div');
@@ -105,6 +106,8 @@ function addAssignment(className){
     
     // appends new div to the classes' assignments
     document.getElementById(''+className+'Assignments').appendChild(div);
+
+
 }
 
 function AddClass(){
@@ -245,6 +248,11 @@ function AddClass(){
 </div>`;
     var ClassesDiv = document.getElementById("classList");
     ClassesDiv.innerHTML += newDiv.innerHTML; 
+
+
+    //Add assignment will also call storeClass into local storage
+    let emptyClass = [];
+    storeClass(inputClassName,emptyClass);
 } 
 
 function completeButton(assignmentID, checkBoxID){
@@ -354,23 +362,27 @@ function changeClassColor(className){
 //storeClass: takes in user inputted className and an array of assignments to store in local storage
 function storeClass(className, arrayAssignments){
     let newClass = {
-        name: className, //text
-        assignments: arrayAssignments, //array of assignment objs
+        name: ''+className, //text
+        assignments: arrayAssignments //array of assignment objs
     };
     var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
-    localStorage.setItem("CLASS:"+className, jsonObj); //stores assignment in local storage as item "CLASS:className"
+    localStorage.setItem(className, jsonObj); //stores assignment in local storage as item "CLASS:className"
 }
 
-function getClassList(){ //returns array of ClassNames
+
+function getClassList(){ //returns array of Class objects
     var classList = [];
     var keys = Object.keys(localStorage);
     var i = keys.length;
 
     while(i--){
-        if(keys[i].startsWith("CLASS:"))
-            classList.push(localStorage.getItem(keys[i]).name);
+        classList.push(localStorage.getItem(keys[i]));
     }
     return classList;
+}
+
+function getClassName(classObj){
+    return classObj.name;
 }
 
 function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
@@ -382,21 +394,22 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
         startDate: assignmentStartDate,         //datetime w/hour min
         link: assignmentLink,                   //text
         relatedLinks: assignmentRelatedLinks,   //text
-        notes: assignmentNotes,                 //text
+        notes: assignmentNotes                 //text
     };
 
-    var classList = getClassList();
-    var classListLength = classList.length;
-    while(classListLength--){
-        if(className == classList[i].name)
-            classList[i].assignments.push(newAssignment);
+    var classList = getClassList(); //array of class objects
+    console.debug(classList);
+    var i = classList.length;
+    
+    while(i--){
+        console.log(getClassName(classList[i]));
     }
 }
 
 //takes in class name and assignment name
 //returns assignment obj in that class
 function getAssignment(inputClassName, inputAssignmentName){ 
-    var classObj = localStorage.getItem("CLASS:"+inputClassName); 
+    var classObj = localStorage.getItem(inputClassName); 
     var assignmentList = classObj.assignments;
     var i = assignmentList.length;
 
@@ -405,4 +418,52 @@ function getAssignment(inputClassName, inputAssignmentName){
         return assignmentList[i];
     }
 
+}
+
+function clearPage(){
+    var classList = getClassList();
+    console.debug("Before Clear")
+    console.debug(classList);
+    localStorage.clear();
+
+    // reset to original html
+    document.getElementsByTagName('body')[0].innerHTML =`
+    <body class= background>
+    <!-- TEST COMMIT -->
+
+    <div class="content">
+
+        <!-- Navigation Bar -->
+        <div class=Mynavbar>
+            <button class="button" onclick="location.href='Home.html'">Home </button>
+            <button class="button" onclick="location.href='Quick_View.html'">Quick View</button>
+            <button class="button" onclick="location.href='AddLocation.html'">View and Add Assignment locations</button> 
+            
+        </div>
+
+        <!-- Put all new classes made in here -->
+        <div class="Classes" id="classList">
+            
+
+        <!-- Add Class Button **This section was copy pasted in** -->
+         <button class="AddClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAddClass" aria-expanded="false" aria-controls="CollapseCourse">
+            <div class="AddClass">
+                Add Class
+            </div>
+        </button>
+
+        <div class="collapse" id="CollapseAddClass">
+            <div class="ClassAssignmentsOutline">
+                <div class="NewClassName">
+                    <form>
+                        Enter Class Name: <input type="text" id="InputClassName" placeholder="Ex. 'CSCE 315'">
+                        <button class="SubmitButton" type="button" value="" onclick="AddClass()">Submit</button>
+                    </form>
+            </div>
+        </div>
+        <!-- Add Class Button End-->
+    </div>
+    <button class="button" type="button" value="" onclick="clearPage()">Clear</button>
+</body>
+    `   
 }
