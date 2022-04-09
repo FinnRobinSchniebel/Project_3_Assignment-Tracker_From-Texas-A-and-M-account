@@ -358,11 +358,10 @@ function changeClassColor(className){
 
 }
 
-// WIP STORE CLASSES AND ASSIGNMENTS
 //storeClass: takes in user inputted className and an array of assignments to store in local storage
 function storeClass(className, arrayAssignments){
-    let newClass = {
-        name: ''+className, //text
+    var newClass = {
+        name: className, //text
         assignments: arrayAssignments //array of assignment objs
     };
     var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
@@ -376,7 +375,7 @@ function getClassList(){ //returns array of Class objects
     var i = keys.length;
 
     while(i--){
-        classList.push(localStorage.getItem(keys[i]));
+        classList.push(JSON.parse(localStorage.getItem(keys[i])));
     }
     return classList;
 }
@@ -386,7 +385,7 @@ function getClassName(classObj){
 }
 
 function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
-    let newAssignment ={
+    var newAssignment ={
         name: assignmentName,                   //text
         class: className,                       //text
         priority: assignmentPriority,           //int
@@ -398,12 +397,17 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
     };
 
     var classList = getClassList(); //array of class objects
-    console.debug(classList);
+    //console.debug(classList);
     var i = classList.length;
     
-    while(i--){
-        console.log(getClassName(classList[i]));
-    }
+    classList.forEach((classObj, i, array) => {
+        if(classObj.name == className){
+            classObj.assignments.push(newAssignment);
+        }
+        //console.debug(i);
+        console.debug(array);
+    });
+
 }
 
 //takes in class name and assignment name
@@ -420,10 +424,20 @@ function getAssignment(inputClassName, inputAssignmentName){
 
 }
 
+function printClassList(){
+    var classList = [];
+    var keys = Object.keys(localStorage);
+    var i = keys.length;
+
+    while(i--){
+        classList.push(localStorage.getItem(keys[i]));
+    }
+    console.log(classList);
+}
+
 function clearPage(){
-    var classList = getClassList();
     console.debug("Before Clear")
-    console.debug(classList);
+    printClassList();
     localStorage.clear();
 
     // reset to original html
