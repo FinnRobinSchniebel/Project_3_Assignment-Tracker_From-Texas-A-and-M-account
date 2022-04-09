@@ -1,4 +1,97 @@
+function addDemo(){
+    // inputs taken from user
+    var newAssignmentDisplay = document.getElementById("NewAssignmentName").innerText;
+    // takes the space away to ensure variables are properly named
+    newAssignment = newAssignmentDisplay.replaceAll(" ", "_");
+    // newAssignment = newAssignmentDisplay.replace(" ", "_");
+    //var newAssignment = newAssignmentDisplay.replace(" ", "_");
+    var startTime = document.getElementById("NewAssignmentStart").innerText;
+    var endTime = document.getElementById("NewAssignmentEnd").innerText;
+    // var className = document.getElementById("NewAssignmentName").innerText;
 
+    //create new div with assignment name 
+    var div = document.createElement('div');
+    div.id = newAssignment;
+
+    // need to remember what this does again 
+    document.getElementsByTagName('body')[0].appendChild(div);
+    
+    // add code into new div need to use `` as quotes 
+    // need to input dynamic info where needed - not all finished 
+    div.innerHTML += `
+    <div id="Assignment`+newAssignment+`" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1" >
+        <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+            <p class="AssignmentPriority">
+                Priority: 1
+            </p>
+            <div class="AssignmentName">  
+                `+newAssignmentDisplay+`
+
+            </div>
+            <div class="AssignmentDuedate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
+                Start date: `+startTime+`
+            </div>
+            <div class="progress justify-content-end" style="width: 25%; float: left; margin-top: 15px">
+                <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
+                    <div id="Assignment1TimeLeft">
+                        2 days
+                    </div>
+                </div>
+            </div>
+            <div class="AssignmentDuedate" id="`+newAssignment+`EndDate"> <!-- Will need unique id in future-->
+                End date: `+endTime+`
+            </div>
+            
+        </button>
+        <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
+            <div class="AssignmentOutline clearfix">
+                    <div class="AssignmentInfo">
+                        <div class="leftside">
+                            <div class="AssignmentLink"> 
+                                <p> 
+                                    <div>
+                                        Assignment Link:
+                                    </div>
+                                    <div class="genericWrittingBox" contenteditable="true"  id="`+newAssignment+`Link"> <!-- Will need unique id in future-->
+                                    </div>
+                                    
+                                </p>
+                                
+                            </div>
+                            <div class="AssignmentRelatedLinks" >
+                                <p>
+                                    Related Links:
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`RelatedLinks"> <!-- Will need unique id in future-->
+                                        
+                                    </div>
+                                </p>
+                                
+                            </div>
+                        </div>
+                        <div class="rightside">
+                            <div class="AssignmentDetails" >
+                                <p>
+                                    Details: 
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`Details"> <!-- Will need unique id in future-->
+                                        This is a demo assignment. 
+                                    </div>
+                                </p>
+                            </div>
+                            <div class="AssignmentStatus" id="`+newAssignment+`CheckBox"> <!-- Will need unique ids in future-->
+                                <input type="checkbox" class="btn-check" id="`+newAssignment+`AssignmentCheckBox" autocomplete="off" onclick="completeButton('`+newAssignment+`AssignmentOverview', '`+newAssignment+`AssignmentCheckBox')">
+                                <label class="btn btn-outline-success" for="`+newAssignment+`AssignmentCheckBox">Complete</label><br>
+                            </div>
+                        </div>
+                    </div>
+                
+            </div>
+        </div>
+    </div>`;
+
+    
+    // appends new div to the classes' assignments
+    document.getElementById("demoAssignments").appendChild(div);
+}
 
 
 function addAssignment(className){
@@ -31,8 +124,8 @@ function addAssignment(className){
             `+newAssignmentDisplay+`
 
         </div>
-        <div class="AssignmentDuedate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
-            Start date: `+startTime+`
+        <div class="AssignmentDuedate AssignmentStartDate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
+        <label for="Assignment1_Start">Start date:</label> <input id=" `+newAssignment +`_Start" type="datetime-local" value=`+ startTime +` aria-readonly="true">
         </div>
         <div class="progress justify-content-end" style="width: 25%; float: left; margin-top: 15px">
             <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
@@ -335,29 +428,10 @@ function changeClassColor(className){
 }
 
 // WIP STORE CLASSES AND ASSIGNMENTS
-//storeClass: takes in user inputted className and an array of assignments to store in local storage
-function storeClass(className, arrayAssignments){
-    let newClass = {
-        name: className, //text
-        assignments: arrayAssignments, //array of assignment objs
-    };
-    var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
-    localStorage.setItem("CLASS:"+className, jsonObj); //stores assignment in local storage as item "CLASS:className"
+function storeClass(className, Assignments){
+
 }
-
-function getClassList(){ //returns array of ClassNames
-    var classList = [];
-    var keys = Object.keys(localStorage);
-    var i = keys.length;
-
-    while(i--){
-        if(keys[i].startsWith("CLASS:"))
-            classList.push(localStorage.getItem(keys[i]).name);
-    }
-    return classList;
-}
-
-function addAssignment(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
+function storeAssignment(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
     let newAssignment ={
         name: assignmentName,                   //text
         class: className,                       //text
@@ -369,24 +443,33 @@ function addAssignment(assignmentName, className, assignmentPriority, assignment
         notes: assignmentNotes,                 //text
     };
 
-    var classList = getClassList();
-    var classListLength = classList.length;
-    while(classListLength--){
-        if(className == classList[i].name)
-            classList[i].assignments.push(newAssignment);
-    }
+    var jsonObj = JSON.stringify(newAssignment); //creates JSON for assignment
+    localStorage.setItem(className+":"+assignmentName, jsonObj); //stores assignment in local storage as item "className+assignmentName"
 }
 
-//takes in class name and assignment name
-//returns assignment obj in that class
-function getAssignment(inputClassName, inputAssignmentName){ 
-    var classObj = localStorage.getItem("CLASS:"+inputClassName); 
-    var assignmentList = classObj.assignments;
-    var i = assignmentList.length;
+function getClassNames(){ //returns array of ClassNames
+    var classList = [];
+    var keys = Object.keys(localStorage);
+    var i = keys.length;
 
     while(i--){
-        if(assignmentList[i].class == inputClassName && assignmentList[i].name == inputAssignmentName)
-        return assignmentList[i];
+        classList.push(localStorage.getItem(keys[i]).class);
     }
 
+    return classList;
 }
+
+function getAssignments(inputClassName){ //takes in class name and returns array of assignment objects in that class
+    var assignmentList = [];
+    var keys = Object.keys(localStorage);
+    var i = keys.length;
+
+    while(i--){
+        if(localStorage.getItem(keys[i]).className == inputClassName)
+            assignmentList.push(localStorage.getItem(keys[i]));
+    }
+
+    return assignmentList;
+}
+
+

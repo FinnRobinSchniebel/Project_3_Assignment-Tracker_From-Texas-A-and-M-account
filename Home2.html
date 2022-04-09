@@ -318,6 +318,101 @@
         </div>
         <!-- Add Class Button End-->
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--reference for creating new unique class-->
+    <div class="MakeAssignment" style="display: none"> <!-- used for adding new assignments-->
+
+        <div id="Assignment`+newAssignment+`" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1" >
+            <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse'+newAssignment'" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+                <p class="AssignmentPriority">
+                    Priority: 1
+                </p>
+                <div class="AssignmentName">  
+                    `+newAssignmentDisplay+`
+        
+                </div>
+                <!--start date-->
+                <div class="AssignmentDuedate AssignmentStartDate" id="Assignment1StartDate"> <!-- has two classes for identification Will need unique id-->
+                    <label for="Assignment1_Start">Start date:</label> <input id="Assignment1_Start" type="datetime-local" value="2022-04-03T19:59" aria-readonly="true">
+                </div>
+
+                <!--Progress bar item-->
+                <div class="progress justify-content-end" style="width: 25%; float: left; margin-top: 15px">
+                    <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
+                        <div id="Assignment1TimeLeft">
+                            2 days
+                        </div>
+                    </div>
+                </div>
+                <!--end date-->
+                <div class="AssignmentDuedate" id="Assignment1EndDate"> <!-- Will need unique id -->
+                    <label for="Assignment1_Due">Due date:</label> <input id="Assignment1_Due" type="datetime-local" value="2022-04-09T19:59">
+                </div>
+                
+            </button>
+
+            <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
+                <div class="AssignmentOutline clearfix">
+                    <div class="AssignmentInfo">
+                        <div class="leftside">
+                            <div class="AssignmentLink"> 
+                                <p> 
+                                    <div>
+                                        Assignment Link:
+                                    </div>
+                                    <div class="genericWrittingBox" contenteditable="true"  id="`+newAssignment+`Link"> <!-- Will need unique id in future-->
+                                    </div>
+                                    
+                                </p>
+                                
+                            </div>
+                            <div class="AssignmentRelatedLinks" >
+                                <p>
+                                    Related Links:
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`RelatedLinks"> <!-- Will need unique id in future-->
+                                        
+                                    </div>
+                                </p>
+                                
+                            </div>
+                        </div>
+                        <div class="rightside">
+                            <div class="AssignmentDetails" >
+                                <p>
+                                    Details: 
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`Details"> <!-- Will need unique id in future-->
+                                        This is a demo assignment. 
+                                    </div>
+                                </p>
+                            </div>
+                            <div class="AssignmentStatus" id="AssignmentCheckBox"> <!-- Will need unique ids in future-->
+                                <input type="checkbox" class="btn-check" id="DemoAssignmentCheckBox" autocomplete="off" onclick="completeButton('ClassNameAssignmentOverview', 'DemoAssignmentCheckBox')">
+                                <label class="btn btn-outline-success" for="DemoAssignmentCheckBox">Complete</label><br>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    
+
+
 </body>
+
+
 
 
