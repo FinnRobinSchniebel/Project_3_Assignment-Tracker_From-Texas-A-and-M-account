@@ -10,6 +10,9 @@ function addAssignment(className){
     var newAssignment = newAssignmentDisplay.replaceAll(" ", "_");
     var startTime = document.getElementById(''+className+'Start').innerText;
     var endTime = document.getElementById(''+className+'End').innerText;
+    var noteDetails = document.getElementById(''+className+'Notes').innerText;
+    var relatedLinks = document.getElementById(''+className+'RelatedLinks').innerText;
+    var link = document.getElementById(''+className+'Link').innerText;
     //var className = document.getElementById("NewAssignmentName").innerHTML;
 
     //create new div with assignment name 
@@ -57,7 +60,7 @@ function addAssignment(className){
                                     Assignment Link:
                                 </div>
                                 <div class="genericWrittingBox" contenteditable="true"  id="`+newAssignment+`Link"> <!-- Will need unique id in future-->
-
+                                    TEST
                                 </div>
                                 
                             </p>
@@ -67,7 +70,7 @@ function addAssignment(className){
                             <p>
                                 Related Links:
                                 <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`RelatedLinks"> <!-- Will need unique id in future-->
-                                    
+                                    TEST           
                                 </div>
                             </p>
                             
@@ -78,7 +81,7 @@ function addAssignment(className){
                             <p>
                                 Details: 
                                 <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`Details"> <!-- Will need unique id in future-->
-                                    Add details here. 
+                                    `+noteDetails+` 
                                 </div>
                             </p>
                         </div>
@@ -103,6 +106,7 @@ function AddClass(){
     var inputClassNameDisplay =  document.getElementById("InputClassName").value;
     // takes the space away to ensure variables are properly named
     var inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
+    inputClassName = inputClassName.trim();
     //create new div with assignment name 
     var newDiv = document.createElement('div');
     newDiv.id = inputClassName;
@@ -157,14 +161,14 @@ function AddClass(){
             <!-- demo assignment end -->
             
             <!-- add new assignment -->
-            <button class="AddAssignmentTop" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`NewAssignment" aria-expanded="false" aria-controls="CollapseCourse">
+            <button class="AddAssignmentTop" id="`+inputClassName+`AddAssignment" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`NewAssignment" aria-expanded="false" aria-controls="CollapseCourse">
                 <div class="AddAssignmentText">
                     Add new Assignment
                 </div>
             </button>
 
             <div class="collapse" id="Collapse`+inputClassName+`NewAssignment">
-                <div class="AssignmentOutline ">
+                <div class="AssignmentOutline" id="`+inputClassName+`AddNewAssignmentOutline">
                     <div class="AssignmentInfo clearfix">
                         <div class="leftside">
                             <div class="NewAssignmentInfoBox" id="`+inputClassName+`InfoBox">
@@ -292,7 +296,7 @@ function parseColor(sixDigitHexString){ //converts 6 digit hex color to array [R
 //takes input of array in format [R, G, B]
 //adds 20 to each rgb value to make lighter version
 function lightColor(RGB){ 
-    var lighter = [RGB[0]+20, RGB[1]+20, RGB[2]+20];
+    var lighter = [RGB[0]+40, RGB[1]+40, RGB[2]+40];
     if(lighter[0] > 255){
         lighter[0] = 255;
     }
@@ -308,14 +312,14 @@ function lightColor(RGB){
 //takes input of array in format [R, G, B]
 //subtracts 20 to each rgb value to make darker version
 function darkColor(RGB){ 
-    var darker = [RGB[0]-20, RGB[1]-20, RGB[2]-20];
+    var darker = [RGB[0]-40, RGB[1]-40, RGB[2]-40];
     if(darker[0] < 0){
         darker[0] = 0;
     }
-    if(darker[1] > 0){
+    if(darker[1] < 0){
         darker[1] = 0;
     }
-    if(darker[2] > 0){
+    if(darker[2] < 0){
         darker[2] = 0;
     }
     return [darker[0], darker[1], darker[2]];
@@ -331,7 +335,13 @@ function changeClassColor(className){
     document.getElementById(className+'Section').style.backgroundColor = color;
     document.getElementById(className+'ColorAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
     document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
-    //WIP need to Change Add new Assignments and individual assignments
+
+    var darker = darkColor(RGB);
+    document.getElementById(className+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+    document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = color;
+    //WIP need to Change individual assignments in class
+    //local storage needed
+
 }
 
 // WIP STORE CLASSES AND ASSIGNMENTS
@@ -357,7 +367,7 @@ function getClassList(){ //returns array of ClassNames
     return classList;
 }
 
-function addAssignment(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
+function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
     let newAssignment ={
         name: assignmentName,                   //text
         class: className,                       //text
