@@ -59,8 +59,8 @@ function addAssignment(className){
     </button>
 
     <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
-        <div class="AssignmentOutline clearfix">
-                <div class="AssignmentInfo">
+        <div class="AssignmentOutline" id = "`+newAssignment+`AssignmentOutline">
+                <div class="AssignmentInfo clearfix">
                     <div class="leftside">
                         <div class="AssignmentLink"> 
                             <p> 
@@ -356,21 +356,30 @@ function changeClassColor(className){
     document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = color;
 
     //to added assignments
-   // var assignmentList = getAssignments(className);
-  //  var i = assignmentList.length;
-   // while(i--){
-  //      console.debug(className+assignmentList[i].name+'AssignmentOverview');
-   //     document.getElementById(className+assignmentList[i].name+'AssignmentOverview').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-  //  }
+    var assignmentList = [];
+    assignmentList = getAssignments(className);
+    //console.debug(assignmentList.length);
+    assignmentList.forEach((assignmentObj, i, array) => {
+        console.log(assignmentObj.name+'AssignmentOutline');
+        document.getElementById(assignmentObj.name+'AssignmentOverview').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+        document.getElementById(assignmentObj.name+'AssignmentOutline').style.backgroundColor = color;
+    });  
 
 }
 
 //storeClass: takes in user inputted className and an array of assignments to store in local storage
 function storeClass(className, arrayAssignments){
-    var newClass = {
-        name: className, //text
-        assignments: arrayAssignments //array of assignment objs
-    };
+    if(arrayAssignments.length == 0){
+        var newClass = {
+            name: className, //text
+            assignments: [] //array of assignment objs
+        };
+    } else{
+        var newClass = {
+            name: className, //text
+            assignments: arrayAssignments //array of assignment objs
+        };
+    }
     var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
     localStorage.setItem(className, jsonObj); //stores assignment in local storage as item "CLASS:className"
 }
@@ -399,7 +408,18 @@ function getClass(className){
 }
 
 function getAssignments(className){ //returns array of assignment objects of a class
+    var classList = getClassList(); //array of class objects
+    var result = [];
 
+    classList.forEach((classObj, i, array) => {
+        if(classObj.name == className){
+            //console.debug(classObj.assignments.length);
+            result =  (classObj.assignments);
+        }
+        //console.debug(i);
+        //console.debug(array);
+    });
+    return result;
 }
 
 function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
