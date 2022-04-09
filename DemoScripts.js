@@ -1,4 +1,4 @@
-function AssignmentAdd(){
+function AssignmentAdd(className){
     // inputs taken from user
     // to make it dynamic, takes className from Parameter and is used to find the -
     // associated ID for variables
@@ -25,13 +25,18 @@ function AssignmentAdd(){
     // appends new div to the classes' assignments
     document.getElementById("demoAssignments").appendChild(div);
 
-    var toAdd= document.getElementsByClassName("MakeAssignment").getElementsByClassName("Assignment");
+    var toAdd= document.getElementById('NewAssignmentTemp')[0].getElementsByClassName("Assignment");
     toAdd.innerHTML.setAttribute('id', 'Assignment'+newAssignment);
-    toAdd.innerHTML.getElementsByClassName('AssignmentOverview').setAttribute('data-bs-target', '#Collapse'+newAssignment);
+    toAdd.innerHTML.getElementsByClassName('AssignmentOverview')[0].setAttribute('data-bs-target', '#Collapse'+newAssignment);
     //one for priority here
-    toAdd.innerHTML.getElementsByClassName('AssignmentName').innerText = newAssignmentDisplay;
-    toAdd.innerHTML.getElementsByClassName('AssignmentDuedate').setAttribute('id',newAssignment+'StartDate');
-    toAdd.innerHTML.getElementsByClassName('AssignmentDuedate').innerHTML.getElementsByTagName('input').setAttribute('value', startTime);
+    toAdd.innerHTML.getElementsByClassName('AssignmentName')[0].innerText = newAssignmentDisplay;
+    toAdd.innerHTML.getElementsByClassName('AssignmentStartDate')[0].setAttribute('id',newAssignment+'StartDate');
+    toAdd.innerHTML.getElementsByClassName('AssignmentStartDate')[0].innerHTML.getElementsByTagName('input').setAttribute('value', startTime);
+    //add time for start and give it the correct id
+    toAdd.innerHTML.getElementsByClassName('AssignmentDuedate')[1].setAttribute('id',newAssignment+'StartDate');
+    toAdd.innerHTML.getElementsByClassName('AssignmentDuedate')[1].innerHTML.getElementsByTagName('input').setAttribute('value', startTime);
+
+
     
 
 

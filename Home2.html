@@ -222,7 +222,7 @@
                                     Add new Assignment
                                 </div>
                             </button>
-
+                            <div <script> </script>></div>
                             <div class="collapse" id="CollapseNewAssignment">
                                 <div class="AssignmentOutline ">
                                     <div class="AssignmentInfo clearfix">
@@ -286,7 +286,7 @@
                                             <div class="NewAssignmentPriority">
                                                 
                                             </div>
-                                            <button class="btn btn-primary" onclick="addDemo()" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-primary" onclick="AssignmentAdd()" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                 submit
                                             </button>
                                         </div>
@@ -331,10 +331,10 @@
 
 
     <!--reference for creating new unique class-->
-    <div class="MakeAssignment" style="display: none"> <!-- used for adding new assignments-->
+    <template id="NewAssignmentTemp" style="display: none"> <!-- used for adding new assignments-->
 
-        <div id="Assignment`+newAssignment+`" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1" >
-            <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse'+newAssignment'" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+        <div id="Assignment" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1" >
+            <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
                 <p class="AssignmentPriority">
                     Priority: 1
                 </p>
@@ -362,7 +362,7 @@
                 
             </button>
 
-            <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
+            <div class="collapse" id="Collapse"> <!-- Will need unique id in future-->
                 <div class="AssignmentOutline clearfix">
                     <div class="AssignmentInfo">
                         <div class="leftside">
@@ -407,7 +407,6 @@
             </div>
         </div>
     
-    </div>
     
 
 
