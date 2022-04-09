@@ -11,8 +11,14 @@ function addAssignment(className){
     var startTime = document.getElementById(''+className+'Start').innerText;
     var endTime = document.getElementById(''+className+'End').innerText;
     var noteDetails = document.getElementById(''+className+'Notes').innerText;
+
+    //when these two variables are included in the html code below
+    //assignment causes whole class to close
+    //************************************** */
     var relatedLinks = document.getElementById(''+className+'RelatedLinks').innerText;
     var link = document.getElementById(''+className+'Link').innerText;
+
+
     //var className = document.getElementById("NewAssignmentName").innerHTML;
 
     //create new div with assignment name 
