@@ -1,0 +1,71 @@
+<script src="DemoScripts.js"></script>
+<!-- This html is for testing adding html form a file: https://api.jquery.com/load/-->
+<div id="Assignment`+newAssignment+`" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1" >
+    <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+        <script>setAtributeID(newassignment)</script>
+        <p class="AssignmentPriority">
+            Priority: 1
+        </p>
+        <div class="AssignmentName">  
+            `+newAssignmentDisplay+`
+
+        </div>
+        <div class="AssignmentDuedate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
+            Start date: `+startTime+`
+        </div>
+        <div class="progress justify-content-end" style="width: 25%; float: left; margin-top: 15px">
+            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
+                <div id="Assignment1TimeLeft">
+                    2 days
+                </div>
+            </div>
+        </div>
+        <div class="AssignmentDuedate" id="`+newAssignment+`EndDate"> <!-- Will need unique id in future-->
+            End date: `+endTime+`
+        </div>
+        
+    </button>
+    <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
+        <div class="AssignmentOutline clearfix">
+                <div class="AssignmentInfo">
+                    <div class="leftside">
+                        <div class="AssignmentLink"> 
+                            <p> 
+                                <div>
+                                    Assignment Link:
+                                </div>
+                                <div class="genericWrittingBox" contenteditable="true"  id="`+newAssignment+`Link"> <!-- Will need unique id in future-->
+                                </div>
+                                
+                            </p>
+                            
+                        </div>
+                        <div class="AssignmentRelatedLinks" >
+                            <p>
+                                Related Links:
+                                <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`RelatedLinks"> <!-- Will need unique id in future-->
+                                    
+                                </div>
+                            </p>
+                            
+                        </div>
+                    </div>
+                    <div class="rightside">
+                        <div class="AssignmentDetails" >
+                            <p>
+                                Details: 
+                                <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`Details"> <!-- Will need unique id in future-->
+                                    This is a demo assignment. 
+                                </div>
+                            </p>
+                        </div>
+                        <div class="AssignmentStatus" id="`+newAssignment+`CheckBox"> <!-- Will need unique ids in future-->
+                            <input type="checkbox" class="btn-check" id="`+newAssignment+`AssignmentCheckBox" autocomplete="off" onclick="completeButton('+newAssignment+AssignmentOverview', '`+newAssignment+`AssignmentCheckBox')">
+                            <label class="btn btn-outline-success" for="`+newAssignment+`AssignmentCheckBox">Complete</label><br>
+                        </div>
+                    </div>
+                </div>
+            
+        </div>
+    </div>
+</div>

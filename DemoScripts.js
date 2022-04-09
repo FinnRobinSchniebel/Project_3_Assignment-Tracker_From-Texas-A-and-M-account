@@ -88,7 +88,16 @@ function addDemo(){
         </div>
     </div>`;
 
-    
     // appends new div to the classes' assignments
     document.getElementById("demoAssignments").appendChild(div);
+}
+
+
+/**
+ * Takes in a dynamic name that will make the element unique and a constant that will tell what it is.
+ * @param {*} dynamic 
+ * @param {*} constant 
+ */
+function setAtributeID(dynamic, constant){
+    return dynamic+constant;
 }
