@@ -222,7 +222,7 @@ function AddClass(){
 
 <div class="collapse" id="Collapse`+inputClassName+`">
     <div class="ClassAssignmentsOutline" id = "`+inputClassName+`AssignmentsOutline">
-        <div class="ClassAssignments" id= "`+inputClassName+`ColorAssignments">
+        <div class="ClassAssignments" id= "`+inputClassName+`ClassAssignments">
             <!-- Buttons in Course drop down -->
             <div align="left"> 
                 <div class="dropdown">
@@ -422,7 +422,7 @@ function changeClassColor(className){
     var RGB = parseColor(color);
     var lighter = lightColor(RGB);
     document.getElementById(className+'Section').style.backgroundColor = color;
-    document.getElementById(className+'ColorAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(className+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
     document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
     //WIP need to Change Add new Assignments and individual assignments
 }
