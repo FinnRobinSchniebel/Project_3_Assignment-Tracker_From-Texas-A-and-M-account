@@ -1,7 +1,7 @@
 src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js";
 
 
-function AssignmentAdd(className, assignmentName, assignmentPriority, assignmentStartDate, assignmentDueDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
+function AssignmentAddHTML(className, assignmentName, assignmentPriority, assignmentStartDate, assignmentDueDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
 
 
     // name: assignmentName,                   //text
@@ -52,7 +52,17 @@ function AssignmentAdd(className, assignmentName, assignmentPriority, assignment
     //should fix the complete button
     document.getElementById('CheckBoxCompelte'+ NameToAddForID).setAttribute('onclick', 'completeButton(Overview' + NameToAddForID+ ', CheckBoxCompelte' + NameToAddForID +' )');
 
+    //set fields
+    document.getElementById('PriorityField'+ NameToAddForID).innerText = "Priority:" + assignmentPriority;
+    document.getElementById('AssignmentNameField'+ NameToAddForID).innerText = assignmentName;
+    document.getElementById('Start_'+ NameToAddForID).setAttribute("value", assignmentStartDate);
+    //do this later
+    document.getElementById('TimeLeftBarText'+ NameToAddForID).innerText = "todo";
 
+    document.getElementById('Due_'+ NameToAddForID).setAttribute("value", assignmentDueDate);
+    document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
+    document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
+    document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
 
     //<<<Dont forget to also do the same with label for tags
 
