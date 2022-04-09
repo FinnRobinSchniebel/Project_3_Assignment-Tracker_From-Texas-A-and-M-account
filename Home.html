@@ -1,185 +1,50 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-    <head>
-      
-        <title>Assignment Stacker Home</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <script src="scripts.js"></script>
-      </head>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- for sorting -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link id="BasicHome" rel="stylesheet" type="text/css" href="BasicHome.css"/>
+    <title>Assignment Stacker Home</title>
+    <script src="scripts.js"></script>
+    <script src="scriptHomeSort.js"> </script>
+</head>
 
-      <body>
-        <!-- NAVBAR -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="container-fluid">
-            <a class="navbar-brand" href="#">Assignment Stacker</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                  <a class="nav-link active" href="Home.html">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="Quick_View.html">Quick View</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="AddLocation.html">Import</a>
-                </li>
-              </ul>
+<body class= background>
+    <!-- TEST COMMIT -->
+
+    <div class="content">
+
+        <!-- Navigation Bar -->
+        <div class=Mynavbar>
+            <button class="button" onclick="location.href='Home.html'">Home </button>
+            <button class="button" onclick="location.href='Quick_View.html'">Quick View</button>
+            <button class="button" onclick="location.href='AddLocation.html'">View and Add Assignment locations</button> 
+            
+        </div>
+
+        <!-- Put all new classes made in here -->
+        <div class="Classes" id="classList">
+            
+
+        <!-- Add Class Button **This section was copy pasted in** -->
+         <button class="AddClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAddClass" aria-expanded="false" aria-controls="CollapseCourse">
+            <div class="AddClass">
+                Add Class
             </div>
-          </div>
-        </nav>
-        
-        <!-- Collapsable Course-->
-        <p>
-          <a class="btn btn-primary" data-bs-toggle="collapse" href="#CollapseCourseX" role="button" aria-expanded="false" aria-controls="collapseExample">
-            Course: Name
-          </a>
-        </p>
-        <p>
-          <div class="collapse" id="CollapseCourseX">
-            <div class="card card-body">
-              <!-- Buttons in Course drop down -->
-              <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddAssignmentModal">Add Assignment</button>
-                <!-- Dropdown button to select how to sort assignments-->
-                <div class="dropdown">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Sort By
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="SortByDropDown">
-                    <li><a class="dropdown-item" href="#">Due Date</a></li>
-                    <li><a class="dropdown-item" href="#">Priority</a></li>
-                    <li><a class="dropdown-item" href="#">Completed</a></li>
-                  </ul>
-                </div>
-              </div>
+        </button>
 
-              <table class="table table-hover table-light" id="CourseAssignmentTable">
-                <thead>
-                  <tr>
-                    <th scope="col">Priority</th>
-                    <th scope="col">Assignment Name</th>
-                    <th scope="col">Start Date</th>
-                    <th scope="col">Time Left</th>
-                    <th scope="col">Due Date</th>
-                    <th scope="col">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Test</td>
-                    <td>MM/DD/YY</td>
-                    <td>
-                      Time Value
-                      <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-                      </div>
-                    </td>
-                    <td>MM/DD/YY</td>
-                    <td>  
-                      <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="AssignmentStatus">
-                      <label class="form-check-label" for="exampleCheck1">Complete</label>
-                    </div></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Test</td>
-                    <td>MM/DD/YY</td>
-                    <td>
-                      Time Value
-                      <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 15%"></div>
-                      </div>
-                    </td>
-                    <td>MM/DD/YY</td>
-                    <td>  
-                      <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="AssignmentStatus">
-                      <label class="form-check-label" for="exampleCheck1">Complete</label>
-                    </div></td>
-                  </tr>
-                  </tr>
-                </tbody>
-              </table>
+        <div class="collapse" id="CollapseAddClass">
+            <div class="ClassAssignmentsOutline">
+                <div class="NewClassName">
+                    <form>
+                        Enter Class Name: <input type="text" id="InputClassName" placeholder="Ex. 'CSCE 315'">
+                        <button class="SubmitButton" type="button" value="" onclick="AddClass()">Submit</button>
+                    </form>
             </div>
-          </div>
-
-
-<!-- Add Course Button -->
-<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddCourseModal">
-  Add Course
-</button>
-
-<!-- Modal for Add Course -->
-<div class="modal fade" id="AddCourseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Course</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Prompt for Course info -->
-        <form>
-          <div class="form-group">
-            <label for="InputCourseName">Course Name</label>
-            <input type="text" class="form-control" id="InputCourseName" placeholder="Ex. 'CSCE 315'">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Add Course</button>
-      </div>
+        </div>
+        <!-- Add Class Button End-->
     </div>
-  </div>
-</div>
-
-<!-- Modal for Add Assignment button-->
-<div class="modal fade" id="AddAssignmentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Assignment</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Prompt for Assignment info -->
-        <form>
-          <div class="form-group">
-            <label for="ManualInputAssignmentName">Assignment Name</label>
-            <input type="text" class="form-control" id="ManualInputAssignmentName" placeholder="Ex. 'HW 1'">
-          </div>
-          <div class="form-group">
-            <label for="ManualInputDueDate">Due Date</label>
-            <input type="text" class="form-control" id="ManualInputDueDate" placeholder="Ex. 'MM/DD/YY'">
-          </div>
-          <div class="form-group">
-            <label for="ManualInputPriority">Priority</label>
-            <input type="text" class="form-control" id="ManualInputPriority" placeholder="" aria-describedby="InputPriorityHelp">
-            <div id="InputPriorityHelp" class="form-text">Scale: 1 is highest priority</div>
-          </div>
-          <div class="form-group">
-            <label for="ManualInputEstimatedTime">Estimated Time Required</label>
-            <input type="text" class="form-control" id="ManualInputEstimatedTime" placeholder="" aria-describedby="ManualInputEstimatedTimeHelp">
-            <div id="InputPriorityHelp" class="form-text">How long will this assignment take? (in hours) </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Add Assignment</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 
-</html>
+
