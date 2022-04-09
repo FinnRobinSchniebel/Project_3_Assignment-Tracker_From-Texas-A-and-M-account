@@ -8,6 +8,7 @@ function addAssignment(className){
     var newAssignmentDisplay = document.getElementById(''+className+'Name').innerText;
     // takes the space away to ensure variables are properly named
     var newAssignment = newAssignmentDisplay.replaceAll(" ", "_");
+    newAssignment = ''+ className + newAssignment;
     var startTime = document.getElementById(''+className+'Start').innerText;
     var endTime = document.getElementById(''+className+'End').innerText;
     var noteDetails = document.getElementById(''+className+'Notes').innerText;
@@ -67,7 +68,7 @@ function addAssignment(className){
                                     Assignment Link:
                                 </div>
                                 <div class="genericWrittingBox" contenteditable="true"  id="`+newAssignment+`Link"> <!-- Will need unique id in future-->
-                                    TEST
+
                                 </div>
                                 
                             </p>
@@ -77,7 +78,7 @@ function addAssignment(className){
                             <p>
                                 Related Links:
                                 <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`RelatedLinks"> <!-- Will need unique id in future-->
-                                    TEST           
+          
                                 </div>
                             </p>
                             
@@ -88,7 +89,7 @@ function addAssignment(className){
                             <p>
                                 Details: 
                                 <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`Details"> <!-- Will need unique id in future-->
-                                    `+noteDetails+` 
+                                     
                                 </div>
                             </p>
                         </div>
@@ -353,8 +354,14 @@ function changeClassColor(className){
     var darker = darkColor(RGB);
     document.getElementById(className+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
     document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = color;
-    //WIP need to Change individual assignments in class
-    //local storage needed
+
+    //to added assignments
+   // var assignmentList = getAssignments(className);
+  //  var i = assignmentList.length;
+   // while(i--){
+  //      console.debug(className+assignmentList[i].name+'AssignmentOverview');
+   //     document.getElementById(className+assignmentList[i].name+'AssignmentOverview').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+  //  }
 
 }
 
@@ -391,6 +398,10 @@ function getClass(className){
     });  
 }
 
+function getAssignments(className){ //returns array of assignment objects of a class
+
+}
+
 function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
     var newAssignment ={
         name: assignmentName,                   //text
@@ -403,14 +414,17 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
         notes: assignmentNotes                 //text
     };
 
+
     var classList = getClassList(); //array of class objects
     
     classList.forEach((classObj, i, array) => {
         if(classObj.name == className){
             classObj.assignments.push(newAssignment);
+            var jsonObj = JSON.stringify(classObj);
+            localStorage.setItem(className, jsonObj);
         }
         //console.debug(i);
-        console.debug(array);
+        //console.debug(array);
     });
 
 }
