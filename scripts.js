@@ -380,8 +380,15 @@ function getClassList(){ //returns array of Class objects
     return classList;
 }
 
-function getClassName(classObj){
-    return classObj.name;
+//takes in class name and returns class obj
+function getClass(className){ 
+    var classList = getClassList(); //array of class objects
+    
+    classList.forEach((classObj, i, array) => {
+        if(classObj.name == className){
+            return classObj;
+        }
+    });  
 }
 
 function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
@@ -397,8 +404,6 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
     };
 
     var classList = getClassList(); //array of class objects
-    //console.debug(classList);
-    var i = classList.length;
     
     classList.forEach((classObj, i, array) => {
         if(classObj.name == className){
@@ -421,8 +426,8 @@ function getAssignment(inputClassName, inputAssignmentName){
         if(assignmentList[i].class == inputClassName && assignmentList[i].name == inputAssignmentName)
         return assignmentList[i];
     }
-
 }
+
 
 function printClassList(){
     var classList = [];
