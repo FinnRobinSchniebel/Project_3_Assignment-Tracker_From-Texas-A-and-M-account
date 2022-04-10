@@ -634,7 +634,6 @@ function PopulateAssignments(assignmentList){
 
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed - not all finished 
-    // fixed complete boxes by changing "innerHTML" to "innerText"
     div.innerHTML += `
     <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
         <p class="AssignmentPriority">
