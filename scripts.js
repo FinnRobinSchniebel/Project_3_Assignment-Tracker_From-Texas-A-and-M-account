@@ -120,93 +120,7 @@ function addAssignment(className){
     //adds assignment to class in localstorage
     addAssignmentToClass(newAssignment,className,priority,endTime, startTime, link, relatedLinks,noteDetails);
 
-    //create new div with assignment name 
-    var div = document.createElement('div');
-    div.id = newAssignment;
-
-    // need to remember what this does again 
-    document.getElementsByTagName('body')[0].appendChild(div);
-
-    // add code into new div need to use `` as quotes 
-    // need to input dynamic info where needed - not all finished 
-    // fixed complete boxes by changing "innerHTML" to "innerText"
-    div.innerHTML += `
-    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
-        <p class="AssignmentPriority">
-            Priority: 1
-        </p>
-        <div class="AssignmentName">
-            `+newAssignmentDisplay+`
-
-        </div>
-        <div class="AssignmentDuedate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
-            Start date: `+startTime+`
-        </div>
-        <div class="progress justify-content-end" style="width: 25%; float: left; margin-top: 15px">
-            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
-                <div id="Assignment1TimeLeft">
-                    2 days
-                </div>
-            </div>
-        </div>
-        <div class="AssignmentDuedate" id="`+newAssignment+`EndDate"> <!-- Will need unique id in future-->
-            End date: `+endTime+`
-        </div>
-        
-    </button>
-
-    <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
-        <div class="AssignmentOutline" id = "`+newAssignment+`AssignmentOutline">
-                <div class="AssignmentInfo clearfix">
-                    <div class="leftside">
-                        <div class="AssignmentLink"> 
-                            <p> 
-                                <div>
-                                    Assignment Link:
-                                </div>
-                                <div class="genericWrittingBox" contenteditable="true"  id="`+newAssignment+`Link"> <!-- Will need unique id in future-->
-
-                                </div>
-                                
-                            </p>
-                            
-                        </div>
-                        <div class="AssignmentRelatedLinks" >
-                            <p>
-                                Related Links:
-                                <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`RelatedLinks"> <!-- Will need unique id in future-->
-          
-                                </div>
-                            </p>
-                            
-                        </div>
-                    </div>
-                    <div class="rightside">
-                        <div class="AssignmentDetails" >
-                            <p>
-                                Details: 
-                                <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`Details"> <!-- Will need unique id in future-->
-                                     
-                                </div>
-                            </p>
-                        </div>
-                        <div class="AssignmentStatus" id="`+newAssignment+`CheckBox"> <!-- Will need unique ids in future-->
-                            <input type="checkbox" class="btn-check" id="`+newAssignment+`AssignmentCheckBox" autocomplete="off" onclick="completeButton('`+newAssignment+`AssignmentOverview', '`+newAssignment+`AssignmentCheckBox')">
-                            <label class="btn btn-outline-success" for="`+newAssignment+`AssignmentCheckBox">Complete</label><br>
-                        </div>
-                        <div class="removeButton" id="`+newAssignment+`Remove"> <!-- Will need unique ids in future-->
-                            <button class="button" type="button" value="" onclick="removeAssignment('`+className+`', '`+newAssignment+`')">Remove</button>
-                        </div>
-                    </div>
-                </div>
-            
-        </div>
-
-    </div>`;
-
-    
-    // appends new div to the classes' assignments
-    document.getElementById(''+className+'Assignments').appendChild(div);
+    populatePage();
 
 
 }
@@ -215,151 +129,13 @@ function AddClass(){
     // input from user
     var inputClassNameDisplay =  document.getElementById("InputClassName").value;
     // takes the space away to ensure variables are properly named
-    var inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
-    inputClassName = inputClassName.trim();
-    //create new div with class name   
-    var newDiv = document.createElement('div');
-    newDiv.id = inputClassName;
-    console.debug(newDiv.id);
-
-    //appends to content
-    //document.getElementsByTagName('body')[0].appendChild(newDiv);
-
-    // add code into new div need to use `` as quotes 
-    // need to input dynamic info where needed - not all finished 
-    //TODO: fix add assignment portion
-    newDiv.innerHTML += `
-    <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
-    <div class="ClassName">
-        `+inputClassNameDisplay+`
-    </div>
-    <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
-        No Upcoming Assignments
-    </div> 
-    <div class="DueDateSection" id="Class1_TimeLeftOnClosestAssignment">
-        Nearest Due Date: 
-    </div> ` +
-    // <div class="RemoveSection" id="Class1_RemoveAssignment">
-    //     <button class="btn btn-primary" onclick="removeClass(`+inputClassName+`)" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-    //         remove
-    //     </button>
-    // </div> 
-    `</button>
-
-
-    <div class="collapse" id="Collapse`+inputClassName+`">
-        <div class="ClassAssignmentsOutline" id = "`+inputClassName+`AssignmentsOutline">
-            <div class="ClassAssignments" id= "`+inputClassName+`ColorAssignments">
-                <!-- Buttons in Course drop down -->
-                <div align="left"> 
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"> <!-- Will need unique id in future (different classes)-->
-                        Sort By
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="SortByDropDown">  <!-- Will need unique id in future (different classes)-->
-                        <li><a class="dropdown-item" href="#">Due Date</a></li>
-                        <li><a class="dropdown-item" href="#">Priority</a></li>
-                        <li><a class="dropdown-item" href="#">Incomplete</a></li>
-                        <li><a class="dropdown-item" href="#">Completed</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div align="right" >
-                    <label for="colorpicker">Color Picker:</label>
-                    <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#0f9dc9>
-                </div>
-
-                <!-- Class to dynamically add assignments to class -->
-                <div class="demoAssignments" id="`+inputClassName+`Assignments">
-
-                </div>
-                <!-- demo assignment end -->
-                
-                <!-- add new assignment -->
-                <button class="AddAssignmentTop" id="`+inputClassName+`AddAssignment" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`NewAssignment" aria-expanded="false" aria-controls="CollapseCourse">
-                    <div class="AddAssignmentText">
-                        Add new Assignment
-                    </div>
-                </button>
-
-                <div class="collapse" id="Collapse`+inputClassName+`NewAssignment">
-                    <div class="AssignmentOutline" id="`+inputClassName+`AddNewAssignmentOutline">
-                        <div class="AssignmentInfo clearfix">
-                            <div class="leftside">
-                                <div class="NewAssignmentInfoBox" id="`+inputClassName+`InfoBox">
-                                    <p> 
-                                        <div>
-                                            Assignment Name:
-                                        </div>
-                                        <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Name"> <!-- Will need unique id in the future-->
-                                            Add Name
-                                        </div>
-                                        
-                                    </p>
-                                    
-                                </div>
-                                <div class="NewAssignmentInfoBox">
-                                    <p>
-                                        Assignment Link:
-                                        <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Link"> <!-- Will need unique id in the future-->
-                                            Add link
-                                        </div>
-                                    </p>
-                                    
-                                </div>
-                                <div class="NewAssignmentInfoBox">
-                                    <p>
-                                        Related Links:
-                                        <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`RelatedLinks" style=" min-height: 100px"> <!-- Will need unique id in the future-->
-                                            Add links
-                                        </div>
-                                    </p>
-                                    
-                                </div>
-                            </div>
-                            <div class="rightside">
-                                <div class="NewAssignmentInfoRightSideAreas leftside">
-                                    <p>
-                                        Start date/ time: 
-                                        <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Start"> <!-- Will need unique id in the future-->
-                                            MM/DD/YYYY hh:mm
-                                        </div>
-                                    </p>
-                                </div>
-                                <div class="NewAssignmentInfoRightSideAreas rightside">
-                                    <p>
-                                        End date/ time: 
-                                        <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`End"> <!-- Will need unique id in the future-->
-                                            MM/DD/YYYY hh:mm
-                                        </div>
-                                    </p>
-                                </div>
-                                <div class="NewAssignmentNotes">
-                                    <p>
-                                        Notes: 
-                                        <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Notes" style="min-height: 100px;"> <!-- Will need unique id in the future-->
-                                            Add notes
-                                        </div>
-                                    </p>
-                                </div>
-                                <button class="btn btn-primary" onclick="addAssignment('`+inputClassName+`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    submit
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>`;
-    var ClassesDiv = document.getElementById("classList");
-    ClassesDiv.innerHTML += newDiv.innerHTML; 
-
+    inputClassNameDisplay = inputClassNameDisplay.trim();
 
     //Add assignment will also call storeClass into local storage
     let emptyClass = [];
-    storeClass(inputClassName,emptyClass);
+    storeClass(inputClassNameDisplay,emptyClass);
+
+    populatePage();
 } 
 
 
@@ -565,7 +341,7 @@ function deleteClass(className){
     });  
 }
 
-// THIS PORTION DOESNT WORK
+//delete assignment does not work
 function deleteAssignment(className, assignmentName){
     var classList = getClassList(); //array of class objects
     
@@ -583,6 +359,8 @@ function deleteAssignment(className, assignmentName){
     });  
     
 }
+
+
 function getAssignments(className){ //returns array of assignment objects of a class
     var classList = getClassList(); //array of class objects
     var result = [];
@@ -723,114 +501,24 @@ function populatePage(){
 
 }
 
-function PopulateAssignments(assignmentList){
 
-    // inputs taken from assignmentList
-    var newAssignment = ''+ assignmentList.class + assignmentList.name;
-    var className = assignmentList.class;
+function PopulateAssignments(AssignmentInfoOBJ){
+
+    
     // Changes display back to original
-    var newAssignmentDisplay = assignmentList.name.replaceAll("_", " ");
-    newAssignmentDisplay = newAssignmentDisplay.replaceAll(className, "");
-    var startTime = assignmentList.startDue;
-    var endTime = assignmentList.dueDate;
-    var noteDetails = assignmentList.notes;
+    var newAssignmentName = AssignmentInfoOBJ.name;
+    var ClassName= AssignmentInfoOBJ.class;
+    var startTime = AssignmentInfoOBJ.startDue;
+    var endTime = AssignmentInfoOBJ.dueDate;
+    var noteDetails = AssignmentInfoOBJ.notes;
     //when these two variables are included in the html code below
     //assignment causes whole class to close
     //************************************** */
-    var relatedLinks = assignmentList.relatedLinks;
-    var link = assignmentList.link;
+    var relatedLinks = AssignmentInfoOBJ.relatedLinks;
+    var link = AssignmentInfoOBJ.link;
     var priority = 4; //test, still needs to be implemented
-
-    //adds assignment to class in localstorage
-    addAssignmentToClass(newAssignment,className,priority,endTime, startTime, link, relatedLinks,noteDetails);
-
-    //create new div with assignment name 
-    var div = document.createElement('div');
-    div.id = newAssignment;
-
-    // need to remember what this does again 
-    document.getElementsByTagName('body')[0].appendChild(div);
-
-    // add code into new div need to use `` as quotes 
-    // need to input dynamic info where needed - not all finished 
-    // fixed complete boxes by changing "innerHTML" to "innerText"
-    div.innerHTML += `
-    <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
-        <p class="AssignmentPriority">
-            Priority: 1
-        </p>
-        <div class="AssignmentName">
-            `+newAssignmentDisplay+`
-
-        </div>
-        <div class="AssignmentDuedate AssignmentStartDate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
-        <label for="Assignment1_Start">Start date:</label> <input id=" `+newAssignment +`_Start" type="datetime-local" value=`+ startTime +` aria-readonly="true">
-        </div>
-        <div class="progress justify-content-end" style="width: 25%; float: left; margin-top: 15px">
-            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
-                <div id="Assignment1TimeLeft">
-                    2 days
-                </div>
-            </div>
-        </div>
-        <div class="AssignmentDuedate" id="`+newAssignment+`EndDate"> <!-- Will need unique id in future-->
-            End date: `+endTime+`
-        </div>
-        
-    </button>
-
-    <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
-        <div class="AssignmentOutline clearfix">
-                <div class="AssignmentInfo">
-                    <div class="leftside">
-                        <div class="AssignmentLink"> 
-                            <p> 
-                                <div>
-                                    Assignment Link:
-                                </div>
-                                <div class="genericWrittingBox" contenteditable="true"  id="`+newAssignment+`Link"> <!-- Will need unique id in future-->
-
-                                </div>
-                                
-                            </p>
-                            
-                        </div>
-                        <div class="AssignmentRelatedLinks" >
-                            <p>
-                                Related Links:
-                                <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`RelatedLinks"> <!-- Will need unique id in future-->
-          
-                                </div>
-                            </p>
-                            
-                        </div>
-                    </div>
-                    <div class="rightside">
-                        <div class="AssignmentDetails" >
-                            <p>
-                                Details: 
-                                <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`Details"> <!-- Will need unique id in future-->
-                                     
-                                </div>
-                            </p>
-                        </div>
-                        <div class="AssignmentStatus" id="`+newAssignment+`CheckBox"> <!-- Will need unique ids in future-->
-                            <input type="checkbox" class="btn-check" id="`+newAssignment+`AssignmentCheckBox" autocomplete="off" onclick="completeButton('`+newAssignment+`AssignmentOverview', '`+newAssignment+`AssignmentCheckBox')">
-                            <label class="btn btn-outline-success" for="`+newAssignment+`AssignmentCheckBox">Complete</label><br>
-                        </div>
-                        <div class="removeButton" id="`+newAssignment+`Remove"> <!-- Will need unique ids in future-->
-                            <button class="button" type="button" value="" onclick="removeAssignment('`+className+`', '`+newAssignment+`')">Remove</button>
-                        </div>
-                    </div>
-                </div>
-            
-        </div>
-
-    </div>`;
-
-    
-    // appends new div to the classes' assignments
-    document.getElementById(''+className+'Assignments').appendChild(div);
+    //todo-priority    
+    AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails);
 
 
 }
@@ -976,7 +664,7 @@ function PopulateClass(className){
     ClassesDiv.innerHTML += newDiv.innerHTML; 
 
 
-    //Add assignment will also call storeClass into local storage
-    let emptyClass = [];
-    storeClass(inputClassName,emptyClass);
+    // //Add assignment will also call storeClass into local storage
+    // let emptyClass = [];
+    // storeClass(inputClassName,emptyClass);
 } 
