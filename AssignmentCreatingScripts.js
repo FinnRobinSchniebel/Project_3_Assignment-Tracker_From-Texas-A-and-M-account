@@ -33,6 +33,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     var NameToAddForID= ClassNameAssignment+newAssignment;
 
     //makes a copy of the content in template for assignment
+    
     var NewHTML = document.querySelector("#NewAssignmentTemp").content;
 
     
@@ -64,6 +65,8 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     //set up the button to link to the right dropdown on the page
     var overviewlink = document.getElementById('Overview'+ NameToAddForID);
+    console.log('Overview'+ NameToAddForID);
+    console.log(document.getElementById('Overview'+ NameToAddForID));
     overviewlink.setAttribute('data-bs-target', ''+overviewlink.getAttribute("data-bs-target") + NameToAddForID);
     
 

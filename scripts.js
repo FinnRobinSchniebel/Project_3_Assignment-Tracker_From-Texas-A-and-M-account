@@ -1,8 +1,6 @@
 function addDemo(){
     // inputs taken from user
-    
     var newAssignmentDisplay = document.getElementById("NewAssignmentName").innerText;
-
     // takes the space away to ensure variables are properly named
     //var newAssignment = newAssignmentDisplay.replaceAll(" ", "_"); //useful when working with nodemo items to make sure the class is correctly formated
     var startTime = document.getElementById("NewAssignmentStart").value;
@@ -11,90 +9,9 @@ function addDemo(){
 
     var link = document.getElementById("NewAssignmentLink").innerText;
     var relatedLinks = document.getElementById("NewAssignmentRelatedLinks").innerText;
-
-
     // need to remember what this does again 
     //document.getElementsByTagName('body')[0].appendChild(div);
-    
     AssignmentAddHTML("Demo", newAssignmentDisplay, "1", startTime, endTime, link, relatedLinks, notes);
-
-
-
-    // add code into new div need to use `` as quotes 
-    // need to input dynamic info where needed - not all finished 
-    // div.innerHTML += `
-    // <div id="Assignment`+newAssignment+`" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1" >
-    //     <button class="AssignmentOverview" id="`+newAssignment+`AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+newAssignment+`" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
-    //         <p class="AssignmentPriority">
-    //             Priority: 1
-    //         </p>
-    //         <div class="AssignmentName">  
-    //             `+newAssignmentDisplay+`
-
-    //         </div>
-    //         <div class="AssignmentDuedate" id="`+newAssignment+`StartDate"> <!-- Will need unique id in future-->
-    //             Start date: `+startTime+`
-    //         </div>
-    //         <div class="progress justify-content-end" style="width: 25%; float: left; margin-top: 15px">
-    //             <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
-    //                 <div id="Assignment1TimeLeft">
-    //                     2 days
-    //                 </div>
-    //             </div>
-    //         </div>
-    //         <div class="AssignmentDuedate" id="`+newAssignment+`EndDate"> <!-- Will need unique id in future-->
-    //             End date: `+endTime+`
-    //         </div>
-            
-    //     </button>
-    //     <div class="collapse" id="Collapse`+newAssignment+`"> <!-- Will need unique id in future-->
-    //         <div class="AssignmentOutline clearfix">
-    //                 <div class="AssignmentInfo">
-    //                     <div class="leftside">
-    //                         <div class="AssignmentLink"> 
-    //                             <p> 
-    //                                 <div>
-    //                                     Assignment Link:
-    //                                 </div>
-    //                                 <div class="genericWrittingBox" contenteditable="true"  id="`+newAssignment+`Link"> <!-- Will need unique id in future-->
-    //                                 </div>
-                                    
-    //                             </p>
-                                
-    //                         </div>
-    //                         <div class="AssignmentRelatedLinks" >
-    //                             <p>
-    //                                 Related Links:
-    //                                 <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`RelatedLinks"> <!-- Will need unique id in future-->
-                                        
-    //                                 </div>
-    //                             </p>
-                                
-    //                         </div>
-    //                     </div>
-    //                     <div class="rightside">
-    //                         <div class="AssignmentDetails" >
-    //                             <p>
-    //                                 Details: 
-    //                                 <div class="genericWrittingBox" contenteditable="true" id="`+newAssignment+`Details"> <!-- Will need unique id in future-->
-    //                                     This is a demo assignment. 
-    //                                 </div>
-    //                             </p>
-    //                         </div>
-    //                         <div class="AssignmentStatus" id="`+newAssignment+`CheckBox"> <!-- Will need unique ids in future-->
-    //                             <input type="checkbox" class="btn-check" id="`+newAssignment+`AssignmentCheckBox" autocomplete="off" onclick="completeButton('`+newAssignment+`AssignmentOverview', '`+newAssignment+`AssignmentCheckBox')">
-    //                             <label class="btn btn-outline-success" for="`+newAssignment+`AssignmentCheckBox">Complete</label><br>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-                
-    //         </div>
-    //     </div>
-    // </div>`;
-
-    
-    // appends new div to the classes' assignments
-    //document.getElementById("demoAssignments").appendChild(div);
 }
 
 
@@ -104,8 +21,6 @@ function addAssignment(className){
     // associated ID for variables
     var newAssignmentDisplay = document.getElementById(''+className+'Name').innerText;
     // takes the space away to ensure variables are properly named
-    var newAssignment = newAssignmentDisplay.replaceAll(" ", "_");
-    newAssignment = ''+ className + newAssignment;
     var startTime = document.getElementById(''+className+'Start').innerText;
     var endTime = document.getElementById(''+className+'End').innerText;
     var noteDetails = document.getElementById(''+className+'Notes').innerText;
@@ -116,9 +31,9 @@ function addAssignment(className){
     var relatedLinks = document.getElementById(''+className+'RelatedLinks').innerText;
     var link = document.getElementById(''+className+'Link').innerText;
     var priority = 4; //test, still needs to be implemented
-
+    
     //adds assignment to class in localstorage
-    addAssignmentToClass(newAssignment,className,priority,endTime, startTime, link, relatedLinks,noteDetails);
+    addAssignmentToClass(newAssignmentDisplay,className,priority,endTime, startTime, link, relatedLinks,noteDetails);
 
     populatePage();
 
@@ -434,45 +349,7 @@ function clearPage(){
     localStorage.clear();
 
     // reset to original html
-    document.getElementsByTagName('body')[0].innerHTML =`
-    <body class= background>
-    <!-- TEST COMMIT -->
-
-    <div class="content">
-
-        <!-- Navigation Bar -->
-        <div class=Mynavbar>
-            <button class="button" onclick="location.href='Home.html'">Home </button>
-            <button class="button" onclick="location.href='Quick_View.html'">Quick View</button>
-            <button class="button" onclick="location.href='AddLocation.html'">View and Add Assignment locations</button> 
-            
-        </div>
-
-        <!-- Put all new classes made in here -->
-        <div class="Classes" id="classList">
-            
-
-        <!-- Add Class Button **This section was copy pasted in** -->
-         <button class="AddClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAddClass" aria-expanded="false" aria-controls="CollapseCourse">
-            <div class="AddClass">
-                Add Class
-            </div>
-        </button>
-
-        <div class="collapse" id="CollapseAddClass">
-            <div class="ClassAssignmentsOutline">
-                <div class="NewClassName">
-                    <form>
-                        Enter Class Name: <input type="text" id="InputClassName" placeholder="Ex. 'CSCE 315'">
-                        <button class="SubmitButton" type="button" value="" onclick="AddClass()">Submit</button>
-                    </form>
-            </div>
-        </div>
-        <!-- Add Class Button End-->
-    </div>
-    <button class="button" type="button" value="" onclick="clearPage()">Clear</button>
-</body>
-    `   
+    document.getElementById('classList').innerHTML = ""
 }
 
 
