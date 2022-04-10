@@ -2,7 +2,7 @@
 <html>
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- for sorting -->
-    <script src="DemoScripts.js"></script>
+    <script src="AssignmentCreatingScripts.js"></script>
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -61,14 +61,14 @@
                                     </ul>
                                 </div>
                             </div>
-                
+                        
                             <div align="right" >
                                 <label for="colorpicker">Color Picker:</label>
                                 <input type="color" id="demoClassColorPicker" onchange="changeClassColor('demoClass')" value=#0f9dc9>
                             </div>
 
                             <!-- Class to dynamically add assignments to class -->
-                            <div class="Assignments" id="demoAssignments"> <!-- Sort: Outside wrapper class changed from demo-->
+                            <div class="Assignments" id="DemoAssignments"> <!-- Sort: Outside wrapper class changed from demo-->
                                 <!-- demo assignment start-->
                                 <div id="C1A1" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1" >  <!--Sort: needs unique id, needs to get the values for priority, due date, and time left make sure to close on other end and the class Assignment-->
                                     <button class="AssignmentOverview" id="ClassNameAssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAssignment1" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
@@ -222,7 +222,6 @@
                                     Add new Assignment
                                 </div>
                             </button>
-                            <div <script> </script>></div>
                             <div class="collapse" id="CollapseNewAssignment">
                                 <div class="AssignmentOutline ">
                                     <div class="AssignmentInfo clearfix">
@@ -286,7 +285,7 @@
                                             <div class="NewAssignmentPriority">
                                                 
                                             </div>
-                                            <button class="btn btn-primary" onclick="AssignmentAdd()" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-primary" onclick="addDemo()" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                 submit
                                             </button>
                                         </div>
@@ -314,6 +313,7 @@
                         Enter Class Name: <input type="text" id="InputClassName" placeholder="Ex. 'CSCE 315'">
                         <button class="SubmitButton" type="button" value="" onclick="AddClass()">Submit</button>
                     </form>
+                </div>
             </div>
         </div>
         <!-- Add Class Button End-->
@@ -334,7 +334,7 @@
     <template id="NewAssignmentTemp"> <!-- used for adding new assignments-->
 
         <div id="Assignment" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1" >
-            <button class="Overview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+            <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse" aria-expanded="false" aria-controls="CollapseCourse" id="overview"> <!-- Will need unique target in future-->
                 <div class="AssignmentPriority" id="PriorityField">
                     Priority: 1
                 </div>
@@ -404,9 +404,10 @@
                 </div>
             </div>
         </div>
+    </template>
     
 </body>
 
-
+</html>
 
 

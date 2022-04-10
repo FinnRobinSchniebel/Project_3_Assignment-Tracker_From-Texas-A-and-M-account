@@ -45,6 +45,84 @@
         </div>
         <!-- Add Class Button End-->
     </div>
+
+
+
+    <!--reference for creating new unique class-->
+    <template id="NewAssignmentTemp"> <!-- used for adding new assignments-->
+
+        <div id="Assignment" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1" >
+            <button class="Overview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse" aria-expanded="false" aria-controls="CollapseCourse"> <!-- Will need unique target in future-->
+                <div class="AssignmentPriority" id="PriorityField">
+                    Priority: 1
+                </div>
+                <div class="AssignmentName" id="AssignmentNameField">  
+                    `+newAssignmentDisplay+`
+        
+                </div>
+                <!--start date-->
+                <div class="AssignmentDuedate AssignmentStartDate" id="StartDate"> <!-- has two classes for identification Will need unique id-->
+                    <label for="_Start">Start date:</label> <input id="Start_" type="datetime-local" value="2022-04-03T19:59" aria-readonly="true">
+                </div>
+
+                <!--Progress bar item-->
+                <div class="progress justify-content-end" id="progressbarCont" style="width: 25%; float: left; margin-top: 15px">
+                    <div class="progress-bar" role="progressbar" id="ProgressBar" style="width: 50%" aria-valuenow="25" aria-valuemin="100" aria-valuemax="0"> 
+                        <div id="TimeLeftBarText">
+                            2 days
+                        </div>
+                    </div>
+                </div>
+                <!--end date-->
+                <div class="AssignmentDuedate" id="EndDate"> <!-- Will need unique id -->
+                    <label for="_Due">Due date:</label> <input id="Due_" type="datetime-local" value="2022-04-09T19:59">
+                </div>
+                
+            </button>
+
+            <div class="collapse" id="Collapse"> <!-- Will need unique id in future-->
+                <div class="AssignmentOutline clearfix" id="OutsideForSizeFix"> <!-- This div is needed to make the outside expand correctly-->
+                    <div class="AssignmentInfo" id="AssignmentInfo">
+                        <div class="leftside" id="LeftDivs">
+                            <div class="AssignmentLink" id="AssignmentWarper"> 
+                                <p> 
+                                    Assignment Link:
+                                    <div class="genericWrittingBox" contenteditable="true"  id="AssignmentLink"> <!-- Will need unique id in future-->
+                                    </div>
+                                    
+                                </p>
+                                
+                            </div>
+                            <div class="AssignmentRelatedLinks" id="RelatedlinkWrapper">
+                                <p>
+                                    Related Links:
+                                    <div class="genericWrittingBox" contenteditable="true" id="RelatedLinks"> <!-- needs unique id-->
+                                        
+                                    </div>
+                                </p>
+                                
+                            </div>
+                        </div>
+                        <div class="rightside" id="RightDivs">
+                            <div class="AssignmentDetails" id="AssigmentDetailWrapper" >
+                                <p>
+                                    Details: 
+                                    <div class="genericWrittingBox" contenteditable="true" id="Details"> <!-- Will need unique id in future-->
+                                        This is a demo assignment. 
+                                    </div>
+                                </p>
+                            </div>
+                            <div class="AssignmentStatus" id="CheckBoxWrapper"> 
+                                <input type="checkbox" class="btn-check" id="CheckBoxCompelte" autocomplete="off" onclick="completeButton('Overview', 'CheckBoxCompelte')"><!-- Will need unique ids in future-->
+                                <label class="btn btn-outline-success" for="CheckBox">Complete</label><br>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </template>
 </body>
 
 

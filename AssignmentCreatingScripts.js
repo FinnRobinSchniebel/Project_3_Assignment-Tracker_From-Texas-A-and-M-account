@@ -26,7 +26,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     // var startTime = document.getElementById(''+className+'Start').innerText;
     // var endTime = document.getElementById(''+className+'End').innerText;
     //<<<<>>>>>>
-
     var newAssignment = assignmentName.replaceAll(" ", "_");
 
     var ClassNameAssignment = className.replaceAll(" ", "_");
@@ -34,21 +33,36 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     var NameToAddForID= ClassNameAssignment+newAssignment;
 
     //makes a copy of the content in template for assignment
-    var NewHTML = document.querySelector("#NewAssignmentTemp").getElementsByClassName("Assignment")[0];
-    NewHTML= NewHTML.cloneNode(true); //true makes this recursive (copy all in assignment)
+    var NewHTML = document.querySelector("#NewAssignmentTemp").content;
+
     
-    var allDivs = [];
-    allDivs =  NewHTML.getElementsByTagName('div') + NewHTML.getElementsByTagName('button') + NewHTML.getElementsByTagName('input');
+
+
+    NewHTML= NewHTML.cloneNode(true); //true makes this recursive (copy all in assignment)    
     
-    //This should in theory set the ids to be unique for all divs and buttons and inputs
-    for(var i=0; i < allDivs.length; i++){
-        allDivs[i].setAttribute('id', allDivs[i].id + NameToAddForID);
+    for(var i=0; i <NewHTML.querySelectorAll('div').length; i++){
+        var cur = NewHTML.querySelectorAll('div')[i];
+        cur.setAttribute('id', ''+cur.id + NameToAddForID);
+        
     }
-    document.getElementById(ClassNameAssignment+'ClassAssignments').innerHTML+= NewHTML;
+    for(var i=0; i< NewHTML.querySelectorAll('button').length; i++){
+        var cur = NewHTML.querySelectorAll('button')[i];
+        cur.setAttribute('id', ''+cur.id + NameToAddForID);
+    }
+    for(var i=0; i< NewHTML.querySelectorAll('input').length; i++){
+        var cur = NewHTML.querySelectorAll('input')[i];
+        cur.setAttribute('id', ''+cur.id + NameToAddForID);
+    }
+    
+    
+    document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
 
 
-    //set target for the collaps 60% sure this works
-    NewHTML.getElementsByClassName('Overview')[0].setAttribute('data-bs-target', NewHTML.getElementsByClassName('Overview')[0].data("bs-target") + NameToAddForID);
+    //set up the button to link to the right dropdown on the page
+    var overviewlink = document.getElementById('overview'+ NameToAddForID);
+    overviewlink.setAttribute('data-bs-target', ''+overviewlink.getAttribute("data-bs-target") + NameToAddForID);
+    
+
     //should fix the complete button
     document.getElementById('CheckBoxCompelte'+ NameToAddForID).setAttribute('onclick', 'completeButton(Overview' + NameToAddForID+ ', CheckBoxCompelte' + NameToAddForID +' )');
 
@@ -76,13 +90,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     // //add time for start and give it the correct id
     // toAdd.innerHTML.getElementsByClassName('AssignmentDuedate')[1].setAttribute('id',newAssignment+'StartDate');
     // toAdd.innerHTML.getElementsByClassName('AssignmentDuedate')[1].innerHTML.getElementsByTagName('input').setAttribute('value', startTime);
-
-
-    
-
-
-
-    div.innerHTML+= toAdd;
 }
 
 
