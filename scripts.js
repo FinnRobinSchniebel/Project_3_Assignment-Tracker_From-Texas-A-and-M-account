@@ -366,11 +366,12 @@ function populatePage(){
         var assignmentList = classObj.assignments;
         var i = assignmentList.length;
         // use check to get assignments properly ordered 
-        var check = 0;
+        var index = 0;
         PopulateClass(className);
-        while (check < i){
-            PopulateAssignments(assignmentList[check]);
-            check ++;
+        // loops through array of assignments and add each one to class
+        while (index < i){
+            PopulateAssignments(assignmentList[index]);
+            index ++;
         }
         console.debug(className);
     });
@@ -378,13 +379,15 @@ function populatePage(){
 
 }
 
-
+//TODO: NEED TO ADD BACK REMOVE BUTTON 
 function PopulateAssignments(AssignmentInfoOBJ){
 
     
     // Changes display back to original
-    var newAssignmentName = AssignmentInfoOBJ.name;
     var ClassName= AssignmentInfoOBJ.class;
+    var newAssignmentName = AssignmentInfoOBJ.name;
+    // takes initial "classname+assignmentname" -> "assignmentname"
+    newAssignmentName = newAssignmentName.replace(ClassName, "");
     var startTime = AssignmentInfoOBJ.startDue;
     var endTime = AssignmentInfoOBJ.dueDate;
     var noteDetails = AssignmentInfoOBJ.notes;
