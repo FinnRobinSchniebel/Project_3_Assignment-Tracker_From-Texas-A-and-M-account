@@ -53,6 +53,10 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         var cur = NewHTML.querySelectorAll('input')[i];
         cur.setAttribute('id', ''+cur.id + NameToAddForID);
     }
+    for(var i=0; i< NewHTML.querySelectorAll("label").length; i++){
+        var cur = NewHTML.querySelectorAll('label')[i];
+        cur.setAttribute('for', ''+cur.getAttribute('for') + NameToAddForID);
+    }
     
     
     document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
