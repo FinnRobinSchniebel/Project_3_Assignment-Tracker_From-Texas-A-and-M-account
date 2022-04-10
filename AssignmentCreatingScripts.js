@@ -59,12 +59,19 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
 
     //set up the button to link to the right dropdown on the page
-    var overviewlink = document.getElementById('overview'+ NameToAddForID);
+    var overviewlink = document.getElementById('Overview'+ NameToAddForID);
     overviewlink.setAttribute('data-bs-target', ''+overviewlink.getAttribute("data-bs-target") + NameToAddForID);
     
 
     //should fix the complete button
-    document.getElementById('CheckBoxCompelte'+ NameToAddForID).setAttribute('onclick', 'completeButton(Overview' + NameToAddForID+ ', CheckBoxCompelte' + NameToAddForID +' )');
+    document.getElementById('CheckBoxComplete'+ NameToAddForID).getAttribute("onclick");
+    if(typeof(onclick) != "function"){
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).setAttribute('onclick', "completeButton('Overview" + NameToAddForID+ "','CheckBoxComplete" + NameToAddForID +"')");
+    }
+    else{
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).onclick = function(){completeButton("Overview" + NameToAddForID, "CheckBoxComplete" + NameToAddForID)};
+    }
+   
 
     //set fields
     document.getElementById('PriorityField'+ NameToAddForID).innerText = "Priority:" + assignmentPriority;

@@ -335,7 +335,7 @@ function AddClass(){
 } 
 
 function completeButton(assignmentID, checkBoxID){
-
+    
         //checks if checkbox is checked
     if(document.getElementById(checkBoxID).checked){
         //this reassigns cssText for that specific box to change to gray
