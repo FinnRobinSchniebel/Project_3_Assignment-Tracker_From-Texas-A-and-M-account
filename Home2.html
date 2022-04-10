@@ -212,7 +212,7 @@
                                     </div>
                                 </div>
 
-
+                                    
                             </div>
                             <!-- demo assignment end -->
                             
@@ -312,11 +312,36 @@
                     <form>
                         Enter Class Name: <input type="text" id="InputClassName" placeholder="Ex. 'CSCE 315'">
                         <button class="SubmitButton" type="button" value="" onclick="AddClass()">Submit</button>
+                        
                     </form>
                 </div>
             </div>
         </div>
+        
         <!-- Add Class Button End-->
+
+        <!-- Remove Class Button **This section was copy pasted in** -->
+        <button class="RemoveClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseRemoveClass" aria-expanded="false" aria-controls="CollapseCourse">
+            <div class="RemoveClass">
+                Remove Class
+            </div>
+        </button>
+
+        <div class="collapse" id="CollapseRemoveClass">
+            <div class="ClassAssignmentsOutline">
+                <div class="NewClassName">
+                    <form>
+                        Enter Class Name: <input type="text" id="RemoveClassName" placeholder="Ex. 'CSCE 315'">
+                        <button class="SubmitButton" type="button" value="" onclick="removeClass()">Submit</button>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Remove Class Button End-->
+        <button class="button" type="button" value="" onclick="populatePage()">populate</button>
+        <button class="button" type="button" value="" onclick="clearPage()">Clear</button>
     </div>
 
 

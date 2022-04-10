@@ -57,7 +57,7 @@
 .ClassSection{
 
     background-color: rgb(15, 157, 201);
-    box-shadow: 0px 3px 6px rgba(6, 70, 90, 0.932);
+    box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
 
     border-radius: 30px;
     color: rgb(0, 0, 0);
@@ -115,7 +115,7 @@
 }
 .ClassAssignmentsOutline{
     background-color: rgb(105, 181, 204);
-    box-shadow: 0px 3px 6px rgba(6, 70, 90, 0.932);
+    box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
     border-bottom-left-radius: 50px;
     border-bottom-right-radius: 50px;
     color: rgb(0, 0, 0);
@@ -149,7 +149,7 @@
     border-radius: 20px;
     color: rgb(0, 0, 0);
     cursor: pointer;
-    box-shadow: 0px 3px 6px rgba(6, 70, 90, 0.932);
+    box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
 
     padding: 10px;
     width: 95%;
@@ -221,7 +221,7 @@
 .AssignmentOutline{
     
     background-color: rgb(83, 169, 196);
-    box-shadow: 0px 3px 6px rgba(6, 70, 90, 0.932);
+    box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
     border-bottom-left-radius: 50px;
     border-bottom-right-radius: 50px;
     color: rgb(0, 0, 0);
@@ -357,7 +357,7 @@
 .AddAssignmentTop{
     background-color: rgb(0, 255, 255);
     color: rgb(0, 0, 0);
-    box-shadow: 0px 3px 6px rgba(6, 70, 90, 0.932);
+    box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
 
     border: 1px solid gray;
     outline: none;
@@ -490,7 +490,7 @@
 .AddClassSection{
     margin-top: 40px;
     background-color: rgb(15, 157, 201);
-    box-shadow: 0px 3px 6px rgba(6, 70, 90, 0.932);
+    box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
     border-radius: 30px;
     color: rgb(0, 0, 0);
     cursor: pointer;
