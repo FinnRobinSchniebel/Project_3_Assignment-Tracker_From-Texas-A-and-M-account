@@ -340,7 +340,7 @@ function printClassList(){
     while(i--){
         classList.push(localStorage.getItem(keys[i]));
     }
-    console.log(classList);
+
 }
 
 function clearPage(){
