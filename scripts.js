@@ -198,7 +198,7 @@ function changeClassColor(className){
     assignmentList = getAssignments(className);
     //console.debug(assignmentList.length);
     assignmentList.forEach((assignmentObj, i, array) => {
-        console.log(assignmentObj.name+'AssignmentOutline');
+        //console.log(assignmentObj.name+'AssignmentOutline');
         document.getElementById(assignmentObj.name+'AssignmentOverview').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
         document.getElementById(assignmentObj.name+'AssignmentOutline').style.backgroundColor = color;
     });  
@@ -545,3 +545,8 @@ function PopulateClass(className){
     // let emptyClass = [];
     // storeClass(inputClassName,emptyClass);
 } 
+
+
+window.onload = function(){
+    populatePage();
+}
