@@ -186,7 +186,7 @@ function changeClassColor(className){
     var RGB = parseColor(color);
     var lighter = lightColor(RGB);
     document.getElementById(className+'Section').style.backgroundColor = color;
-    document.getElementById(className+'ColorAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(className+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
     document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
 
     var darker = darkColor(RGB);
@@ -198,7 +198,7 @@ function changeClassColor(className){
     assignmentList = getAssignments(className);
     //console.debug(assignmentList.length);
     assignmentList.forEach((assignmentObj, i, array) => {
-        //console.log(assignmentObj.name+'AssignmentOutline');
+        console.log(assignmentObj.name+'AssignmentOutline');
         document.getElementById(assignmentObj.name+'AssignmentOverview').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
         document.getElementById(assignmentObj.name+'AssignmentOutline').style.backgroundColor = color;
     });  
