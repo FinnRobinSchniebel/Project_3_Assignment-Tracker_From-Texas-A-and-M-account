@@ -21,8 +21,9 @@ function addAssignment(className){
     // associated ID for variables
     var newAssignmentDisplay = document.getElementById(''+className+'Name').innerText;
     // takes the space away to ensure variables are properly named
-    var startTime = document.getElementById(''+className+'Start').innerText;
-    var endTime = document.getElementById(''+className+'End').innerText;
+    var startTime = document.getElementById(''+className+'Start').value; //"`+inputClassName+`Start"
+    var endTime = document.getElementById(''+className+'End').value;
+    console.log(endTime);
     var noteDetails = document.getElementById(''+className+'Notes').innerText;
 
     //when these two variables are included in the html code below
@@ -33,7 +34,7 @@ function addAssignment(className){
     var priority = 4; //test, still needs to be implemented
     
     //adds assignment to class in localstorage
-    addAssignmentToClass(newAssignmentDisplay,className,priority,endTime, startTime, link, relatedLinks,noteDetails);
+    addAssignmentToClass(newAssignmentDisplay,className,priority,endTime,startTime, link, relatedLinks,noteDetails);
 
     populatePage();
 
@@ -80,14 +81,14 @@ function removeAssignment(className, assignmentName){
     //used to remove class
     var removeAssignment = assignmentName.replaceAll(" ", "_");
     const element = document.getElementById(removeAssignment);
-    console.debug(element);
+    //console.debug(element);
     element.remove();
 
-    console.debug("Before Delete")
+    //console.debug("Before Delete")
     printClassList();
     // removes class from classList
     deleteAssignment(className, assignmentName);
-    console.debug("After Delete")
+    //console.debug("After Delete")
     printClassList();
 }
 
@@ -165,9 +166,7 @@ function changeClassColor(className){
     //to added assignments
     var assignmentList = [];
     assignmentList = getAssignments(className);
-    //console.debug(assignmentList.length);
     assignmentList.forEach((assignmentObj, i, array) => {
-        //console.debug('Overview'+assignmentObj.name);
         document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
         document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = color;
     });  
@@ -231,7 +230,7 @@ function deleteAssignment(className, assignmentName){
     
     classList.forEach((classObj) => {
         var assignmentList = classObj.assignments;
-        console.debug(classObj.assignments);
+        //console.debug(classObj.assignments);
         if(classObj.name == className){
             var index = assignmentList.indexOf(0);
             console.debug(index);
@@ -239,7 +238,7 @@ function deleteAssignment(className, assignmentName){
                 classObj.assignments.splice(index, 1);
             }
         }
-        console.debug(classObj.assignments);
+        //console.debug(classObj.assignments);
     });  
     
 }
@@ -327,7 +326,7 @@ function populatePage(){
     document.getElementById("classList").innerHTML = "";
    
     var classList = getClassList(); //array of class objects
-    console.debug(classList);
+    //console.debug(classList);
     // makes classes reverse display 
     // color not saved ATM
     classList.slice().reverse().forEach((classObj) => {
@@ -342,7 +341,7 @@ function populatePage(){
             PopulateAssignments(assignmentList[index]);
             index ++;
         }
-        console.debug(className);
+        //console.debug(className);
     });
 
 
@@ -357,7 +356,7 @@ function PopulateAssignments(AssignmentInfoOBJ){
     var newAssignmentName = AssignmentInfoOBJ.name;
     // takes initial "classname+assignmentname" -> "assignmentname"
     newAssignmentName = newAssignmentName.replace(ClassName, "");
-    var startTime = AssignmentInfoOBJ.startDue;
+    var startTime = AssignmentInfoOBJ.startDate;
     var endTime = AssignmentInfoOBJ.dueDate;
     var noteDetails = AssignmentInfoOBJ.notes;
     //when these two variables are included in the html code below
@@ -478,17 +477,17 @@ function PopulateClass(className){
                             <div class="NewAssignmentInfoRightSideAreas leftside">
                                 <p>
                                     Start date/ time: 
-                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Start"> <!-- Will need unique id in the future-->
-                                        MM/DD/YYYY hh:mm
-                                    </div>
+                                    <input class="genericWrittingBox" id="`+inputClassName+`Start" type="datetime-local"> 
+                                                        
+                                    </input>
                                 </p>
                             </div>
                             <div class="NewAssignmentInfoRightSideAreas rightside">
                                 <p>
                                     End date/ time: 
-                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`End"> <!-- Will need unique id in the future-->
-                                        MM/DD/YYYY hh:mm
-                                    </div>
+                                    <input class="genericWrittingBox" id="`+inputClassName+`End" type="datetime-local"> 
+                                                        
+                                    </input>
                                 </p>
                             </div>
                             <div class="NewAssignmentNotes">

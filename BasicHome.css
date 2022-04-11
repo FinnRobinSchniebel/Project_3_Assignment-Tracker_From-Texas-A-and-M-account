@@ -524,3 +524,8 @@
 }
 
 
+.PriorityPicker{
+    border-radius: 5px;
+    min-width: 50px;
+    min-height: 30px;
+}
