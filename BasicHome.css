@@ -8,18 +8,19 @@
     height: 125px;
     text-align: center; 
 
-    background-color: rgb(97, 206, 161);
+    background-color: rgb(192, 182, 182);
     color: rgb(0, 0, 0);
-    border-bottom-right-radius: 35px;
-    border-bottom-left-radius: 35px;
-    border: 3px solid rgb(118, 223, 182);
+    /*border-bottom-right-radius: 35px;*/
+    /*border-bottom-left-radius: 35px;*/
+    border: 3px solid rgb(80, 80, 80);
+    box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
     border-top: none;
 }
 .button{
-    background-color: rgb(144, 233, 225);
+    background-color: rgb(90, 135, 156);
     margin: 15px;
     margin-top: 30px;
-    border: 3px solid rgb(15, 136, 173);
+    border: 3px solid rgb(74, 95, 102);
     color: rgb(0, 0, 0);
     border-radius: 10px;
     text-align: center;
@@ -29,10 +30,11 @@
     padding: 15px;
     padding-left: 15px;
     padding-right: 15px;
+    border-top-left-radius: 0px;
 
 }
 .background {
-    background-color: aqua; 
+    background-color:rgb(108, 141, 151); 
     background-position: center;
     color: rgb(0, 0, 0);
     width: 100%;
@@ -56,7 +58,7 @@
 }
 .ClassSection{
 
-    background-color: rgb(15, 157, 201);
+    background-color: rgb(19, 62, 77);
     box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
 
     border-radius: 30px;
@@ -114,7 +116,7 @@
     border-radius: 10px;
 }
 .ClassAssignmentsOutline{
-    background-color: rgb(105, 181, 204);
+    background-color: rgb(36, 106, 129);
     box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
     border-bottom-left-radius: 50px;
     border-bottom-right-radius: 50px;
@@ -130,7 +132,7 @@
     font-size: 15px;
 }
 .ClassAssignments{
-    background-color: rgb(105, 181, 204);
+    background-color: rgb(36, 106, 129);
     border-radius: 50px;
     color: rgb(0, 0, 0);
     padding: 5px;
@@ -354,8 +356,8 @@
 
 
 /* add assignment  */
-.AddAssignmentTop{
-    background-color: rgb(0, 255, 255);
+.AddAssignmentTop{  
+    background-color: rgb(71, 58, 104);
     color: rgb(0, 0, 0);
     box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
 
@@ -473,8 +475,8 @@
 }
 
 .NewClassName{
-    background-color: rgb(105, 181, 204);
-    border-radius: 50px;
+    background-color: rgb(36, 106, 129);
+    border-radius: 10px;
     color: rgb(0, 0, 0);
     padding: 3px;
     width: 50%;
@@ -489,7 +491,7 @@
 
 .AddClassSection{
     margin-top: 40px;
-    background-color: rgb(15, 157, 201);
+    background-color: rgb(71, 58, 104);
     box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
     border-radius: 30px;
     color: rgb(0, 0, 0);

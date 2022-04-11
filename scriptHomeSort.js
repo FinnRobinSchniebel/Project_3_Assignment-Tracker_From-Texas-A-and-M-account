@@ -7,8 +7,6 @@ function sortAssignmentBy(locationD, sortBy){
         var contentA = parseInt( $(a).data(sortBy));
         
         var contentB = parseInt( $(b).data(sortBy));
-        console.debug(contentA);
-        console.debug(contentB);
         return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
     
     }).appendTo(locationD);

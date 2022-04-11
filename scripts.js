@@ -62,17 +62,14 @@ function removeClass(){
     // takes the space away to ensure variables are properly named
     // var inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
     // inputClassName = inputClassName.trim();
-    console.debug(inputClassNameDisplay);
     //used to remove class
     const element = document.getElementById(inputClassNameDisplay);
-    console.debug(element);
     element.remove();
 
-    console.debug("Before Delete")
+    
     printClassList();
     // removes class from classList
     deleteClass(inputClassNameDisplay);
-    console.debug("After Delete")
     printClassList();
     
 }
