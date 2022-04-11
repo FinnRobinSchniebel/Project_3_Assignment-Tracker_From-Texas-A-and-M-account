@@ -422,7 +422,7 @@ function PopulateClass(className){
 
             <div align="right" >
                 <label for="colorpicker">Color Picker:</label>
-                <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#0f9dc9>
+                <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#246A81>
             </div>
 
             <!-- Class to dynamically add assignments to class -->
