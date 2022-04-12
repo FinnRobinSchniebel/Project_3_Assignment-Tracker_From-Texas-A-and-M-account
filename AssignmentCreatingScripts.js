@@ -75,10 +75,10 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     //should fix the complete button
     document.getElementById('CheckBoxComplete'+ NameToAddForID).getAttribute("onclick");
     if(typeof(onclick) != "function"){
-        document.getElementById('CheckBoxComplete'+ NameToAddForID).setAttribute('onclick', "completeButton('Overview" + NameToAddForID+ "','CheckBoxComplete" + NameToAddForID +"')");
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).setAttribute('onclick', "completeButton('" + assignmentName+ "','" + className +"')");
     }
     else{
-        document.getElementById('CheckBoxComplete'+ NameToAddForID).onclick = function(){completeButton("Overview" + NameToAddForID, "CheckBoxComplete" + NameToAddForID)};
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).onclick = function(){completeButton(assignmentName, className)};
     }
    
 

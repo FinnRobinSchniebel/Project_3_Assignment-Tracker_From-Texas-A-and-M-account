@@ -34,7 +34,7 @@ function addAssignment(className){
     var priority = 4; //test, still needs to be implemented
     
     //adds assignment to class in localstorage
-    addAssignmentToClass(newAssignmentDisplay,className,priority,endTime,startTime, link, relatedLinks,noteDetails);
+    addAssignmentToClass(newAssignmentDisplay,className,priority,endTime,startTime, link, relatedLinks,noteDetails,false);
 
     populatePage();
 
@@ -49,7 +49,8 @@ function AddClass(){
 
     //Add assignment will also call storeClass into local storage
     let emptyClass = [];
-    storeClass(inputClassNameDisplay,emptyClass);
+    var defaultColor = "rgb(138, 138, 138);" //default color of a new class
+    storeClass(inputClassNameDisplay,emptyClass,defaultColor);
 
     populatePage();
 } 
@@ -75,6 +76,7 @@ function removeClass(){
     
 }
 
+
 function removeAssignment(className, assignmentName){
 
     // console.debug(inputClassNameDisplay);
@@ -92,17 +94,42 @@ function removeAssignment(className, assignmentName){
     printClassList();
 }
 
-function completeButton(assignmentID, checkBoxID){
+function completeButton(assignmentName,className){
 
+        //getting copies of objects
+        var assignmentObj = getAssignment(className, assignmentName);
         //checks if checkbox is checked
-    if(document.getElementById(checkBoxID).checked){
+    if(document.getElementById("CheckBoxComplete"+className+assignmentName).checked){
         //this reassigns cssText for that specific box to change to gray
-        document.getElementById(assignmentID).style.backgroundColor = "rgb(110, 108, 117)";       
+        document.getElementById("Overview"+className+assignmentName).style.backgroundColor = "rgb(110, 108, 117)";    
+        document.getElementById("OutsideForSizeFix"+className+assignmentName).style.backgroundColor = "rgb(110, 108, 117)";
+        assignmentObj.complete = true;
     } else {
         //this reverts it back to our original color
-        document.getElementById(assignmentID).style.backgroundColor = "rgb(75, 139, 158)";    
+        document.getElementById("Overview"+className+assignmentName).style.backgroundColor = "rgb(75, 139, 158)";   
+        document.getElementById("OutsideForSizeFix"+className+assignmentName).style.backgroundColor ="rgb(75, 139, 158)";
+        assignmentObj.complete = false;    
     }
 
+    //TODO
+    //Remove old assignment from classObj's assignments
+    deleteAssignment(className, assignmentName);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    //console.debug(assignmentObj.complete);
+}
+
+//needed for colorpicker
+// input is text in format "rgb(R,G,B)" 
+function rgbToHex(RGBcolor) {
+    var inputSubstring = RGBcolor.substring(4,RGBcolor.length-2);
+    var RGBstringArray = inputSubstring.split(",");
+    var RGBnum = [];
+
+    RGBstringArray.forEach(str => {
+        RGBnum.push(Number(str));
+      });
+
+    return "#" + ((1 << 24) + (RGBnum[0] << 16) + (RGBnum[1] << 8) + RGBnum[2]).toString(16).slice(1);
 }
 
 function parseColor(sixDigitHexString){ //converts 6 digit hex color to array [R, G, B]
@@ -150,18 +177,27 @@ function darkColor(RGB){
 
 
 
-//takes in name of a class (Ex. "demoClass") and edits color values respectively
+//this function is called when the color picker changes
+//this function stores the new color into local storage
 function changeClassColor(className){
     let color = document.getElementById(className+'ColorPicker').value;
     var RGB = parseColor(color);
+
+    //setting color update into localstorage
+    var classObj = getClass(className);
+    classObj.color = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+    var jsonObj = JSON.stringify(classObj);
+    localStorage.setItem(className, jsonObj);
+
+
     var lighter = lightColor(RGB);
-    document.getElementById(className+'Section').style.backgroundColor = color;
+    document.getElementById(className+'Section').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
     document.getElementById(className+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
     document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
 
     var darker = darkColor(RGB);
     document.getElementById(className+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-    document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = color;
+    document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
 
     //to added assignments
     var assignmentList = [];
@@ -170,20 +206,47 @@ function changeClassColor(className){
         document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
         document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = color;
     });  
-
 }
 
+//this function is called when loading a class from localstorage
+//this function is called in populate page and laods the class with the color stored in local storage
+function loadClassColor(className){
+    var classObj = getClass(className);
+    console.debug(localStorage);
+    let RGB = classObj.color;
+    var lighter = lightColor(RGB);
+    document.getElementById(className+'Section').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+    document.getElementById(className+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    var darker = darkColor(RGB);
+    document.getElementById(className+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+    document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+
+    //to added assignments
+    var assignmentList = [];
+    assignmentList = getAssignments(className);
+    assignmentList.forEach((assignmentObj, i, array) => {
+        document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+        document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = color;
+    });  
+}
+
+
+
 //storeClass: takes in user inputted className and an array of assignments to store in local storage
-function storeClass(className, arrayAssignments){
+function storeClass(className, arrayAssignments, classColor){
     if(arrayAssignments.length == 0){
         var newClass = {
             name: className, //text
-            assignments: [] //array of assignment objs
+            assignments: [], //array of assignment objs
+            color: classColor //text
         };
     } else{
         var newClass = {
             name: className, //text
-            assignments: arrayAssignments //array of assignment objs
+            assignments: arrayAssignments, //array of assignment objs
+            color: classColor //text
+
         };
     }
     var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
@@ -204,42 +267,61 @@ function getClassList(){ //returns array of Class objects
 
 //takes in class name and returns class obj
 function getClass(className){ 
-    var classList = getClassList(); //array of class objects
-    
-    classList.forEach((classObj, i, array) => {
+    var keys = Object.keys(localStorage);
+    var i = keys.length;
+
+    while(i--){
+        var classObj = JSON.parse(localStorage.getItem(keys[i]));
         if(classObj.name == className){
             return classObj;
         }
-    });  
+    } 
+}
+
+//takes in assignment name and returns assignment obj
+//takes in class name and assignment name
+//returns assignment obj in that class
+function getAssignment(inputClassName, inputAssignmentName){ 
+    var classObj = getClass(inputClassName);
+    var assignmentList = classObj.assignments;
+    var result;
+    assignmentList.forEach((assignmentObj, i, array) => {
+        if(assignmentObj.name == inputAssignmentName){
+            result = assignmentObj;
+        }
+    });
+    return result;
 }
 
 // deletes class from list (WIP)
 function deleteClass(className){
-    var classList = getClassList(); //array of class objects
-    
-    classList.forEach((classObj, i, array) => {
-        if(classObj.name == className){
-            localStorage.removeItem(className);
-        }
-    });  
+    localStorage.removeItem(className);
 }
 
 //delete assignment does not work
 function deleteAssignment(className, assignmentName){
-    var classList = getClassList(); //array of class objects
-    
-    classList.forEach((classObj) => {
-        var assignmentList = classObj.assignments;
-        //console.debug(classObj.assignments);
-        if(classObj.name == className){
-            var index = assignmentList.indexOf(0);
-            console.debug(index);
-            if (index > -1){
-                classObj.assignments.splice(index, 1);
-            }
-        }
-        //console.debug(classObj.assignments);
-    });  
+    //copies of respective class and assignment objs & arrays
+    var classObj = getClass(className);
+    var assignmentObj = getAssignment(className, assignmentName);
+    var assignmentList = classObj.assignments;
+
+    //find index of assignment in array that needs to be removed
+    var indexToRemove = assignmentList.findIndex(myAssignment =>{
+        return myAssignment.name == assignmentObj.name;
+    });
+
+    //splice removes one element at the indexToRemove
+    assignmentList.splice(indexToRemove,1);
+
+
+    //TODO: 
+    //Remove class & store it again without assignment
+    deleteClass(className);
+    storeClass(classObj.name, assignmentList, classObj.color);
+
+    console.debug(assignmentList);
+
+
     
 }
 
@@ -259,7 +341,7 @@ function getAssignments(className){ //returns array of assignment objects of a c
     return result;
 }
 
-function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
+function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes,isComplete){
     var newAssignment ={
         name: assignmentName,                   //text
         class: className,                       //text
@@ -268,7 +350,8 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
         startDate: assignmentStartDate,         //datetime w/hour min
         link: assignmentLink,                   //text
         relatedLinks: assignmentRelatedLinks,   //text
-        notes: assignmentNotes                 //text
+        notes: assignmentNotes,                 //text
+        complete: isComplete
     };
 
 
@@ -284,19 +367,6 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
         //console.debug(array);
     });
 
-}
-
-//takes in class name and assignment name
-//returns assignment obj in that class
-function getAssignment(inputClassName, inputAssignmentName){ 
-    var classObj = localStorage.getItem(inputClassName); 
-    var assignmentList = classObj.assignments;
-    var i = assignmentList.length;
-
-    while(i--){
-        if(assignmentList[i].class == inputClassName && assignmentList[i].name == inputAssignmentName)
-        return assignmentList[i];
-    }
 }
 
 
@@ -341,7 +411,6 @@ function populatePage(){
             PopulateAssignments(assignmentList[index]);
             index ++;
         }
-        //console.debug(className);
     });
 
 
@@ -519,7 +588,7 @@ function PopulateClass(className){
     </div>
 </div>`;
     var ClassesDiv = document.getElementById("classList");
-    ClassesDiv.innerHTML += newDiv.innerHTML; 
+    ClassesDiv.innerHTML += newDiv.innerHTML;
 
 
     // //Add assignment will also call storeClass into local storage
