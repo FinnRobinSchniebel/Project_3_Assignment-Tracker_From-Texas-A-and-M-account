@@ -98,8 +98,6 @@ function completeButton(assignmentName,className){
 
         //getting copies of objects
         var assignmentObj = getAssignment(className, assignmentName);
-        var classObj = getClass(className);
-        var assignmentList = classObj.assignments;
         //checks if checkbox is checked
     if(document.getElementById("CheckBoxComplete"+className+assignmentName).checked){
         //this reassigns cssText for that specific box to change to gray
@@ -116,7 +114,8 @@ function completeButton(assignmentName,className){
     //TODO
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
-    //addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    //console.debug(assignmentObj.complete);
 }
 
 //needed for colorpicker
@@ -296,13 +295,7 @@ function getAssignment(inputClassName, inputAssignmentName){
 
 // deletes class from list (WIP)
 function deleteClass(className){
-    var classList = getClassList(); //array of class objects
-    
-    classList.forEach((classObj, i, array) => {
-        if(classObj.name == className){
-            localStorage.removeItem(className);
-        }
-    });  
+    localStorage.removeItem(className);
 }
 
 //delete assignment does not work
@@ -317,7 +310,17 @@ function deleteAssignment(className, assignmentName){
         return myAssignment.name == assignmentObj.name;
     });
 
-    //TODO: splicing
+    //splice removes one element at the indexToRemove
+    assignmentList.splice(indexToRemove,1);
+
+
+    //TODO: 
+    //Remove class & store it again without assignment
+    deleteClass(className);
+    storeClass(classObj.name, assignmentList, classObj.color);
+
+    console.debug(assignmentList);
+
 
     
 }
