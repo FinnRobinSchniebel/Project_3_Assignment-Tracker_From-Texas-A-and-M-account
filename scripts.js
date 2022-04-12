@@ -498,6 +498,16 @@ function PopulateClass(className){
                                     </div>
                                 </p>
                             </div>
+                            <div class="NewAssignmentNotes">
+                                <Label for="PriorityCreate`+inputClassName+`">Priority:</Label>
+                                <select class="PriorityPicker" aria-label="Priority select table" id="PriorityCreate`+inputClassName+`">
+									<option value="1" selected>1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+								</select>
+                            </div>
                             <button class="btn btn-primary" onclick="addAssignment('`+inputClassName+`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 submit
                             </button>
