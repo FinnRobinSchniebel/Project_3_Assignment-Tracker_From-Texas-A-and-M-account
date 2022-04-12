@@ -97,10 +97,12 @@ function completeButton(assignmentID, checkBoxID){
         //checks if checkbox is checked
     if(document.getElementById(checkBoxID).checked){
         //this reassigns cssText for that specific box to change to gray
-        document.getElementById(assignmentID).style.backgroundColor = "rgb(110, 108, 117)";       
+        document.getElementById("Overview"+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";    
+        document.getElementById("OutsideForSizeFix"+assignmentID).style.backgroundColor = "rgb(110, 108, 117)"; 
     } else {
         //this reverts it back to our original color
-        document.getElementById(assignmentID).style.backgroundColor = "rgb(75, 139, 158)";    
+        document.getElementById("Overview"+assignmentID).style.backgroundColor = "rgb(75, 139, 158)";   
+        document.getElementById("OutsideForSizeFix"+assignmentID).style.backgroundColor ="rgb(75, 139, 158)";    
     }
 
 }
