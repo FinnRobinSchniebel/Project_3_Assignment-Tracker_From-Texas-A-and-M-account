@@ -83,7 +83,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
    
 
     //set fields
-    document.getElementById('PriorityField'+ NameToAddForID).innerText = "Priority:" + assignmentPriority;
+    document.getElementById('PriorityField'+ NameToAddForID).innerText = "Priority: " + assignmentPriority;
     document.getElementById('AssignmentNameField'+ NameToAddForID).innerText = assignmentName;
     document.getElementById('Start_'+ NameToAddForID).setAttribute("value", assignmentStartDate);
     //do this later
@@ -94,18 +94,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
     document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
 
-    //<<<Dont forget to also do the same with label for tags
-
-    // var toAdd= document.getElementById('NewAssignmentTemp')[0].getElementsByClassName("Assignment");
-    // toAdd.innerHTML.setAttribute('id', 'Assignment'+newAssignment);
-    // toAdd.innerHTML.getElementsByClassName('AssignmentOverview')[0].setAttribute('data-bs-target', '#Collapse'+newAssignment);
-    // //one for priority here
-    // toAdd.innerHTML.getElementsByClassName('AssignmentName')[0].innerText = newAssignmentDisplay;
-    // toAdd.innerHTML.getElementsByClassName('AssignmentStartDate')[0].setAttribute('id',newAssignment+'StartDate');
-    // toAdd.innerHTML.getElementsByClassName('AssignmentStartDate')[0].innerHTML.getElementsByTagName('input').setAttribute('value', startTime);
-    // //add time for start and give it the correct id
-    // toAdd.innerHTML.getElementsByClassName('AssignmentDuedate')[1].setAttribute('id',newAssignment+'StartDate');
-    // toAdd.innerHTML.getElementsByClassName('AssignmentDuedate')[1].innerHTML.getElementsByTagName('input').setAttribute('value', startTime);
 }
 
 
