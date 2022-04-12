@@ -444,8 +444,10 @@ function PopulateClass(className){
     
     // input from user
     var inputClassName =  className;
+    // when removed adding assignments doesnt work will check
+    var inputClassNameDisplay = inputClassName.replaceAll("_", " ");
     // takes the space away to ensure variables are properly named
-    inputClassName = inputClassName.replaceAll(" ", "_");
+    inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
     inputClassName = inputClassName.trim();
     //create new div with class name 
     
@@ -459,7 +461,7 @@ function PopulateClass(className){
     newDiv.innerHTML += `
     <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
     <div class="ClassName">
-        `+className+`
+        `+inputClassNameDisplay+`
     </div>
     <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
         No Upcoming Assignments
