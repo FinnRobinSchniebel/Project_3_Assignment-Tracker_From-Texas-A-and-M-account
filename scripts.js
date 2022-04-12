@@ -444,10 +444,9 @@ function PopulateClass(className){
     
     // input from user
     var inputClassName =  className;
-    var inputClassNameDisplay = inputClassName.replaceAll("_", " ");
     // takes the space away to ensure variables are properly named
-    // var inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
-    // inputClassName = inputClassName.trim();
+    inputClassName = inputClassName.replaceAll(" ", "_");
+    inputClassName = inputClassName.trim();
     //create new div with class name 
     
     var newDiv = document.createElement('div');
@@ -460,7 +459,7 @@ function PopulateClass(className){
     newDiv.innerHTML += `
     <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
     <div class="ClassName">
-        `+inputClassNameDisplay+`
+        `+className+`
     </div>
     <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
         No Upcoming Assignments
