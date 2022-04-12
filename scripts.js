@@ -46,12 +46,13 @@ function AddClass(){
     // input from user
     var inputClassNameDisplay =  document.getElementById("InputClassName").value;
     // takes the space away to ensure variables are properly named
-    inputClassNameDisplay = inputClassNameDisplay.trim();
+    var inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
+    inputClassName = inputClassName.trim();
 
     //Add assignment will also call storeClass into local storage
     let emptyClass = [];
     var defaultColor = "rgb(138, 138, 138);" //default color of a new class
-    storeClass(inputClassNameDisplay,emptyClass,defaultColor);
+    storeClass(inputClassName,emptyClass,defaultColor);
 
     populatePage();
 } 
