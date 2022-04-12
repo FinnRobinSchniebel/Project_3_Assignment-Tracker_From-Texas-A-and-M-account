@@ -104,6 +104,7 @@ function completeButton(assignmentName,className){
 
         //getting copies of objects
         var assignmentObj = getAssignment(className, assignmentName);
+        var classObj = getClass(className);
         //checks if checkbox is checked
     if(document.getElementById("CheckBoxComplete"+className+assignmentName).checked){
         //this reassigns cssText for that specific box to change to gray
@@ -112,8 +113,8 @@ function completeButton(assignmentName,className){
         assignmentObj.complete = true;
     } else {
         //this reverts it back to our original color
-        document.getElementById("Overview"+className+assignmentName).style.backgroundColor = "rgb(75, 139, 158)";   
-        document.getElementById("OutsideForSizeFix"+className+assignmentName).style.backgroundColor ="rgb(75, 139, 158)";
+        document.getElementById("Overview"+className+assignmentName).style.backgroundColor = classObj.color;   
+        document.getElementById("OutsideForSizeFix"+className+assignmentName).style.backgroundColor =classObj.color;
         assignmentObj.complete = false;    
     }
 
