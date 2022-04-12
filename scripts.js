@@ -76,6 +76,7 @@ function removeClass(){
     
 }
 
+
 function removeAssignment(className, assignmentName){
 
     // console.debug(inputClassNameDisplay);
@@ -113,13 +114,9 @@ function completeButton(assignmentName,className){
     }
 
     //TODO
-    //Replace respective assignmentObj in assignmentList
-    //Reassign classObj's assignments to assignmentList
-    //Convert classObj to JSON
-    //Set class in localstorage to JSON
-
-
-
+    //Remove old assignment from classObj's assignments
+    deleteAssignment(className, assignmentName);
+    //addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
 }
 
 //needed for colorpicker
@@ -310,20 +307,18 @@ function deleteClass(className){
 
 //delete assignment does not work
 function deleteAssignment(className, assignmentName){
-    var classList = getClassList(); //array of class objects
-    
-    classList.forEach((classObj) => {
-        var assignmentList = classObj.assignments;
-        //console.debug(classObj.assignments);
-        if(classObj.name == className){
-            var index = assignmentList.indexOf(0);
-            console.debug(index);
-            if (index > -1){
-                classObj.assignments.splice(index, 1);
-            }
-        }
-        //console.debug(classObj.assignments);
-    });  
+    //copies of respective class and assignment objs & arrays
+    var classObj = getClass(className);
+    var assignmentObj = getAssignment(className, assignmentName);
+    var assignmentList = classObj.assignments;
+
+    //find index of assignment in array that needs to be removed
+    var indexToRemove = assignmentList.findIndex(myAssignment =>{
+        return myAssignment.name == assignmentObj.name;
+    });
+
+    //TODO: splicing
+
     
 }
 
