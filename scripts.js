@@ -34,7 +34,7 @@ function addAssignment(className){
     var priority = 4; //test, still needs to be implemented
     
     //adds assignment to class in localstorage
-    addAssignmentToClass(newAssignmentDisplay,className,priority,endTime,startTime, link, relatedLinks,noteDetails);
+    addAssignmentToClass(newAssignmentDisplay,className,priority,endTime,startTime, link, relatedLinks,noteDetails,false);
 
     populatePage();
 
@@ -93,18 +93,32 @@ function removeAssignment(className, assignmentName){
     printClassList();
 }
 
-function completeButton(assignmentID, checkBoxID){
+function completeButton(assignmentName,className){
 
+        //getting copies of objects
+        var assignmentObj = getAssignment(className, assignmentName);
+        var classObj = getClass(className);
+        var assignmentList = classObj.assignments;
         //checks if checkbox is checked
-    if(document.getElementById(checkBoxID).checked){
+    if(document.getElementById("CheckBoxComplete"+className+assignmentName).checked){
         //this reassigns cssText for that specific box to change to gray
-        document.getElementById("Overview"+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";    
-        document.getElementById("OutsideForSizeFix"+assignmentID).style.backgroundColor = "rgb(110, 108, 117)"; 
+        document.getElementById("Overview"+className+assignmentName).style.backgroundColor = "rgb(110, 108, 117)";    
+        document.getElementById("OutsideForSizeFix"+className+assignmentName).style.backgroundColor = "rgb(110, 108, 117)";
+        assignmentObj.complete = true;
     } else {
         //this reverts it back to our original color
-        document.getElementById("Overview"+assignmentID).style.backgroundColor = "rgb(75, 139, 158)";   
-        document.getElementById("OutsideForSizeFix"+assignmentID).style.backgroundColor ="rgb(75, 139, 158)";    
+        document.getElementById("Overview"+className+assignmentName).style.backgroundColor = "rgb(75, 139, 158)";   
+        document.getElementById("OutsideForSizeFix"+className+assignmentName).style.backgroundColor ="rgb(75, 139, 158)";
+        assignmentObj.complete = false;    
     }
+
+    //TODO
+    //Replace respective assignmentObj in assignmentList
+    //Reassign classObj's assignments to assignmentList
+    //Convert classObj to JSON
+    //Set class in localstorage to JSON
+
+
 
 }
 
@@ -268,6 +282,21 @@ function getClass(className){
     } 
 }
 
+//takes in assignment name and returns assignment obj
+//takes in class name and assignment name
+//returns assignment obj in that class
+function getAssignment(inputClassName, inputAssignmentName){ 
+    var classObj = getClass(inputClassName);
+    var assignmentList = classObj.assignments;
+    var result;
+    assignmentList.forEach((assignmentObj, i, array) => {
+        if(assignmentObj.name == inputAssignmentName){
+            result = assignmentObj;
+        }
+    });
+    return result;
+}
+
 // deletes class from list (WIP)
 function deleteClass(className){
     var classList = getClassList(); //array of class objects
@@ -314,7 +343,7 @@ function getAssignments(className){ //returns array of assignment objects of a c
     return result;
 }
 
-function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
+function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes,isComplete){
     var newAssignment ={
         name: assignmentName,                   //text
         class: className,                       //text
@@ -323,7 +352,8 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
         startDate: assignmentStartDate,         //datetime w/hour min
         link: assignmentLink,                   //text
         relatedLinks: assignmentRelatedLinks,   //text
-        notes: assignmentNotes                 //text
+        notes: assignmentNotes,                 //text
+        complete: isComplete
     };
 
 
@@ -339,19 +369,6 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
         //console.debug(array);
     });
 
-}
-
-//takes in class name and assignment name
-//returns assignment obj in that class
-function getAssignment(inputClassName, inputAssignmentName){ 
-    var classObj = localStorage.getItem(inputClassName); 
-    var assignmentList = classObj.assignments;
-    var i = assignmentList.length;
-
-    while(i--){
-        if(assignmentList[i].class == inputClassName && assignmentList[i].name == inputAssignmentName)
-        return assignmentList[i];
-    }
 }
 
 
