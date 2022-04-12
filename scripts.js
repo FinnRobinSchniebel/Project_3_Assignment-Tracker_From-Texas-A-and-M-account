@@ -253,6 +253,7 @@ function loadClassColor(className){
         } else {
             document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb(110, 108, 117)";
             document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById("CheckBoxComplete"+className+assignmentObj.name).checked = true;
         }
     }); 
 }
