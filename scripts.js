@@ -25,13 +25,14 @@ function addAssignment(className){
     var endTime = document.getElementById(''+className+'End').value;
     console.log(endTime);
     var noteDetails = document.getElementById(''+className+'Notes').innerText;
+    var priority = document.getElementById("PriorityCreate" + className).value;
 
     //when these two variables are included in the html code below
     //assignment causes whole class to close
     //************************************** */
     var relatedLinks = document.getElementById(''+className+'RelatedLinks').innerText;
     var link = document.getElementById(''+className+'Link').innerText;
-    var priority = 4; //test, still needs to be implemented
+    
     
     //adds assignment to class in localstorage
     addAssignmentToClass(newAssignmentDisplay,className,priority,endTime,startTime, link, relatedLinks,noteDetails,false);
@@ -433,7 +434,7 @@ function PopulateAssignments(AssignmentInfoOBJ){
     //************************************** */
     var relatedLinks = AssignmentInfoOBJ.relatedLinks;
     var link = AssignmentInfoOBJ.link;
-    var priority = 4; //test, still needs to be implemented
+    var priority = AssignmentInfoOBJ.priority; //test, still needs to be implemented
     //todo-priority    
     AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails);
 
