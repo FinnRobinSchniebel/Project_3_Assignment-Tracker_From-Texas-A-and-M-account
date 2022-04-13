@@ -46,18 +46,20 @@ function AddClass(){
     // input from user
     var inputClassNameDisplay =  document.getElementById("InputClassName").value;
     // takes the space away to ensure variables are properly named
-    inputClassNameDisplay = inputClassNameDisplay.trim();
+    var inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
+    inputClassName = inputClassName.trim();
 
     //Add assignment will also call storeClass into local storage
     let emptyClass = [];
     var defaultColor = "rgb(138, 138, 138);" //default color of a new class
-    storeClass(inputClassNameDisplay,emptyClass,defaultColor);
+    storeClass(inputClassName,emptyClass,defaultColor);
 
     populatePage();
 } 
 
 
-// THIS PORTION DOESNT WORK
+// WIP: removeClass
+//edits HTML
 function removeClass(){
     // input from user
     var inputClassNameDisplay = document.getElementById("RemoveClassName").value;
@@ -78,6 +80,8 @@ function removeClass(){
 }
 
 
+//WIP: removeAssignment
+//edits HTML
 function removeAssignment(className, assignmentName){
 
     // console.debug(inputClassNameDisplay);
@@ -95,10 +99,12 @@ function removeAssignment(className, assignmentName){
     printClassList();
 }
 
+
 function completeButton(assignmentName,className){
 
         //getting copies of objects
         var assignmentObj = getAssignment(className, assignmentName);
+        var classObj = getClass(className);
         //checks if checkbox is checked
     if(document.getElementById("CheckBoxComplete"+className+assignmentName).checked){
         //this reassigns cssText for that specific box to change to gray
@@ -107,8 +113,8 @@ function completeButton(assignmentName,className){
         assignmentObj.complete = true;
     } else {
         //this reverts it back to our original color
-        document.getElementById("Overview"+className+assignmentName).style.backgroundColor = "rgb(75, 139, 158)";   
-        document.getElementById("OutsideForSizeFix"+className+assignmentName).style.backgroundColor ="rgb(75, 139, 158)";
+        document.getElementById("Overview"+className+assignmentName).style.backgroundColor = classObj.color;   
+        document.getElementById("OutsideForSizeFix"+className+assignmentName).style.backgroundColor =classObj.color;
         assignmentObj.complete = false;    
     }
 
@@ -204,8 +210,13 @@ function changeClassColor(className){
     var assignmentList = [];
     assignmentList = getAssignments(className);
     assignmentList.forEach((assignmentObj, i, array) => {
-        document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-        document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = color;
+        if(assignmentObj.complete == false){
+            document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+            document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+        } else {
+            document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb(110, 108, 117)";
+        }
     });  
 }
 
@@ -213,8 +224,17 @@ function changeClassColor(className){
 //this function is called in populate page and laods the class with the color stored in local storage
 function loadClassColor(className){
     var classObj = getClass(className);
-    console.debug(localStorage);
-    let RGB = classObj.color;
+    var classColor = classObj.color;
+
+    //parsing rgb string into array of numbers
+    var inputSubstring = classColor.substring(4,classColor.length-1);
+    var RGBstringArray = inputSubstring.split(",");
+    var RGB = [];
+
+    RGBstringArray.forEach(str => {
+        RGB.push(Number(str));
+    });
+
     var lighter = lightColor(RGB);
     document.getElementById(className+'Section').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
     document.getElementById(className+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
@@ -227,9 +247,15 @@ function loadClassColor(className){
     var assignmentList = [];
     assignmentList = getAssignments(className);
     assignmentList.forEach((assignmentObj, i, array) => {
-        document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-        document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = color;
-    });  
+        if(assignmentObj.complete == false){
+            document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+            document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+        } else {
+            document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById("CheckBoxComplete"+className+assignmentObj.name).checked = true;
+        }
+    }); 
 }
 
 
@@ -320,7 +346,7 @@ function deleteAssignment(className, assignmentName){
     deleteClass(className);
     storeClass(classObj.name, assignmentList, classObj.color);
 
-    console.debug(assignmentList);
+    //console.debug(assignmentList);
 
 
     
@@ -413,6 +439,8 @@ function populatePage(){
             PopulateAssignments(assignmentList[index]);
             index ++;
         }
+
+        loadClassColor(className);
     });
 
 
@@ -436,8 +464,10 @@ function PopulateAssignments(AssignmentInfoOBJ){
     var relatedLinks = AssignmentInfoOBJ.relatedLinks;
     var link = AssignmentInfoOBJ.link;
     var priority = AssignmentInfoOBJ.priority; //test, still needs to be implemented
+    var isComplete = AssignmentInfoOBJ.complete;
     //todo-priority    
-    AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails);
+    AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails, isComplete);
+
 
 
 }
