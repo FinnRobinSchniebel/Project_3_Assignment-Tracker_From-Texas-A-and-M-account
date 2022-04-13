@@ -12,7 +12,7 @@
 	<link id="BasicHome" rel="stylesheet" type="text/css" href="BasicHome.css" />
 	<title>Assignment Stacker Home</title>
 	<script src="scripts.js"></script>
-	<script src="scriptHomeSort.js"> </script>
+	<script src="SortScript.js"> </script>
 </head>
 
 <body class=background>
@@ -25,6 +25,13 @@
 			<button class="button" onclick="location.href='Quick_View.html'">Quick View</button>
 			<button class="button" onclick="location.href='AddLocation.html'">View and Add Assignment locations</button>
 
+            <select class="priorityButton" aria-label="Priority select table" id="SortSelect" onchange="sortButton(this.options[this.selectedIndex].value)">
+                <option value="DueDate" selected>Due Date</option>
+                <option value="Priority">Priority</option>
+                <option value="3" disabled>Something else</option>
+                <option value="4" disabled>Something else</option>
+                <option value="5" disabled>Something else</option>
+            </select>
 		</div>
 
 		<!-- Put all new classes made in here -->

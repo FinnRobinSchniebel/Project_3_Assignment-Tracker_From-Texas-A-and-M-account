@@ -403,6 +403,7 @@ function populatePage(){
     classList.slice().reverse().forEach((classObj) => {
         var className = classObj.name;
         var assignmentList = classObj.assignments;
+        assignmentList = sortAssignment(assignmentList);
         var i = assignmentList.length;
         // use check to get assignments properly ordered 
         var index = 0;
@@ -476,21 +477,6 @@ function PopulateClass(className){
 <div class="collapse" id="Collapse`+inputClassName+`">
     <div class="ClassAssignmentsOutline" id = "`+inputClassName+`AssignmentsOutline">
         <div class="ClassAssignments" id= "`+inputClassName+`ClassAssignments">
-            <!-- Buttons in Course drop down -->
-            <div align="left"> 
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"> <!-- Will need unique id in future (different classes)-->
-                    Sort By
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="SortByDropDown">  <!-- Will need unique id in future (different classes)-->
-                    <li><a class="dropdown-item" href="#">Due Date</a></li>
-                    <li><a class="dropdown-item" href="#">Priority</a></li>
-                    <li><a class="dropdown-item" href="#">Incomplete</a></li>
-                    <li><a class="dropdown-item" href="#">Completed</a></li>
-                    </ul>
-                </div>
-            </div>
-
             <div align="right" >
                 <label for="colorpicker">Color Picker:</label>
                 <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#246A81>
@@ -602,3 +588,13 @@ function PopulateClass(className){
 window.onload = function(){
     populatePage();
 }
+
+// <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"> <!-- Will need unique id in future (different classes)-->
+//             Sort 
+// </button>
+/*{ <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="SortByDropDown">  <!-- Will need unique id in future (different classes)-->
+<li><a class="dropdown-item" href="#">Due Date</a></li>
+<li><a class="dropdown-item" href="#">Priority</a></li>
+<li><a class="dropdown-item" href="#">Incomplete</a></li>
+<li><a class="dropdown-item" href="#">Completed</a></li>
+</div> }*/
