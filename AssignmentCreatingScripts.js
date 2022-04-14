@@ -13,19 +13,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     //     relatedLinks: assignmentRelatedLinks,   //text
     //     notes: assignmentNotes,                 //text
     // };
-
-
-    //<<<<not needed for this but another function>>>>>
-    // // inputs taken from user
-    // // to make it dynamic, takes className from Parameter and is used to find the -
-    // // associated ID for variables
-    // var newAssignmentDisplay = document.getElementById(''+className+'Name').innerText;
-
-    // // takes the space away to ensure variables are properly named
-    // var newAssignment = newAssignmentDisplay.replaceAll(" ", "_");
-    // var startTime = document.getElementById(''+className+'Start').innerText;
-    // var endTime = document.getElementById(''+className+'End').innerText;
-    //<<<<>>>>>>
     var newAssignment = assignmentName.replaceAll(" ", "_");
 
     var ClassNameAssignment = className.replaceAll(" ", "_");
@@ -35,8 +22,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     //makes a copy of the content in template for assignment
     
     var NewHTML = document.querySelector("#NewAssignmentTemp").content;
-
-    
 
 
     NewHTML= NewHTML.cloneNode(true); //true makes this recursive (copy all in assignment)    
@@ -90,18 +75,73 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     document.getElementById('TimeLeftBarText'+ NameToAddForID).innerText = "todo";
 
     document.getElementById('Due_'+ NameToAddForID).setAttribute("value", assignmentDueDate);
+    //bar stuff
+    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + getDatePercent(assignmentStartDate, assignmentDueDate));
+    document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
+
     document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
     document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
     document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
 
 }
 
-
-/**
- * Takes in a dynamic name that will make the element unique and a constant that will tell what it is.
- * @param {*} dynamic 
- * @param {*} constant 
- */
-function setAttributeIDs(){
+//this function is used by the progress bar
+function getDatePercent(StartDate, DueDate){
     
+    var todaysDate = new Date(CurrentDateISOTime()); //defaults to today
+
+    var max = new Date(DueDate) - new Date(StartDate);
+    var left = new Date(DueDate) - todaysDate;
+    var percent = (left/max*100).toFixed(3);
+    if(percent < 0){ //edge case (overdue)
+        percent = 0;
+    }
+    return ''+ percent + '%';
+}
+
+//this function will return the largest nonzero value of the time left for the progress bar
+function getTimeLeftLargestNonZero(DueDate){
+    //cannot really be condensed much more than this
+    console.log(DueDate);
+    var curDate = new Date(CurrentDateISOTime());
+    console.log(curDate);
+    var Year = new Date(DueDate).getFullYear() - curDate.getFullYear(); //unlikely to be ever needed but still here
+    if(Year > 0){
+        if(Year == 1){
+            return Year + " Year";
+        }
+        return Year + " Years";
+    }
+    var Month = new Date(DueDate).getMonth() - curDate.getMonth();
+    if(Month > 0){
+        if(Month == 1){
+            return Month + " Month";
+        }
+        return Month + " Months";
+    }
+    var Day = new Date(DueDate).getDate() - curDate.getDate();
+    if(Day > 0){
+        if(Day == 1){
+            return Day + " Day";
+        }
+        return Day + " Days";
+    }
+    var Hour = new Date(DueDate).getHours() - curDate.getHours();
+    if(Hour > 0){
+        if(Hour == 1){
+            return Hour + " Hour";
+        }
+        return Hour + " Hours";
+    }
+    var Minutes = new Date(DueDate).getMinutes() - curDate.getMinutes();
+    if(Minutes > 0){
+        if(Minutes == 1){
+            return Minutes + " Minute";
+        }
+        return Minutes + " Minutess";
+    }
+    else{
+        return "OVER DUE!!!";
+    }
+
 }

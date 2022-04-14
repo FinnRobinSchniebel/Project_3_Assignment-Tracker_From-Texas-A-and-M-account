@@ -23,7 +23,7 @@ function addAssignment(className){
     // takes the space away to ensure variables are properly named
     var startTime = document.getElementById(''+className+'Start').value; //"`+inputClassName+`Start"
     var endTime = document.getElementById(''+className+'End').value;
-    console.log(endTime);
+    //console.log(endTime);
     var noteDetails = document.getElementById(''+className+'Notes').innerText;
     var priority = document.getElementById("PriorityCreate" + className).value;
 
@@ -369,6 +369,14 @@ function getAssignments(className){ //returns array of assignment objects of a c
 }
 
 function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes,isComplete){
+    //if one of the dates is empty asign it todays date 
+    if(assignmentStartDate == ""){ 
+        assignmentStartDate = CurrentDateISOTime();
+    }
+    if(assignmentDueDate == ""){
+        assignmentDueDate = CurrentDateISOTime();
+    }
+
     var newAssignment ={
         name: assignmentName,                   //text
         class: className,                       //text
@@ -628,3 +636,14 @@ window.onload = function(){
 <li><a class="dropdown-item" href="#">Incomplete</a></li>
 <li><a class="dropdown-item" href="#">Completed</a></li>
 </div> }*/
+
+//Generates todays date and converts it to ISO keeping its timezone offset
+function CurrentDateISOTime(){
+
+    //formula sourced from: https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset
+    var today = new Date(); //todays date UTC
+    var offset = today.getTimezoneOffset() * 60000; //60000 timezone with milliseconds 
+    var today = (new Date(Date.now() - offset)).toISOString().slice(0, -8); 
+    console.log(today + " logsow");
+    return today;
+}
