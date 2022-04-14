@@ -644,6 +644,5 @@ function CurrentDateISOTime(){
     var today = new Date(); //todays date UTC
     var offset = today.getTimezoneOffset() * 60000; //60000 timezone with milliseconds 
     var today = (new Date(Date.now() - offset)).toISOString().slice(0, -8); 
-    console.log(today + " logsow");
     return today;
 }

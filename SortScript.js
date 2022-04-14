@@ -27,6 +27,11 @@ function sortAssignment(JSONOBJ){
         JSONOBJ = sortPrior(JSONOBJ);
         JSONOBJ = sortStart(JSONOBJ);
     }
+    else if(CurSort == "TimePast"){
+        JSONOBJ = sortDue(JSONOBJ);
+        JSONOBJ = sortPrior(JSONOBJ);
+        JSONOBJ = sortExpired(JSONOBJ);
+    }
     else{
         console.log("error");
     }
@@ -49,5 +54,24 @@ function sortStart(OBJ){
         
         //using ISO date sort the extra stuff is for correctness. For source: https://stackoverflow.com/questions/12192491/sort-array-by-iso-8601-date 
         return ((x.startDate < y.startDate) ? -1 : ((x.startDate > y.startDate)) ? 1 : 0); 
+    });
+}
+function sortExpired(OBJ){
+    return OBJ.sort( function(x,y){
+        var todaysDate = new Date(CurrentDateISOTime()); //defaults to today
+        var max1 = new Date(x.dueDate) - new Date(x.startDate);
+        var max2 = new Date(y.dueDate) - new Date(y.startDate);
+        if(max1 == 0){
+            max1=1;
+        }
+        if(max2 ==0){
+            max2=1;
+        }
+        var expired1 = (todaysDate - new Date(x.startDate))/max1;
+        var expired2 = (todaysDate - new Date(y.startDate))/max2;
+        console.log(x.name+" "+ +expired1);
+        console.log(x.name+ " "+ +expired2);
+        //using ISO date sort the extra stuff is for correctness. For source: https://stackoverflow.com/questions/12192491/sort-array-by-iso-8601-date 
+        return (parseFloat(expired1) < parseFloat(expired2)); 
     });
 }

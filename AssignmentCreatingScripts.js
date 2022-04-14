@@ -102,9 +102,7 @@ function getDatePercent(StartDate, DueDate){
 //this function will return the largest nonzero value of the time left for the progress bar
 function getTimeLeftLargestNonZero(DueDate){
     //cannot really be condensed much more than this
-    console.log(DueDate);
     var curDate = new Date(CurrentDateISOTime());
-    console.log(curDate);
     var Year = new Date(DueDate).getFullYear() - curDate.getFullYear(); //unlikely to be ever needed but still here
     if(Year > 0){
         if(Year == 1){
