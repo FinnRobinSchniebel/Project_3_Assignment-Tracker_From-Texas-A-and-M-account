@@ -69,9 +69,10 @@ function sortExpired(OBJ){
         }
         var expired1 = (todaysDate - new Date(x.startDate))/max1;
         var expired2 = (todaysDate - new Date(y.startDate))/max2;
-        console.log(x.name+" "+ +expired1);
-        console.log(x.name+ " "+ +expired2);
+        console.log(x.name+" " +parseFloat(expired1));
+        console.log("2 " +y.name+ " " +expired2);
+        
         //using ISO date sort the extra stuff is for correctness. For source: https://stackoverflow.com/questions/12192491/sort-array-by-iso-8601-date 
-        return (parseFloat(expired1) < parseFloat(expired2)); 
+        return (parseFloat(expired2)-parseFloat(expired1)); 
     });
 }
