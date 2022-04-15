@@ -4,6 +4,7 @@ from __future__ import print_function
 import os.path
 
 import json
+from datetime import date
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -49,19 +50,46 @@ def main():
         # Prints the names of the courses
         for course in courses:
             # Class name that will be stored
+            className = course['name']
+
+            #classID for accessing coursework
             classID = course['id']
 
             #all users assignments in a course
             coursework = service.courses().courseWork().list(courseId=classID).execute()
             assignments = coursework.get('courseWork', [])
 
+
+            # iterate through all of their coursework and create assignmentObjs in dictionarys
+            assignmentObj = {}
+            for assignment in assignments:
+                assignmentObj['name'] = assignment['title']
+                assignmentObj['class'] = className
+                assignmentObj['priority'] = 1
+
+                # NEED TO PARSE DATE AND TIME CORRECTLY FOR OUR FORMATTING
+                assignmentObj['dueDate'] = assignment['dueDate']
+                assignmentObj['startDate'] = date.today()
+
+
+                assignmentObj['link'] = assignment['alternateLink']
+
+                # WIP
+                #assignmentObj['relatedLinks'] = ''
+
+
+                assignmentObj['notes'] = assignment['description']
+                #assignmentObj['complete'] = 
+
+                print("Course: "+ className)
+                print(assignmentObj)
+
+
             #creating classObj for each course
             classObj = {}
-            className = course['name']
             classObj['name'] = className
-
-            print("Course: "+ className)
-            print(assignments)
+            #classObj['color'] = 
+            #classObj['assignments'] = 
 
 
 
