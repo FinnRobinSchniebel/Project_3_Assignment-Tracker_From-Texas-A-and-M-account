@@ -5,14 +5,16 @@ function CT(Option){
         $('#ImportInfo').collapse("hide");
     }
     else if(Option == "Canvas"){
-        clearImportCont();
-        addinfoGetCanvas();
+        clearImportCont(); //clear any other content
+
+        addinfoGet("#CanvasInfoTemp");
         var check;
-        setTimeout(check, 300);
         $('#ImportInfo').collapse("show");
     }
     else if(Option == "Google"){
         clearImportCont();
+
+        addinfoGet("#ClassRoomTemp");
         $('#ImportInfo').collapse("show");
     }
     
@@ -22,16 +24,19 @@ function clearImportCont(){
 }
 
 
-function addinfoGetCanvas(){
-    var NewHTML = document.querySelector("#CanvasInfoTemp").content;
-
-
+function addinfoGet(fromTemp){
+    var NewHTML = document.querySelector(fromTemp).content;
     NewHTML= NewHTML.cloneNode(true);
-
     document.getElementById("CollapseCont").append(NewHTML);
 }
 
 
 function  ImportAPICanvas(){
+    document.getElementById('SelectLocation').innerHTML += `<div class="loader"></div>`;
+
+    //function for api call here (return file or bool)
+
+    //populate options here (with json results) 
+
     
 }

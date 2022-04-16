@@ -53,11 +53,10 @@
 }
 .collapseImport{
     background-color: rgb(31, 92, 110);
-    border-bottom-left-radius: 50px;
-    border-bottom-right-radius: 50px;
+    border-radius: 30px;
     color: rgb(0, 0, 0);
     padding: 10px;
-    width: 100%;
+    width: 90%;
     margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
@@ -65,9 +64,10 @@
     text-align: left;
     outline: none;
     font-size: 15px;
+
 }
 .importbutton{
-    background-color: rgb(73, 96, 129);
+    background-color: rgb(126, 159, 206);
     margin: 15px;
     margin-top: 30px;
     border: 3px solid rgb(15, 136, 173);
@@ -77,10 +77,26 @@
     display: inline;
     font-size: 18px;
     transition-duration: 5ms;
-    padding: 10px;
+    padding: 5px;
     padding-left: 10px;
     padding-right: 10px;
 }
+.importbutton:hover{
+    background-color: rgb(101, 217, 221);
+    margin: 15px;
+    margin-top: 30px;
+    border: 3px solid rgb(89, 115, 122);
+    color: rgb(0, 0, 0);
+    border-radius: 10px;
+    text-align: center;
+    display: inline;
+    font-size: 18px;
+    transition-duration: 5ms;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .ImportCreater{
     background-color: rgb(72, 46, 112);
     border-bottom-left-radius: 50px;
@@ -99,5 +115,33 @@
 .ICanvans{
     margin-left: auto;
     margin-right: auto;
-    width: 40%;
+    width: 50%;
+}
+.TextfieldLeftLabel{
+    background-color: white;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    color: rgb(0, 0, 0);
+    border: 1px black solid;
+
+    padding: 2px;
+}
+.CreateInfo{
+    text-align: center;
+}
+
+/* source: https://www.w3schools.com/howto/howto_css_loader.asp*/
+.loader{
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    border: 18px solid rgba(228, 228, 228, 0.671);
+    border-top: 18px solid rgb(32, 219, 148);
+    animation: spin 2s linear infinite;
+    margin-left: auto;
+    margin-right: auto;
+}
+@keyframes spin { 
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

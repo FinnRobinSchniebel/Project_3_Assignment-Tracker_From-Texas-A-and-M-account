@@ -5,7 +5,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- for sorting -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
         <title>Assignment Stacker Quick View</title>
-        <link id="BasicHome" rel="stylesheet" type="text/css" href="BasicHOme.css"/>
+        <link id="BasicHome" rel="stylesheet" type="text/css" href="CSS/BasicHome.css"/>
         <link id="AddLocation" rel="stylesheet" type="text/css" href="./CSS/AddLocation.css"/>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
@@ -20,9 +20,9 @@
             <div class=Mynavbar>
                 <button class="button" onclick="location.href='Home.html'">Home </button>
                 <button class="button" onclick="location.href='Quick_View.html'"> Quick View</button>
-                <button class="button" onclick="location.href='AddLocation.html'"> view and Add Assignment locations</button> 
+                <button class="button" onclick="location.href='AddLocation.html'"> View and Add Assignment locations</button> 
                 <select class="priorityButton" aria-label="Priority select table" id="SortSelect" disabled>
-                    <option value="DueDate" selected>Sort Button</option>
+                    <option value="DueDate" selected>Sort Disabled</option>
                     <option value="Priority">Priority</option>
                     <option value="StartDate" >Assigned Date</option>
                     <option value="TimePast" >Time Expired</option>
@@ -50,8 +50,11 @@
 
                 <!--Div that collapses-->
                 <div class="collapse collapseImport" id="ImportInfo">
-                    <div class="CreateInfo clearfix" id="CollapseCont" >
+                    <div class="CreateInfo clearfix" id="CollapseCont">
                         
+                    </div>
+                    <div id="SelectLocation" class="clearfix">
+
                     </div>
                 </div>
             </div>
@@ -63,11 +66,21 @@
 
 </html>
 
-<template id="CanvasInfoTemp">
-    <div class="ICanvans" id="CanvasInfo">
-        <label for="CanvasConnect">Enter "" Info here:</label>
-        <input type="text" id="CanvasConnect" id="canvasConnectionInfo">
-        <button class="button importbutton" onclick="ImportAPICanvas()">Import</button>
-    </div>
 
+
+<template id="CanvasInfoTemp">
+    <div class="ICanvans clearfix" id="CanvasInfo">
+        <label for="CanvasConnect" class="TextfieldLeftLabel">Enter "" Info here:</label>
+        <input type="text" id="CanvasConnect" id="canvasConnectionInfo">
+        <button class="button importbutton" onclick="ImportAPICanvas()">Start Import</button>
+    </div>
+</template>
+
+
+
+<template id="ClassRoomTemp">
+    <div class="ICanvans clearfix" id="CanvasInfo">
+        <label for="importbutton" class="TextfieldLeftLabel">Start Import from Google Classroom:</label>
+        <button class="button importbutton" onclick="ImportAPICanvas()">Start Import</button>
+    </div>
 </template>
