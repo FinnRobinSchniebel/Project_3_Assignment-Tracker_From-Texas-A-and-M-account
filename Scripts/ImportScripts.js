@@ -1,18 +1,14 @@
-function CollapseToggle(Option){
-    $('#collapse').collapse();
-    if(Option = "Null"){
-        $('#collapse').collapse({
-            toggle: false
-        });
+
+function CT(Option){
+    $('#ImportInfo').collapse();
+    if(Option == "none"){
+        $('#ImportInfo').collapse("hide");
     }
-    else if(Option = "Canvas"){
-        $('#collapse').collapse({
-            toggle: true
-        });
+    else if(Option == "Canvas"){
+        $('#ImportInfo').collapse("show");
     }
-    else if(Option = "Google"){
-        $('#collapse').collapse();
+    else if(Option == "Google"){
+        $('#ImportInfo').collapse("show");
     }
-    
     
 }
