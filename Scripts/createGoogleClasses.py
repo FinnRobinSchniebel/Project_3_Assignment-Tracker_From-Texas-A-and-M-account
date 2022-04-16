@@ -43,7 +43,7 @@ def main():
         courses = results.get('courses', [])
 
 
-
+        classList = []
         if not courses:
             print('No courses found.')
             return
@@ -51,6 +51,8 @@ def main():
         for course in courses:
             # Class name that will be stored
             className = course['name']
+            print(className)
+            print("\n")
 
             #classID for accessing coursework
             classID = course['id']
@@ -61,35 +63,67 @@ def main():
 
 
             # iterate through all of their coursework and create assignmentObjs in dictionarys
-            assignmentObj = {}
+            assignmentList = []
             for assignment in assignments:
+                #create a new assignmentObj to make JSON
+                assignmentObj = {}
                 assignmentObj['name'] = assignment['title']
                 assignmentObj['class'] = className
-                assignmentObj['priority'] = 1
+                assignmentObj['priority'] = 3
 
                 # NEED TO PARSE DATE AND TIME CORRECTLY FOR OUR FORMATTING
-                assignmentObj['dueDate'] = assignment['dueDate']
-                assignmentObj['startDate'] = date.today()
+                assignmentDueDateGoogle = assignment['dueDate']
+                assignmentDueTimeGoogle = assignment['dueTime']
+                dueYear = assignmentDueDateGoogle['year']
+                dueMonth = assignmentDueDateGoogle['month']
+                dueDay = assignmentDueDateGoogle['day']
+                dueHour = (assignmentDueTimeGoogle['hours'] + 19) % 24
+                dueMin = assignmentDueTimeGoogle['minutes']
+                objDueDate = str(dueYear)+ '-' + str(dueMonth)+ '-' + str(dueDay) + 'T' + str(dueHour) + ':' + str(dueMin)
+                assignmentObj['dueDate'] = objDueDate
+
+
+                startDateTime = str(assignment['creationTime'])
+                assignmentObj['startDate'] = startDateTime[0:16]
 
 
                 assignmentObj['link'] = assignment['alternateLink']
 
                 # WIP
-                #assignmentObj['relatedLinks'] = ''
+                assignmentObj['relatedLinks'] = ''
 
 
                 assignmentObj['notes'] = assignment['description']
-                #assignmentObj['complete'] = 
 
-                print("Course: "+ className)
-                print(assignmentObj)
 
+                #check if the assignment has a submission
+                assignmentID = assignment['id']
+                studentSubmissions = service.courses().courseWork().studentSubmissions().list(courseId=classID, courseWorkId = assignmentID).execute()
+                submissions = studentSubmissions.get('studentSubmissions', [])
+                for submission in submissions:
+                    if(submission['assignmentSubmission'] == {}):
+                        assignmentObj['complete'] = False
+                    else:    
+                        assignmentObj['complete'] = True
+
+                assignmentList.append(assignmentObj)
+                
 
             #creating classObj for each course
+            #store assignmentList of each course
+            #set default color for added courses
             classObj = {}
             classObj['name'] = className
-            #classObj['color'] = 
-            #classObj['assignments'] = 
+            classObj['color'] = 'default'
+            classObj['assignments'] = assignmentList
+
+            classList.append(classObj)
+
+            ##write classObj to JSON file
+            print(classList)
+            with open("googleClassObjs.json", "w") as outfile:
+                json.dump(classList, outfile) 
+            
 
 
 
