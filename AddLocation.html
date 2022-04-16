@@ -8,7 +8,7 @@
         <link id="BasicHome" rel="stylesheet" type="text/css" href="BasicHOme.css"/>
         <link id="AddLocation" rel="stylesheet" type="text/css" href="./CSS/AddLocation.css"/>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <script src="./Scripts/scripts.js"></script>
+
         <script src="./Scripts/ImportScripts.js"></script>
 
     </head>
@@ -34,11 +34,11 @@
 
 
         
-            <div id="Locations" class="LocSpace">
+            <div id="Locations" class="LocSpace"><!-- will display all existing connection here to remove-->
 
             </div>
 
-            <div id="ImportAssignment" class="ImportCreater">
+            <div id="ImportCreater" class="ImportCreater">
                 <div id="SourceGroup" class="TypeOutside"> 
                     <Label for="Source">Location Type:</Label>
                     <select class="" aria-label="Priority select table" id="Source" onchange="CT(this.options[this.selectedIndex].value)">
@@ -47,12 +47,13 @@
                         <option value="Google">Class Room</option>
                     </select>
                 </div>
-                <div class="collapse" id="ImportInfo">
-                    <div  id="CollapseCont" class="CreateInfo">
-                        content here
+
+                <!--Div that collapses-->
+                <div class="collapse collapseImport" id="ImportInfo">
+                    <div class="CreateInfo clearfix" id="CollapseCont" >
+                        
                     </div>
                 </div>
-                
             </div>
         </div>
     
@@ -62,9 +63,11 @@
 
 </html>
 
-    <template id="ToAssignmentTemp">
-        <div class="">
+<template id="CanvasInfoTemp">
+    <div class="ICanvans" id="CanvasInfo">
+        <label for="CanvasConnect">Enter "" Info here:</label>
+        <input type="text" id="CanvasConnect" id="canvasConnectionInfo">
+        <button class="button importbutton" onclick="ImportAPICanvas()">Import</button>
+    </div>
 
-        </div>
-    
-    </template>
+</template>
