@@ -96,7 +96,7 @@ function getGoogleJSONs(){
         contentType: "application/json",
         success: function (response){
             classList = JSON.parse(response);
-            alert("Successfully Imported ClassList");
+            alert("Successfully Imported ClassList \n"+ response);
             assignmentPop(classList);
         }
     })
