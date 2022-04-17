@@ -77,7 +77,7 @@ function assignmentPop(ClassList){
         //document.getElementById('NewLoc'+ i).innerHTML += optionObj.innerHTML;
         document.getElementById('SelectLocation').appendChild(NewHTML);
 
-        document.getElementById('').innerText = 'Place Contents from "' + ClassList.name + '" into:';
+        document.getElementById('locText').innerText = 'Place Contents from "' + ClassList.name + '" into:';
 
         for(var j =0; j < userClasses.length; j++){
             // optionObj.innerHTML += `<option value="`+ ClassList[i].name +`" selected> `+ ClassList[i].name +`</option>`;
