@@ -13,10 +13,6 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 ## END OF GOOGLE API IMPORTS
 
-#Canvas Import 
-import requests
-from requests.structures import CaseInsensitiveDict
-
 
 from flask import Flask
 from flask import render_template
