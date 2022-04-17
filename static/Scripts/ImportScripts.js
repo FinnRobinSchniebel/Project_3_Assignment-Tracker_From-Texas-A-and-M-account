@@ -89,6 +89,18 @@ function assignmentPop(ClassList){
         }
         
     }
+
+    var but = document.createElement('button');
+    but.setAttribute('class',"importbutton");
+    but.innerHTML = 'Submit Changes';
+    but.setAttribute('onclick', 'Finalize()');
+
+    //flask does not play nice with multi class so this is needed
+    var centDiv = document.createElement('div');
+    centDiv.setAttribute('class', 'CenterElement');
+    centDiv.appendChild(but);
+    
+    document.getElementById('SelectLocation').appendChild(centDiv);
     return; //returns nothing atm
 }
 
@@ -99,6 +111,8 @@ function ImportAPIGoogle(){
     var classList = [];
     //on success it will call display classList
     
+    //classList = getClassList();
+    //assignmentPop(classList);
     classList = getGoogleJSONs();
 
 }
@@ -136,4 +150,12 @@ function appendAssignmentList(className, importAssignmentList){
     classObj.assignments = assignmentList;
     var jsonObj = JSON.stringify(classObj);
     localStorage.setItem(className, jsonObj);
+}
+
+function Finalize(){
+    console.log("hi");
+
+
+    //clear content when done
+    document.getElementById('SelectLocation').innerHTML ='';
 }
