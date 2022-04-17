@@ -66,6 +66,7 @@ function assignmentPop(ClassList){
         var cur = NewHTML.querySelectorAll('select')[0]; //select
         cur.setAttribute('id', '' + cur.id +i);
 
+        //console.log(NewHTML.querySelectorAll('select'));
         var cur = NewHTML.querySelectorAll('label')[0]; //label
         cur.setAttribute('id', ''+ cur.id +i);
         cur.setAttribute('for', ''+ cur.for +i);
@@ -106,7 +107,7 @@ function getGoogleJSONs(){
         contentType: "application/json",
         success: function (response){
             classList = JSON.parse(response);
-            alert("Successfully Imported ClassList \n"+ response);
+            //console.log("Successfully Imported ClassList \n"+ response);
             assignmentPop(classList);
         }
     })
