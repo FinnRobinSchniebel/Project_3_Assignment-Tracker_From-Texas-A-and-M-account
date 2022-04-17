@@ -65,14 +65,23 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     else{
         document.getElementById('CheckBoxComplete'+ NameToAddForID).onclick = function(){completeButton(assignmentName, className)};
     }
-   
+    
+
+    //priority change
+    document.getElementById('PriorityChange'+ NameToAddForID).getAttribute("onchange");
+    if(typeof(onchange) != "function"){
+        
+        document.getElementById('PriorityChange'+ NameToAddForID).setAttribute('onchange', "updatePriority(this.options[this.selectedIndex].value,'" + assignmentName+ "','" + className +"')");
+    }
+    else{
+        document.getElementById('PriorityChange'+ NameToAddForID).onchange = function(){updatePriority(this.options[this.selectedIndex].value, assignmentName, className)};
+    }
+
 
     //set fields
     document.getElementById('PriorityField'+ NameToAddForID).innerText = "Priority: " + assignmentPriority;
     document.getElementById('AssignmentNameField'+ NameToAddForID).innerText = assignmentName;
     document.getElementById('Start_'+ NameToAddForID).setAttribute("value", assignmentStartDate);
-    //do this later
-    document.getElementById('TimeLeftBarText'+ NameToAddForID).innerText = "todo";
 
     document.getElementById('Due_'+ NameToAddForID).setAttribute("value", assignmentDueDate);
     //bar stuff
@@ -82,6 +91,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
     document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
     document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
+
 
 }
 

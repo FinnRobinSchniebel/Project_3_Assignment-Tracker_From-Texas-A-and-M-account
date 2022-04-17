@@ -257,7 +257,7 @@ function clearPage(){
 }
 
 function updateDiscription(){
-    
+
 }
 function updateURL(){
 
@@ -265,6 +265,18 @@ function updateURL(){
 function updateRelated(){
 
 }
-function updatePriority(){
+function updatePriority(selected, assignmentName, className){
+    //getting copies of objects
+    //console.log(selected +" as: " + assignmentName + " class " + className);
+    var assignmentObj = getAssignment(className, assignmentName);
+    //checks if checkbox is checked
+    
+    //this reassigns cssText for that specific box to change to gray
+    document.getElementById("PriorityField"+className+assignmentName).innerText = "Priority: " + selected;    
+    assignmentObj.priority = selected;
 
+
+    //Remove old assignment from classObj's assignments
+    deleteAssignment(className, assignmentName);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
 }
