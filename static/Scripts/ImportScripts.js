@@ -104,6 +104,7 @@ function ImportAPIGoogle(){
 }
 
 //this function calls python script to generate googleClassObjs.json
+//and call assignmentPop to generate the collapses
 function getGoogleJSONs(){
 
     var classList = [];
@@ -127,6 +128,7 @@ function getGoogleJSONs(){
 function appendAssignmentList(className, importAssignmentList){
     classObj = getClass(className);
     assignmentList = classObj.assignments;
+
     importAssignmentList.forEach(importAssignmentObj => {
         assignmentList.append(importAssignmentObj);
     });
