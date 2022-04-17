@@ -45,7 +45,7 @@ function  ImportAPICanvas(){
 function assignmentPop(ClassList){
     var listlen = ClassList.length;
 
-    var optionObj = document.createElement('div'); //will hold the options
+    var optionObj = document.createElement('select'); //will hold the options
 
     //add options for dropdown to temperary div
     for(var i =0; i < ClassList.length; i++){
@@ -65,14 +65,16 @@ function assignmentPop(ClassList){
         var cur = NewHTML.querySelectorAll('select')[0]; //select
         cur.setAttribute('id', '' + cur.id +i);
 
+        //console.log(NewHTML.querySelectorAll('select'));
         var cur = NewHTML.querySelectorAll('label')[0]; //label
         cur.setAttribute('id', ''+ cur.id +i);
         cur.setAttribute('for', ''+ cur.for +i);
 
         //add all valid options
+        console.log(document.getElementById('NewLoc'+ i));
         document.getElementById('NewLoc'+ i).innerHTML += optionObj.innerHTML;
 
-       document.getElementById('SelectLocation').innerHTML += NewHTML;
+        document.getElementById('SelectLocation').innerHTML += NewHTML;
     }
     return; //returns nothing atm
 }
@@ -96,7 +98,7 @@ function getGoogleJSONs(){
         contentType: "application/json",
         success: function (response){
             classList = JSON.parse(response);
-            alert("Successfully Imported ClassList \n"+ response);
+            //console.log("Successfully Imported ClassList \n"+ response);
             assignmentPop(classList);
         }
     })
