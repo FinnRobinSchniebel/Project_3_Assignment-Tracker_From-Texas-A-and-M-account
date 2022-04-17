@@ -248,7 +248,6 @@ function printClassList(){
 
 //clears everything including the storage
 function clearPage(){
-    console.debug("Before Clear")
     printClassList();
     localStorage.clear();
 
@@ -256,8 +255,16 @@ function clearPage(){
     document.getElementById('classList').innerHTML = ""
 }
 
-function updateDiscription(){
+//updates the JSON with new discription of assignment
+function updateDiscription(text, assignmentName, className){
+    //getting copies of objects
+    var assignmentObj = getAssignment(className, assignmentName);
+    //set new details
+    assignmentObj.notes = text;
 
+    //Remove old assignment from classObj's assignments
+    deleteAssignment(className, assignmentName);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
 }
 function updateURL(){
 
@@ -269,9 +276,8 @@ function updatePriority(selected, assignmentName, className){
     //getting copies of objects
     //console.log(selected +" as: " + assignmentName + " class " + className);
     var assignmentObj = getAssignment(className, assignmentName);
-    //checks if checkbox is checked
     
-    //this reassigns cssText for that specific box to change to gray
+    //this sets the html
     document.getElementById("PriorityField"+className+assignmentName).innerText = "Priority: " + selected;    
     assignmentObj.priority = selected;
 

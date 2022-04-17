@@ -287,7 +287,7 @@ function CurrentDateISOTime(){
 
 //gets the closest non-past due assignment
 function findClosestDue(ListAssignments){
-    console.log(ListAssignments);
+    //console.log(ListAssignments);
     if(ListAssignments.length == 0){ //edge case for no assignments
         return null;
     }

@@ -66,6 +66,17 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         document.getElementById('CheckBoxComplete'+ NameToAddForID).onclick = function(){completeButton(assignmentName, className)};
     }
     
+    //discription change
+    document.getElementById('Details'+ NameToAddForID).getAttribute("onblur");
+    if(typeof(onblur) != "function"){
+        
+        document.getElementById('Details'+ NameToAddForID).setAttribute('onblur', "updateDiscription(this.innerText,'" + assignmentName+ "','" + className +"')");
+    }
+    else{
+        document.getElementById('Details'+ NameToAddForID).onblur = function(){updateDiscription(this.innerText, assignmentName, className)};
+    }
+
+
 
     //priority change
     document.getElementById('PriorityChange'+ NameToAddForID).getAttribute("onchange");
