@@ -77,11 +77,13 @@ function assignmentPop(ClassList){
         //document.getElementById('NewLoc'+ i).innerHTML += optionObj.innerHTML;
         document.getElementById('SelectLocation').appendChild(NewHTML);
 
+        document.getElementById('').innerText = 'Place Contents from "' + ClassList.name + '" into:';
+
         for(var j =0; j < userClasses.length; j++){
             // optionObj.innerHTML += `<option value="`+ ClassList[i].name +`" selected> `+ ClassList[i].name +`</option>`;
             var opt = document.createElement('option');
-            opt.value= ClassList[j].name;
-            opt.innerHTML = ClassList[j].name ;
+            opt.value= userClasses[j].name;
+            opt.innerHTML = userClasses[j].name ;
             //console.log('NewLoc'+ i);
             document.getElementById('NewLoc'+ i).appendChild(opt);
         }
