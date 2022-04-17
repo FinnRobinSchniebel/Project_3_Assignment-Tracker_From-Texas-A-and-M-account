@@ -145,6 +145,7 @@ function appendAssignmentList(className, importAssignmentList){
         assignmentList.append(importAssignmentObj);
     });
 
+    classObj.assignments = assignmentList;
     var jsonObj = JSON.stringify(classObj);
     localStorage.setItem(className, jsonObj);
 }
