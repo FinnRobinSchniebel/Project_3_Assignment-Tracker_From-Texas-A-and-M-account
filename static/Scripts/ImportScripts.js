@@ -45,12 +45,13 @@ function  ImportAPICanvas(){
 function assignmentPop(ClassList){
     var listlen = ClassList.length;
 
-    var optionObj = document.createElement('div'); //will hold the options
+    //var optionObj = ; //will hold the options
 
     //add options for dropdown to temperary div
-    for(var i =0; i < ClassList.length; i++){
-        optionObj.innerHTML += `<option value="`+ ClassList[i].name +`" selected> `+ ClassList[i].name +`</option>`;
-    }
+    var userClasses = getClassList();
+
+
+    
 
     for(var i =0; i < listlen; i++){
         var NewHTML = document.querySelector('#PlaceLocTemp').content;
@@ -70,9 +71,18 @@ function assignmentPop(ClassList){
         cur.setAttribute('for', ''+ cur.for +i);
 
         //add all valid options
-        document.getElementById('NewLoc'+ i).innerHTML += optionObj.innerHTML;
+        
+        //document.getElementById('NewLoc'+ i).innerHTML += optionObj.innerHTML;
+        document.getElementById('SelectLocation').innerHTML = NewHTML;
 
-       document.getElementById('SelectLocation').innerHTML += NewHTML;
+        for(var j =0; j < userClasses.length; j++){
+            // optionObj.innerHTML += `<option value="`+ ClassList[i].name +`" selected> `+ ClassList[i].name +`</option>`;
+            var opt = document.createElement('option');
+            opt.value= ClassList[j].name;
+            opt.innerHTML = ClassList[j].name ;
+            document.getElementById('NewLoc'+ i).appendChild(opt);
+        }
+        
     }
     return; //returns nothing atm
 }
