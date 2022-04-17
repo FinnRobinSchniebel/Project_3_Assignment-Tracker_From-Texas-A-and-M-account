@@ -78,3 +78,43 @@ function assignmentPop(ClassList){
     }
     return; //returns nothing atm
 }
+
+function ImportAPIGoogle(){
+    document.getElementById('SelectLocation').innerHTML += `<div class="loader"></div>`;
+
+    //function for api call here (return file or bool)
+    var classList = [];
+    //on success it will call display classList
+    classList = getGoogleJSONs();
+
+}
+
+//this function calls python script to generate googleClassObjs.json
+function getGoogleJSONs(){
+    var classList = [];
+    $.ajax({
+        url:"/bgGoogleImport",
+        type: "GET",
+        contentType: "application/json",
+        success: function (response){
+            classList = JSON.parse(response);
+            assignmentPop(classList);
+        }
+    })
+    return classList;
+}
+
+
+
+//this function is to add assignments from an imported class INTO an already existing class
+//this function takes in a className that is currently in local storage and adds all the assignments in assignment list
+function appendAssignmentList(className, importAssignmentList){
+    classObj = getClass(className);
+    assignmentList = classObj.assignments;
+    importAssignmentList.forEach(importAssignmentObj => {
+        assignmentList.append(importAssignmentObj);
+    });
+
+    var jsonObj = JSON.stringify(classObj);
+    localStorage.setItem(className, jsonObj);
+}
