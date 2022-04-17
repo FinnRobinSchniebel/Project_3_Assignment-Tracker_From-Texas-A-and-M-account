@@ -45,8 +45,6 @@ function  ImportAPICanvas(){
 function assignmentPop(ClassList){
     var listlen = ClassList.length;
 
-    var ClassList = getClassList();
-
     var optionObj = document.createElement('div'); //will hold the options
 
     //add options for dropdown to temperary div
@@ -98,6 +96,7 @@ function getGoogleJSONs(){
         contentType: "application/json",
         success: function (response){
             classList = JSON.parse(response);
+            alert("Successfully Imported ClassList");
             assignmentPop(classList);
         }
     })
