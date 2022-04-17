@@ -77,7 +77,7 @@ function assignmentPop(ClassList){
         //document.getElementById('NewLoc'+ i).innerHTML += optionObj.innerHTML;
         document.getElementById('SelectLocation').appendChild(NewHTML);
 
-        document.getElementById('locText'+i).innerText = 'Place Contents from "' + ClassList.name + '" into:';
+        document.getElementById('locText'+i).innerText = 'Place Contents from "' + ClassList[i].name + '" into:';
 
         for(var j =0; j < userClasses.length; j++){
             // optionObj.innerHTML += `<option value="`+ ClassList[i].name +`" selected> `+ ClassList[i].name +`</option>`;
@@ -131,6 +131,7 @@ function appendAssignmentList(className, importAssignmentList){
         assignmentList.append(importAssignmentObj);
     });
 
+    classObj.assignments = assignmentList;
     var jsonObj = JSON.stringify(classObj);
     localStorage.setItem(className, jsonObj);
 }
