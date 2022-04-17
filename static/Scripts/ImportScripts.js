@@ -32,8 +32,8 @@ function addinfoGet(fromTemp){
 
 
 function  ImportAPICanvas(){
-    document.getElementById('SelectLocation').innerHTML += `<div class="loader"></div>`;
-
+    document.getElementById('SelectLocation').innerHTML = `<div class="loader"></div>`;
+    
     //function for api call here (return file or bool)
 
     //populate options here (with json results) 
@@ -44,7 +44,7 @@ function  ImportAPICanvas(){
 
 function assignmentPop(ClassList){
     var listlen = ClassList.length;
-
+    document.getElementById('SelectLocation').innerHTML = ``;
     //var optionObj = ; //will hold the options
 
     //add options for dropdown to temperary div
@@ -63,24 +63,26 @@ function assignmentPop(ClassList){
         var cur = NewHTML.querySelectorAll('div')[0]; //div
         cur.setAttribute('id', '' + cur.id +i);
         
-        var cur = NewHTML.querySelectorAll('select')[0]; //select
+        cur = NewHTML.querySelectorAll('select')[0]; //select
         cur.setAttribute('id', '' + cur.id +i);
+        console.log(cur.id);
 
         //console.log(NewHTML.querySelectorAll('select'));
-        var cur = NewHTML.querySelectorAll('label')[0]; //label
+        cur = NewHTML.querySelectorAll('label')[0]; //label
         cur.setAttribute('id', ''+ cur.id +i);
         cur.setAttribute('for', ''+ cur.for +i);
 
         //add all valid options
         
         //document.getElementById('NewLoc'+ i).innerHTML += optionObj.innerHTML;
-        document.getElementById('SelectLocation').innerHTML = NewHTML;
+        document.getElementById('SelectLocation').appendChild(NewHTML);
 
         for(var j =0; j < userClasses.length; j++){
             // optionObj.innerHTML += `<option value="`+ ClassList[i].name +`" selected> `+ ClassList[i].name +`</option>`;
             var opt = document.createElement('option');
             opt.value= ClassList[j].name;
             opt.innerHTML = ClassList[j].name ;
+            //console.log('NewLoc'+ i);
             document.getElementById('NewLoc'+ i).appendChild(opt);
         }
         
@@ -89,17 +91,19 @@ function assignmentPop(ClassList){
 }
 
 function ImportAPIGoogle(){
-    document.getElementById('SelectLocation').innerHTML += `<div class="loader"></div>`;
+    document.getElementById('SelectLocation').innerHTML = `<div class="loader"></div>`;
 
     //function for api call here (return file or bool)
     var classList = [];
     //on success it will call display classList
+    
     classList = getGoogleJSONs();
 
 }
 
 //this function calls python script to generate googleClassObjs.json
 function getGoogleJSONs(){
+
     var classList = [];
     $.ajax({
         url:"/bgGoogleImport",
@@ -110,7 +114,7 @@ function getGoogleJSONs(){
             //console.log("Successfully Imported ClassList \n"+ response);
             assignmentPop(classList);
         }
-    })
+    });
     return classList;
 }
 
