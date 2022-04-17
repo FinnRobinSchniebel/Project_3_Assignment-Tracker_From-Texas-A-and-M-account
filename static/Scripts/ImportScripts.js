@@ -55,7 +55,7 @@ function assignmentPop(ClassList){
     }
 
     for(var i =0; i < listlen; i++){
-        var NewHTML = document.querySelector(fromTemp).content;
+        var NewHTML = document.querySelector('#PlaceLocTemp').content;
         NewHTML= NewHTML.cloneNode(true);
         //document.getElementById("CollapseCont").append(NewHTML);
 
