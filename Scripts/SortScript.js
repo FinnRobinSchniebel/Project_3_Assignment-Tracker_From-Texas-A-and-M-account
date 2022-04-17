@@ -16,21 +16,28 @@ function sortAssignment(JSONOBJ){
         JSONOBJ = sortStart(JSONOBJ);
         JSONOBJ = sortPrior(JSONOBJ);
         JSONOBJ = sortDue(JSONOBJ); 
+        JSONOBJ = sortComplete(JSONOBJ);
+        //console.log(JSONOBJ);
     }
     else if(CurSort == "Priority"){
         JSONOBJ = sortStart(JSONOBJ);
         JSONOBJ = sortDue(JSONOBJ);
         JSONOBJ = sortPrior(JSONOBJ);
+        JSONOBJ = sortComplete(JSONOBJ);
     }
     else if(CurSort == "StartDate"){
         JSONOBJ = sortDue(JSONOBJ);
         JSONOBJ = sortPrior(JSONOBJ);
         JSONOBJ = sortStart(JSONOBJ);
+
+        JSONOBJ = sortComplete(JSONOBJ);
     }
     else if(CurSort == "TimePast"){
         JSONOBJ = sortDue(JSONOBJ);
         JSONOBJ = sortPrior(JSONOBJ);
         JSONOBJ = sortExpired(JSONOBJ);
+
+        JSONOBJ = sortComplete(JSONOBJ);
     }
     else{
         console.log("error");
@@ -70,7 +77,13 @@ function sortExpired(OBJ){
         var expired1 = (todaysDate - new Date(x.startDate))/max1;
         var expired2 = (todaysDate - new Date(y.startDate))/max2;
         
-        //using ISO date sort the extra stuff is for correctness. For source: https://stackoverflow.com/questions/12192491/sort-array-by-iso-8601-date 
         return (parseFloat(expired2)-parseFloat(expired1)); 
+    });
+}
+//sends completed to back
+function sortComplete(OBJ){
+    return OBJ.sort(function(x,y){
+        
+        return (x.complete === y.complete)? 0 : x.complete? 1 : -1; 
     });
 }

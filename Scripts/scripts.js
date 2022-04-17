@@ -287,19 +287,25 @@ function CurrentDateISOTime(){
 
 //gets the closest non-past due assignment
 function findClosestDue(ListAssignments){
-    if(ListAssignments == null){ //edge case for no assignments
+    console.log(ListAssignments);
+    if(ListAssignments.length == 0){ //edge case for no assignments
         return null;
     }
     var currentClossest =ListAssignments[0];
     for(var i =0; i < ListAssignments.length; i++){
         if(ListAssignments[i].dueDate < currentClossest.dueDate){
-            currentClossest = [i];
+            currentClossest = ListAssignments[i];
         }   
     }
     if(currentClossest ){
 
     }
     return currentClossest;
+}
+
+
+function findPastDue(listOfAssignments){
+
 }
 
 window.onload = function(){

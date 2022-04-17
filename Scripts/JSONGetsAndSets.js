@@ -255,3 +255,16 @@ function clearPage(){
     // reset to original html
     document.getElementById('classList').innerHTML = ""
 }
+
+function updateDiscription(){
+    
+}
+function updateURL(){
+
+}
+function updateRelated(){
+
+}
+function updatePriority(){
+
+}
