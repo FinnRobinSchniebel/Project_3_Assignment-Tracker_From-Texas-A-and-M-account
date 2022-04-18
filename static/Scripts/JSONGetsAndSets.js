@@ -127,25 +127,39 @@ function deleteAssignment(className, assignmentName){
 
     //console.debug(assignmentList);
 }
-// WIP: removeClass
+
+// should work as intended 
+//edits HTML
+function removeAssignment(className, assignmentName, assignmentDiv){
+
+    // console.debug(inputClassNameDisplay);
+    //used to remove class
+    var removeAssignment = assignmentDiv;
+    const element = document.getElementById(removeAssignment);
+    //console.debug(element);
+    element.remove();
+
+    //console.debug("Before Delete")
+    //printClassList();
+    // removes class from classList
+    deleteAssignment(className, assignmentName);
+    //console.debug("After Delete")
+    //printClassList();
+}
+
+// should work as intended 
 //edits HTML
 function removeClass(){
     // input from user
     var inputClassNameDisplay = document.getElementById("RemoveClassName").value;
-    // // var inputClassNameDisplay = document.getElementById("csce");
-    // takes the space away to ensure variables are properly named
-    // var inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
-    // inputClassName = inputClassName.trim();
+    var classDiv = inputClassNameDisplay + 'Section';
+
     //used to remove class
-    const element = document.getElementById(inputClassNameDisplay);
+    const element = document.getElementById(classDiv);
     element.remove();
 
-    
-    printClassList();
     // removes class from classList
     deleteClass(inputClassNameDisplay);
-    printClassList();
-    
 }
 
 //storeClass: takes in user inputted className and an array of assignments to store in local storage

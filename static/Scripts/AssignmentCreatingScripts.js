@@ -66,6 +66,10 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         document.getElementById('CheckBoxComplete'+ NameToAddForID).onclick = function(){completeButton(assignmentName, className)};
     }
     
+    //remove button
+    document.getElementById('removeButton'+ NameToAddForID).onclick = function(){removeAssignment(className, assignmentName, 'Assignment'+NameToAddForID)};
+
+
     //discription change
     document.getElementById('Details'+ NameToAddForID).getAttribute("onblur");
     if(typeof(onblur) != "function"){
