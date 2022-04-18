@@ -1,4 +1,4 @@
-src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js";
 
 var CurSort = "DueDate";
 

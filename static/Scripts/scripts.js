@@ -1,3 +1,4 @@
+
 function addDemo(){
     // inputs taken from user
     var newAssignmentDisplay = document.getElementById("NewAssignmentName").innerText;
@@ -99,7 +100,6 @@ function populatePage(){
             PopulateAssignments(assignmentList[index]);
             index ++;
         }
-
         loadClassColor(className);
     });
 
