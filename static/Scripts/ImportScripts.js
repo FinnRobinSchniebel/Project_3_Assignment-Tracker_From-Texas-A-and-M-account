@@ -35,7 +35,7 @@ function  ImportAPICanvas(){
     document.getElementById('SelectLocation').innerHTML = `<div class="loader"></div>`;
     
     //function for api call here (return file or bool)
-
+    getCanvasUserJSON();
     //populate options here (with json results) 
 
     
@@ -139,6 +139,16 @@ function getGoogleJSONs(){
 }
 
 
+function getCanvasUserJSON(){
+    $.ajax({
+        url:"/bgGetCanvasUser",
+        type: "GET",
+        contentType: "application/json",
+        success: function (response){
+            console.log(response.id);
+        }
+    });
+}
 
 //this function is to add assignments from an imported class INTO an already existing class
 //this function takes in a className that is currently in local storage and adds all the assignments in assignment list
@@ -152,6 +162,7 @@ function appendAssignmentList(className, importAssignmentList){
 
     classObj.assignments = assignmentList;
     var jsonObj = JSON.stringify(classObj);
+    console.log(jsonObj);
     localStorage.setItem(className, jsonObj);
 }
 
@@ -197,10 +208,10 @@ function Finalize(){
         selClassName = selClassName.replace(/_/g," ");
 
         if(selClassName == "None"){
-            console.log(JSON.stringify(importedClassObjs[i]));
+            //console.log(JSON.stringify(importedClassObjs[i]));
             storeClass(importedClassObjs[i].name,importedClassObjs[i].assignments,importedClassObjs[i].color);
         } else{
-            console.log(JSON.stringify(importedClassObjs[i]));
+            //console.log(JSON.stringify(importedClassObjs[i]));
             appendAssignmentList(selClassName, importedClassObjs[i].assignments);
         }
     }

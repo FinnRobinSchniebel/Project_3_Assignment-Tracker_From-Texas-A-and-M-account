@@ -13,6 +13,10 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 ## END OF GOOGLE API IMPORTS
 
+#Canvas
+import requests
+from requests.structures import CaseInsensitiveDict
+
 
 from flask import Flask
 from flask import render_template
@@ -151,15 +155,21 @@ def getGoogleJSONs():
         jsonStr = json.dumps(classList)
         return jsonStr
             
-
-
-
-
-
-
     except HttpError as error:
         print('An error occurred: %s' % error)
 
 
+#background process happening without any refreshing
+@app.route('/bgGetCanvasUser', methods=['GET', 'POST'])
+def getCanvasUser():
+    url = "https://canvas.tamu.edu/api/v1/users/self"
+
+    headers = {'Authorization' : 'Bearer 15924~j9hFN1TVjJHgUCE7CyTdrKaWKSLsf8yIRaCtCfQlXp4PkASi8ts3UJEqn2ackRq1'}
+
+    resp = requests.get(url, headers=headers)
+
+    return (resp.json())
+
 if __name__ == '__main__':
     app.run(debug=True)
+
