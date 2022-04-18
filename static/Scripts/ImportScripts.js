@@ -65,7 +65,7 @@ function assignmentPop(ClassList){
         
         cur = NewHTML.querySelectorAll('select')[0]; //select
         cur.setAttribute('id', '' + cur.id +i);
-        console.log(cur.id);
+        //console.log(cur.id);
 
         //console.log(NewHTML.querySelectorAll('select'));
         cur = NewHTML.querySelectorAll('label')[0]; //label
@@ -131,8 +131,8 @@ function getGoogleJSONs(){
             //console.log("Successfully Imported ClassList \n"+ response);
             assignmentPop(classList);
             storeImports(classList);
-            console.log("STORING \n\n")
-            console.log(localStorage);
+            //console.log("STORING \n\n")
+            //console.log(localStorage);
         }
     });
     return classList;
@@ -153,16 +153,18 @@ function getCanvasUserJSON(){
 //this function is to add assignments from an imported class INTO an already existing class
 //this function takes in a className that is currently in local storage and adds all the assignments in assignment list
 function appendAssignmentList(className, importAssignmentList){
+    console.log(className);
     classObj = getClass(className);
     assignmentList = classObj.assignments;
 
     importAssignmentList.forEach(importAssignmentObj => {
-        assignmentList.append(importAssignmentObj);
+        importAssignmentObj.class = className;
+        assignmentList.push(importAssignmentObj);
+        console.log(JSON.stringify(importAssignmentObj));
     });
 
     classObj.assignments = assignmentList;
     var jsonObj = JSON.stringify(classObj);
-    console.log(jsonObj);
     localStorage.setItem(className, jsonObj);
 }
 
@@ -198,6 +200,8 @@ function getTempClassObjs(){
 function Finalize(){
     //these are the classObjs that were imported
     var importedClassObjs = getTempClassObjs();
+    console.log("\n\n");
+    console.log(localStorage);
 
 
     //TODO implement logic to iterate through loc0-locX
@@ -205,12 +209,8 @@ function Finalize(){
         // gets the selected className to import to
         var selecter = document.getElementById('NewLoc'+ i);
         var selClassName = selecter.options[selecter.selectedIndex].value;
-        selClassName = selClassName.replace(/_/g," ");
 
-        if(selClassName == "None"){
-            //console.log(JSON.stringify(importedClassObjs[i]));
-            storeClass(importedClassObjs[i].name,importedClassObjs[i].assignments,importedClassObjs[i].color);
-        } else{
+        if(selClassName != "None"){
             //console.log(JSON.stringify(importedClassObjs[i]));
             appendAssignmentList(selClassName, importedClassObjs[i].assignments);
         }

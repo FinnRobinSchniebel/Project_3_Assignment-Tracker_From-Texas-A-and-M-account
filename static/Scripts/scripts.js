@@ -97,6 +97,7 @@ function populatePage(){
         PopulateClass(className, closest);
         // loops through array of assignments and add each one to class
         while (index < i){
+            console.log(assignmentList[index]);
             PopulateAssignments(assignmentList[index]);
             index ++;
         }
