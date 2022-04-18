@@ -130,6 +130,9 @@ function getGoogleJSONs(){
             classList = JSON.parse(response);
             //console.log("Successfully Imported ClassList \n"+ response);
             assignmentPop(classList);
+            storeImports(classList);
+            console.log("STORING \n\n")
+            console.log(localStorage);
         }
     });
     return classList;
@@ -152,10 +155,52 @@ function appendAssignmentList(className, importAssignmentList){
     localStorage.setItem(className, jsonObj);
 }
 
-function Finalize(){
-    console.log("hi");
+function storeImports(classList){
+    classList.forEach(classObj => {
+        importClassName = "IMPORTING-TEMP"+classObj.name;
+        importAssignment = classObj.assignments;
+        importColor = classObj.color;
+        storeClass(importClassName,importAssignment,importColor);
+    });
+}
 
+//this function will pull all TEMP classes from local storage & remove them
+function getTempClassObjs(){
+    classList = getClassList();
+    importedClassObjs = []; // array of classObjs
+    classList.forEach(classObj => {
+        className = classObj.name;
+        if(className.startsWith("IMPORTING-TEMP")){
+            //rename classObj copy
+            classObj.name = className.substring(14);
+            console.log(classObj.name);
+            //append imported classObj without IMPORTING-TEMP
+            importedClassObjs.push(classObj);
+            //delete item in localstorage with IMPORTING-TEMP
+            deleteClass(className);
+        }
+    });
+    return importedClassObjs;
+}
+
+function Finalize(){
+    //these are the classObjs that were imported
+    importedClassObjs = getTempClassObjs();
+
+    //TODO implement logic to iterate through loc0-locX
+    
+    //if adding to existing course use appendAssignmentList()
+    
+    //if not adding to existing course use storeClass()
+
+    
 
     //clear content when done
     document.getElementById('SelectLocation').innerHTML ='';
+}
+
+//this function will remove temp objects when leaving page
+window.onbeforeunload = function(){
+    temp = getTempClassObjs();
+    //console.log("leaving");
 }
