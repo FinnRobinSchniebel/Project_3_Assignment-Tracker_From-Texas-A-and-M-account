@@ -183,18 +183,27 @@ function getTempClassObjs(){
     return importedClassObjs;
 }
 
+//WIP: Debugging, does not add to exsisting
 function Finalize(){
     //these are the classObjs that were imported
-    importedClassObjs = getTempClassObjs();
+    var importedClassObjs = getTempClassObjs();
+
 
     //TODO implement logic to iterate through loc0-locX
-    
-    //if adding to existing course use appendAssignmentList()
-    
-    //if not adding to existing course use storeClass()
+    for(var i = 0; i < importedClassObjs.length;i++){
+        // gets the selected className to import to
+        var selecter = document.getElementById('NewLoc'+ i);
+        var selClassName = selecter.options[selecter.selectedIndex].value;
+        selClassName = selClassName.replace(/_/g," ");
 
-    
-
+        if(selClassName == "None"){
+            console.log(JSON.stringify(importedClassObjs[i]));
+            storeClass(importedClassObjs[i].name,importedClassObjs[i].assignments,importedClassObjs[i].color);
+        } else{
+            console.log(JSON.stringify(importedClassObjs[i]));
+            appendAssignmentList(selClassName, importedClassObjs[i].assignments);
+        }
+    }
     //clear content when done
     document.getElementById('SelectLocation').innerHTML ='';
 }
