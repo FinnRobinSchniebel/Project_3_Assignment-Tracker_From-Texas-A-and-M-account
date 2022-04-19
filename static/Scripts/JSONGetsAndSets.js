@@ -189,15 +189,18 @@ function completeButton(assignmentName,className){
     var assignmentObj = getAssignment(className, assignmentName);
     var classObj = getClass(className);
     //checks if checkbox is checked
-    if(document.getElementById("CheckBoxComplete"+className+assignmentName).checked){
+    var assignmentID = assignmentObj.name;
+    assignmentID = assignmentID.replaceAll(" ", "_");
+    var classID = className.replaceAll(" ","_");
+    if(document.getElementById("CheckBoxComplete"+classID+assignmentID).checked){
         //this reassigns cssText for that specific box to change to gray
-        document.getElementById("Overview"+className+assignmentName).style.backgroundColor = "rgb(110, 108, 117)";    
-        document.getElementById("OutsideForSizeFix"+className+assignmentName).style.backgroundColor = "rgb(110, 108, 117)";
+        document.getElementById("Overview"+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";    
+        document.getElementById("OutsideForSizeFix"+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
         assignmentObj.complete = true;
     } else {
         //this reverts it back to our original color
-        document.getElementById("Overview"+className+assignmentName).style.backgroundColor = classObj.color;   
-        document.getElementById("OutsideForSizeFix"+className+assignmentName).style.backgroundColor =classObj.color;
+        document.getElementById("Overview"+classID+assignmentID).style.backgroundColor = classObj.color;   
+        document.getElementById("OutsideForSizeFix"+classID+assignmentID).style.backgroundColor =classObj.color;
         assignmentObj.complete = false;    
     }
 
@@ -216,6 +219,7 @@ function completeButton(assignmentName,className){
 function changeClassColor(className){
     let color = document.getElementById(className+'ColorPicker').value;
     var RGB = parseColor(color);
+    var classID = className.replaceAll(" ","_");
 
     //setting color update into localstorage
     var classObj = getClass(className);
@@ -237,12 +241,14 @@ function changeClassColor(className){
     var assignmentList = [];
     assignmentList = getAssignments(className);
     assignmentList.forEach((assignmentObj, i, array) => {
+        var assignmentID = assignmentObj.name;
+        assignmentID = assignmentID.replaceAll(" ", "_");
         if(assignmentObj.complete == false){
-            document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-            document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+            document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+            document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
         } else {
-            document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb(110, 108, 117)";
-            document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
         }
     });  
 }

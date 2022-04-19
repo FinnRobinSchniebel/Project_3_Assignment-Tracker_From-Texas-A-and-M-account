@@ -90,13 +90,15 @@ function loadClassColor(className){
     var assignmentList = [];
     assignmentList = getAssignments(className);
     assignmentList.forEach((assignmentObj, i, array) => {
+        var assignmentID = assignmentObj.name;
+        assignmentID = assignmentID.replaceAll(" ", "_");
         if(assignmentObj.complete == false){
-            document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-            document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+            document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+            document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
         } else {
-            document.getElementById('Overview'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb(110, 108, 117)";
-            document.getElementById('OutsideForSizeFix'+assignmentObj.class+assignmentObj.name).style.backgroundColor = "rgb(110, 108, 117)";
-            document.getElementById("CheckBoxComplete"+className+assignmentObj.name).checked = true;
+            document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById("CheckBoxComplete"+classID+assignmentID).checked = true;
         }
     }); 
 }

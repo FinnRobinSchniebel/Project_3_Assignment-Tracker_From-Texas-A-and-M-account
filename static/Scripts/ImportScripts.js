@@ -139,6 +139,34 @@ function getGoogleJSONs(){
 }
 
 
+//this function calls python script to generate an array of canvas classObjs
+//and call assignmentPop to generate the collapses
+function getCanvasJSONs(){
+
+    //TODO
+    //Get token value entered by user
+    //Pass token value as python argument
+    var classList = [];
+    $.ajax({
+        url:"/bgCanvasImport",
+        type: "GET",
+        contentType: "application/json",
+        success: function (response){
+            classList = JSON.parse(response);
+            console.log("Successfully Imported ClassList \n"+ response);
+            //assignmentPop(classList);
+            //storeImports(classList);
+            //console.log("STORING \n\n")
+            //console.log(localStorage);
+        }
+    });
+    return classList;
+}
+
+
+
+
+//leaving this function for testing
 function getCanvasUserJSON(){
     $.ajax({
         url:"/bgGetCanvasUser",
@@ -149,6 +177,10 @@ function getCanvasUserJSON(){
         }
     });
 }
+
+
+
+
 
 //this function is to add assignments from an imported class INTO an already existing class
 //this function takes in a className that is currently in local storage and adds all the assignments in assignment list
