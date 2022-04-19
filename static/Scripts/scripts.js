@@ -97,7 +97,7 @@ function populatePage(){
         PopulateClass(className, closest);
         // loops through array of assignments and add each one to class
         while (index < i){
-            console.log(assignmentList[index]);
+            //console.log(assignmentList[index]);
             PopulateAssignments(assignmentList[index]);
             index ++;
         }
@@ -124,7 +124,7 @@ function PopulateAssignments(AssignmentInfoOBJ){
     //************************************** */
     var relatedLinks = AssignmentInfoOBJ.relatedLinks;
     var link = AssignmentInfoOBJ.link;
-    console.log(AssignmentInfoOBJ.link);
+    //console.log(AssignmentInfoOBJ.link);
     var priority = AssignmentInfoOBJ.priority; //test, still needs to be implemented
     var isComplete = AssignmentInfoOBJ.complete;
     //todo-priority    
