@@ -12,7 +12,7 @@ function addDemo(){
     var relatedLinks = document.getElementById("NewAssignmentRelatedLinks").innerText;
     // need to remember what this does again 
     //document.getElementsByTagName('body')[0].appendChild(div);
-    AssignmentAddHTML("Demo", newAssignmentDisplay, "1", startTime, endTime, link, relatedLinks, notes);
+    AssignmentAddHTML("Demo", newAssignmentDisplay, "1", startTime, endTime, link, relatedLinks, notes, "");
 }
 
 
@@ -98,7 +98,7 @@ function populatePage(){
         // loops through array of assignments and add each one to class
         while (index < i){
             //console.log(assignmentList[index]);
-            PopulateAssignments(assignmentList[index]);
+            PopulateAssignments(assignmentList[index] ,"");
             index ++;
         }
         loadClassColor(className);
@@ -108,9 +108,9 @@ function populatePage(){
 }
 
 //TODO: NEED TO ADD BACK REMOVE BUTTON 
-function PopulateAssignments(AssignmentInfoOBJ){
+function PopulateAssignments(AssignmentInfoOBJ, Location){
 
-    
+
     // Changes display back to original
     var ClassName= AssignmentInfoOBJ.class;
     var newAssignmentName = AssignmentInfoOBJ.name;
@@ -128,7 +128,7 @@ function PopulateAssignments(AssignmentInfoOBJ){
     var priority = AssignmentInfoOBJ.priority; //test, still needs to be implemented
     var isComplete = AssignmentInfoOBJ.complete;
     //todo-priority    
-    AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails, isComplete);
+    AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails, isComplete, Location);
 
 
 
@@ -308,8 +308,4 @@ function findClosestDue(ListAssignments){
 
 function findPastDue(listOfAssignments){
 
-}
-
-window.onload = function(){
-    populatePage();
 }
