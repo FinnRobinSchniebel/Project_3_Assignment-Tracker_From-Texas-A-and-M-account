@@ -5,6 +5,8 @@ import os.path
 
 import json
 from datetime import date
+from datetime import datetime
+from datetime import timedelta
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -116,11 +118,26 @@ def getGoogleJSONs():
                     dueDay = ''+str(assignmentDueDateGoogle['day'])
                 dueHour = (assignmentDueTimeGoogle['hours'] + 19) % 24
                 dueMin = assignmentDueTimeGoogle['minutes']
+                
                 objDueDate = str(dueYear)+ '-' + str(dueMonth)+ '-' + str(dueDay) + 'T' + str(dueHour) + ':' + str(dueMin)
                 assignmentObj['dueDate'] = objDueDate
 
 
                 startDateTime = str(assignment['creationTime'])
+
+                ## Creating DateTime datatypes for comparison
+                dueDateYear = int(dueYear)
+                dueDateMonth = int(dueMonth)
+                dueDateDay = int(dueDay)
+
+                dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+                delta = dueDate - date.today()
+
+                ##checks if assignment is less than ten days overdue, if not then displays
+                isNotPastAssignment = delta > timedelta(days = 10)
+
+
+
                 assignmentObj['startDate'] = startDateTime[0:16]
 
 
@@ -143,6 +160,7 @@ def getGoogleJSONs():
                     else:    
                         assignmentObj['complete'] = True
 
+
                 assignmentList.append(assignmentObj)
                 
 
@@ -154,7 +172,8 @@ def getGoogleJSONs():
             classObj['color'] = 'rgb(162, 214, 161);'
             classObj['assignments'] = assignmentList
 
-            classList.append(classObj)
+            if(isNotPastAssignment):
+                classList.append(classObj)
 
         ##write classObj to JSON file
         with open("./static/Scripts/googleClassObjs.json", "w") as outfile:
