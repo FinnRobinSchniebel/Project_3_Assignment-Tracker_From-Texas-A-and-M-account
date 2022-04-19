@@ -184,6 +184,8 @@ def getCanvasCourses(token, userID):
 
     resp = requests.get(url, headers=headers)
 
+    
+
     return (resp.json())
 
 
