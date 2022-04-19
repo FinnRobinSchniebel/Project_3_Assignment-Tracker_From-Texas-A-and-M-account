@@ -104,8 +104,16 @@ def getGoogleJSONs():
                 assignmentDueDateGoogle = assignment['dueDate']
                 assignmentDueTimeGoogle = assignment['dueTime']
                 dueYear = assignmentDueDateGoogle['year']
-                dueMonth = assignmentDueDateGoogle['month']
-                dueDay = assignmentDueDateGoogle['day']
+
+                if(assignmentDueDateGoogle['month'] < 10):
+                    dueMonth = '0'+str(assignmentDueDateGoogle['month'])
+                else:
+                    dueMonth = ''+str(assignmentDueDateGoogle['month'])
+                    
+                if(assignmentDueDateGoogle['day'] < 10):
+                    dueDay = '0'+str(assignmentDueDateGoogle['day'])
+                else:
+                    dueDay = ''+str(assignmentDueDateGoogle['day'])
                 dueHour = (assignmentDueTimeGoogle['hours'] + 19) % 24
                 dueMin = assignmentDueTimeGoogle['minutes']
                 objDueDate = str(dueYear)+ '-' + str(dueMonth)+ '-' + str(dueDay) + 'T' + str(dueHour) + ':' + str(dueMin)
@@ -184,7 +192,7 @@ def getCanvasCourses(token, userID):
 
     resp = requests.get(url, headers=headers)
 
-    
+
 
     return (resp.json())
 
