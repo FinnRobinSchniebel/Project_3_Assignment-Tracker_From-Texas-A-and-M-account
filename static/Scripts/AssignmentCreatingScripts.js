@@ -1,8 +1,7 @@
 src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js";
 
 
-function AssignmentAddHTML(className, assignmentName, assignmentPriority, assignmentStartDate, assignmentDueDate, assignmentLink, assignmentRelatedLinks, assignmentNotes){
-
+function AssignmentAddHTML(className, assignmentName, assignmentPriority, assignmentStartDate, assignmentDueDate, assignmentLink, assignmentRelatedLinks, assignmentNotes, isComplete, Location){
 
     // name: assignmentName,                   //text
     //     class: className,                       //text
@@ -48,8 +47,13 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         cur.setAttribute('id', ''+cur.id + NameToAddForID);
     }
     
+    if(Location == ""){
+        document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
+    }
+    else{
+        document.getElementById(Location).appendChild(NewHTML);
+    }
     
-    document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
 
 
     //set up the button to link to the right dropdown on the page
