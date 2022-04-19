@@ -124,6 +124,7 @@ function PopulateAssignments(AssignmentInfoOBJ){
     //************************************** */
     var relatedLinks = AssignmentInfoOBJ.relatedLinks;
     var link = AssignmentInfoOBJ.link;
+    console.log(AssignmentInfoOBJ.link);
     var priority = AssignmentInfoOBJ.priority; //test, still needs to be implemented
     var isComplete = AssignmentInfoOBJ.complete;
     //todo-priority    
