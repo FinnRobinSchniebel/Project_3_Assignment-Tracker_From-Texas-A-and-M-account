@@ -182,6 +182,8 @@ function getCanvasUserJSON(){
 // Uses getCanvasCourses
 // TODO: Need to find a way to pass user token
 function getCanvasJSONs(){
+
+    var classList = [];
     $.ajax({
         url:"/bgGetCanvasAssignments",
         type: "GET",
@@ -224,7 +226,6 @@ function storeImports(classList){
         importAssignment = classObj.assignments;
         importColor = classObj.color;
         storeClass(importClassName,importAssignment,importColor);
-
     });
 }
 

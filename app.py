@@ -222,10 +222,14 @@ def getCanvasCourses():
     # this is done by looping through the courses again to find the ones with maxID
     courseDict = {}
     for course in resp.json():
-        if course["enrollment_term_id"] == maxID:
+        if course["enrollment_term_id"] == maxID:     
             courseID = course["id"]
+            if courseID == 123752: continue
             courseDict[courseID] = course["name"]  
-
+    # getting rid of JAPN messes up stuff
+    for course in courseDict:
+        if (course == 123752):
+            course.pop()
     return (courseDict)
 
 
@@ -233,10 +237,8 @@ def getCanvasCourses():
 @app.route('/bgGetCanvasAssignments', methods=['GET', 'POST'])
 def getCanvasAssignments():
     courseDict = getCanvasCourses()
-    assignmentList = []
     classList = []
-    
-    # counter = 0
+    print(courseDict)
     for courseID in courseDict:
         stringID = str(courseID)
         # takes course name and replaces : since it creates error later 
@@ -244,7 +246,6 @@ def getCanvasAssignments():
         courseName = courseDict[courseID]
         courseName = courseName.replace(':','')
         courseName = courseName.replace(' ','_')
-        # print(courseName)
         url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments/"
 
         #eventually will take bearer token as an argument
@@ -253,11 +254,10 @@ def getCanvasAssignments():
 
         resp = requests.get(url, headers=headers)
         
-        
-        
         # loops through current class's assignmnents
         # puts everything required into assignmentObj
         # TODO: Noticed some dates are null for assignments need to check
+        assignmentList = []
         for assignment in resp.json():
             #create a new assignmentObj to make JSON
             assignmentObj = {}
@@ -270,15 +270,18 @@ def getCanvasAssignments():
             assignmentObj['link'] = assignment['html_url']
             assignmentObj['relatedLinks'] = ''
             assignmentObj['notes'] = '' #assignment['description']
+            # print("Assignment Name:")
+            # print(assignment['name'])
 
             #check if the assignment has a submission
-            submission = assignment['has_submitted_submissions']
-            if(submission == False):
-                assignmentObj['complete'] = False
-            else:    
-                assignmentObj['complete'] = True
+            # submission = assignment['has_submitted_submissions']
+            # if(submission == False):
+            #     assignmentObj['complete'] = False
+            # else:    
+            #     assignmentObj['complete'] = True
 
             assignmentList.append(assignmentObj)
+
             # delta = assignmentObj['dueDate'] - assignmentObj['startDate']
 
         ##checks if assignment is less than ten days overdue, if not then displays
@@ -293,8 +296,6 @@ def getCanvasAssignments():
         # if(isNotPastAssignment):
         classList.append(classObj)
         # print(resp.json())
-
-        # counter+=
 
     ##write classObj to JSON file
     with open("./static/Scripts/CanvasObjs.json", "w") as outfile:
