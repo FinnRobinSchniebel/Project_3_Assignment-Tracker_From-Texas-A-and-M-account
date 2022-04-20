@@ -6,7 +6,10 @@ function sortButton(sortby){
     CurSort = sortby;
     populatePage();
 }   
-
+function sortButtonQuick(sortby){
+    CurSort = sortby;
+    populateQuickView();
+}
 
 
 //called by populating function for sorting the array
@@ -15,7 +18,7 @@ function sortAssignment(JSONOBJ){
         //order primarily by due date but first by start and priority so if something has the same duedate the one with the higher priority will go first
         JSONOBJ = sortStart(JSONOBJ);
         JSONOBJ = sortPrior(JSONOBJ);
-        JSONOBJ = sortDue(JSONOBJ); 
+        JSONOBJ = sortDue(JSONOBJ);
         JSONOBJ = sortComplete(JSONOBJ);
         //console.log(JSONOBJ);
     }
