@@ -187,47 +187,122 @@ def getGoogleJSONs():
 
 
 #background process happening without any refreshing
-@app.route('/bgGetCanvasUser', methods=['GET', 'POST'])
-def getCanvasUser(token):
-    url = "https://canvas.tamu.edu/api/v1/users/self"
+# @app.route('/bgGetCanvasUser', methods=['GET', 'POST'])
+# def getCanvasUser(token):
+#     url = "https://canvas.tamu.edu/api/v1/users/self"
 
-    #eventually will take bearer token as an argument
-    token = "15924~j9hFN1TVjJHgUCE7CyTdrKaWKSLsf8yIRaCtCfQlXp4PkASi8ts3UJEqn2ackRq1"
-    headers = {'Authorization' : 'Bearer '+ token}
+#     #eventually will take bearer token as an argument
+#     token = "15924~j9hFN1TVjJHgUCE7CyTdrKaWKSLsf8yIRaCtCfQlXp4PkASi8ts3UJEqn2ackRq1"
+#     headers = {'Authorization' : 'Bearer '+ token}
 
-    resp = requests.get(url, headers=headers)
+#     resp = requests.get(url, headers=headers)
 
-    return (resp.json())
+#     return (resp.json())
 
 
 #will call for all courses of a user
 @app.route('/bgGetCanvasCourses', methods=['GET', 'POST'])
-def getCanvasCourses(token, userID):
-    url = "https://canvas.tamu.edu/api/v1/users/"+userID+"/courses"
+def getCanvasCourses():
+    url = "https://canvas.tamu.edu/api/v1/courses/"
 
     #eventually will take bearer token as an argument
-    token = "15924~j9hFN1TVjJHgUCE7CyTdrKaWKSLsf8yIRaCtCfQlXp4PkASi8ts3UJEqn2ackRq1"
+    token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
     headers = {'Authorization' : 'Bearer '+ token}
 
     resp = requests.get(url, headers=headers)
 
+    # finds the max enrollment_term_id -> courses w/ this are in current semester 
+    maxID = 0
+    for ID in resp.json():
+        currID = ID["enrollment_term_id"]
+        if currID > maxID:
+            maxID = currID
 
-
-    return (resp.json())
+    # creates dictionary w/ current semesters courseIDs as the key and names as the values
+    # this is done by looping through the courses again to find the ones with maxID
+    courseDict = {}
+    for course in resp.json():
+        if course["enrollment_term_id"] == maxID:     
+            courseID = course["id"]
+            if courseID == 123752: continue
+            courseDict[courseID] = course["name"]  
+    # getting rid of JAPN messes up stuff
+    for course in courseDict:
+        if (course == 123752):
+            course.pop()
+    return (courseDict)
 
 
 #function will call for assignments in a course
 @app.route('/bgGetCanvasAssignments', methods=['GET', 'POST'])
-def getCanvasAssignments(token, courseID):
-    url = "https://canvas.tamu.edu/api/v1/courses/"+courseID+"/assignments"
+def getCanvasAssignments():
+    courseDict = getCanvasCourses()
+    classList = []
+    print(courseDict)
+    for courseID in courseDict:
+        stringID = str(courseID)
+        # takes course name and replaces : since it creates error later 
+        # TODO: what should the courseName be? Spaces? underscores? 
+        courseName = courseDict[courseID]
+        courseName = courseName.replace(':','')
+        courseName = courseName.replace(' ','_')
+        url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments/"
 
-    #eventually will take bearer token as an argument
-    token = "15924~j9hFN1TVjJHgUCE7CyTdrKaWKSLsf8yIRaCtCfQlXp4PkASi8ts3UJEqn2ackRq1"
-    headers = {'Authorization' : 'Bearer '+ token}
+        #eventually will take bearer token as an argument
+        token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+        headers = {'Authorization' : 'Bearer '+ token}
 
-    resp = requests.get(url, headers=headers)
+        resp = requests.get(url, headers=headers)
+        
+        # loops through current class's assignmnents
+        # puts everything required into assignmentObj
+        # TODO: Noticed some dates are null for assignments need to check
+        assignmentList = []
+        for assignment in resp.json():
+            #create a new assignmentObj to make JSON
+            assignmentObj = {}
+            assignmentObj['name'] = assignment['name']
+            assignmentObj['class'] = courseName
+            assignmentObj['priority'] = 3
+            assignmentObj['dueDate'] = assignment['due_at']
+            # startDate should be unlock or created at? 
+            assignmentObj['startDate'] = assignment['unlock_at']
+            assignmentObj['link'] = assignment['html_url']
+            assignmentObj['relatedLinks'] = ''
+            assignmentObj['notes'] = '' #assignment['description']
+            # print("Assignment Name:")
+            # print(assignment['name'])
 
-    return (resp.json())
+            #check if the assignment has a submission
+            # submission = assignment['has_submitted_submissions']
+            # if(submission == False):
+            #     assignmentObj['complete'] = False
+            # else:    
+            #     assignmentObj['complete'] = True
+
+            assignmentList.append(assignmentObj)
+
+            # delta = assignmentObj['dueDate'] - assignmentObj['startDate']
+
+        ##checks if assignment is less than ten days overdue, if not then displays
+        # isNotPastAssignment = delta > timedelta(days = 10)
+
+        # create classobj for each class
+        classObj = {}
+        classObj['name'] = courseName
+        classObj['color'] = 'rgb(162, 214, 161);'
+        classObj['assignments'] = assignmentList
+
+        # if(isNotPastAssignment):
+        classList.append(classObj)
+        # print(resp.json())
+
+    ##write classObj to JSON file
+    with open("./static/Scripts/CanvasObjs.json", "w") as outfile:
+        json.dump(classList, outfile) 
+
+    jsonStr = json.dumps(classList)
+    return jsonStr
 
 #this will be the main function for getting all classes and assignments from a user
 @app.route('/bgCanvasImport', methods=['GET', 'POST'])

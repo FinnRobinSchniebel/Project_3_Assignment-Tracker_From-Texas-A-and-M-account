@@ -35,7 +35,8 @@ function  ImportAPICanvas(){
     document.getElementById('SelectLocation').innerHTML = `<div class="loader"></div>`;
     
     //function for api call here (return file or bool)
-    getCanvasUserJSON();
+    // getCanvasCoursesJSON();
+    classList = getCanvasJSONs();
     //populate options here (with json results) 
 
     
@@ -141,27 +142,27 @@ function getGoogleJSONs(){
 
 //this function calls python script to generate an array of canvas classObjs
 //and call assignmentPop to generate the collapses
-function getCanvasJSONs(){
+// function getCanvasJSONs(){
 
-    //TODO
-    //Get token value entered by user
-    //Pass token value as python argument
-    var classList = [];
-    $.ajax({
-        url:"/bgCanvasImport",
-        type: "GET",
-        contentType: "application/json",
-        success: function (response){
-            classList = JSON.parse(response);
-            console.log("Successfully Imported ClassList \n"+ response);
-            //assignmentPop(classList);
-            //storeImports(classList);
-            //console.log("STORING \n\n")
-            //console.log(localStorage);
-        }
-    });
-    return classList;
-}
+//     //TODO
+//     //Get token value entered by user
+//     //Pass token value as python argument
+//     var classList = [];
+//     $.ajax({
+//         url:"/bgCanvasImport",
+//         type: "GET",
+//         contentType: "application/json",
+//         success: function (response){
+//             classList = JSON.parse(response);
+//             console.log("Successfully Imported ClassList \n"+ response);
+//             //assignmentPop(classList);
+//             //storeImports(classList);
+//             //console.log("STORING \n\n")
+//             //console.log(localStorage);
+//         }
+//     });
+//     return classList;
+// }
 
 
 
@@ -178,7 +179,26 @@ function getCanvasUserJSON(){
     });
 }
 
+// Uses getCanvasCourses
+// TODO: Need to find a way to pass user token
+function getCanvasJSONs(){
 
+    var classList = [];
+    $.ajax({
+        url:"/bgGetCanvasAssignments",
+        type: "GET",
+        contentType: "application/json",
+        success: function (response){
+            classList = JSON.parse(response);
+            console.log("Successfully Imported ClassList \n"+ response);
+            assignmentPop(classList);
+            storeImports(classList);
+            console.log("STORING \n\n")
+            console.log(localStorage);
+        }
+    });
+    return classList;
+}
 
 
 
