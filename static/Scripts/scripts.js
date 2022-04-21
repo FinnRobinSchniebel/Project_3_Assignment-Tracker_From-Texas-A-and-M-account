@@ -94,7 +94,7 @@ function populatePage(){
         var closest = findClosestDue(assignmentList);
         // use check to get assignments properly ordered 
         var index = 0;
-        PopulateClass(className, closest);
+        PopulateClass(className, closest, i);
         // loops through array of assignments and add each one to class
         while (index < i){
             //console.log(assignmentList[index]);
@@ -135,7 +135,7 @@ function PopulateAssignments(AssignmentInfoOBJ, Location){
 
 }
 
-function PopulateClass(className, closest){
+function PopulateClass(className, closest, assignmentcount){
     
     // input from user
     var inputClassName =  className;
@@ -155,7 +155,14 @@ function PopulateClass(className, closest){
         closestAssignmentDate = closestAssignmentDate.replaceAll('-', '/');
         closestAssignmentDate = closestAssignmentDate.replaceAll('T', ' ');
     }
-
+    var upcoming= "No Upcoming Assignments";
+    
+    if(assignmentcount > 1){
+        upcoming = "There Are <strong>" + assignmentcount + "</strong> Upcoming Assingments";
+    }
+    else if(assignmentcount > 0){
+        upcoming = "There Is <strong>" + assignmentcount + "</strong> Upcoming Assingment";
+    }
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed
     newDiv.innerHTML += `
@@ -164,7 +171,7 @@ function PopulateClass(className, closest){
         `+inputClassNameDisplay+`
     </div>
     <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
-        No Upcoming Assignments
+        `+upcoming+`
     </div> 
     <div class="DueDateSection" id="Class1_TimeLeftOnClosestAssignment">
         Nearest Due Date: `+ closestAssignmentDate +`
