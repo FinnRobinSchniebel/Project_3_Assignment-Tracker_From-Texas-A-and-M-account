@@ -94,7 +94,7 @@ function populatePage(){
         var closest = findClosestDue(assignmentList);
         // use check to get assignments properly ordered 
         var index = 0;
-        PopulateClass(className, closest);
+        PopulateClass(className, closest, i);
         // loops through array of assignments and add each one to class
         while (index < i){
             //console.log(assignmentList[index]);
@@ -127,14 +127,15 @@ function PopulateAssignments(AssignmentInfoOBJ, Location){
     //console.log(AssignmentInfoOBJ.link);
     var priority = AssignmentInfoOBJ.priority; //test, still needs to be implemented
     var isComplete = AssignmentInfoOBJ.complete;
-    //todo-priority    
+
+
     AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails, isComplete, Location);
 
 
 
 }
 
-function PopulateClass(className, closest){
+function PopulateClass(className, closest, assignmentcount){
     
     // input from user
     var inputClassName =  className;
@@ -154,7 +155,14 @@ function PopulateClass(className, closest){
         closestAssignmentDate = closestAssignmentDate.replaceAll('-', '/');
         closestAssignmentDate = closestAssignmentDate.replaceAll('T', ' ');
     }
-
+    var upcoming= "No Upcoming Assignments";
+    
+    if(assignmentcount > 1){
+        upcoming = "There Are <strong>" + assignmentcount + "</strong> Upcoming Assingments";
+    }
+    else if(assignmentcount > 0){
+        upcoming = "There Is <strong>" + assignmentcount + "</strong> Upcoming Assingment";
+    }
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed
     newDiv.innerHTML += `
@@ -163,7 +171,7 @@ function PopulateClass(className, closest){
         `+inputClassNameDisplay+`
     </div>
     <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
-        No Upcoming Assignments
+        `+upcoming+`
     </div> 
     <div class="DueDateSection" id="Class1_TimeLeftOnClosestAssignment">
         Nearest Due Date: `+ closestAssignmentDate +`
@@ -201,7 +209,7 @@ function PopulateClass(className, closest){
                                     <div>
                                         Assignment Name:
                                     </div>
-                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Name"> <!-- Will need unique id in the future-->
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Name"> 
                                         Add Name
                                     </div>
                                     
@@ -211,7 +219,7 @@ function PopulateClass(className, closest){
                             <div class="NewAssignmentInfoBox">
                                 <p>
                                     Assignment Link:
-                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Link"> <!-- Will need unique id in the future-->
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Link"> 
                                         Add link
                                     </div>
                                 </p>
@@ -220,7 +228,7 @@ function PopulateClass(className, closest){
                             <div class="NewAssignmentInfoBox">
                                 <p>
                                     Related Links:
-                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`RelatedLinks" style=" min-height: 100px"> <!-- Will need unique id in the future-->
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`RelatedLinks" style=" min-height: 100px"> 
                                         Add links
                                     </div>
                                 </p>
@@ -247,7 +255,7 @@ function PopulateClass(className, closest){
                             <div class="NewAssignmentNotes">
                                 <p>
                                     Notes: 
-                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Notes" style="min-height: 100px;"> <!-- Will need unique id in the future-->
+                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Notes" style="min-height: 100px;"> 
                                         Add notes
                                     </div>
                                 </p>

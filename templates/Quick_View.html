@@ -1,17 +1,22 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+	
     <head>
       
         <title>Assignment Stacker Quick View</title>
+
         <link id="BasicHome" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/BasicHome.css') }}" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- for sorting -->
+		<link id="Assignment" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/Assignment.css') }}" />
         
         <script src="{{ url_for('static',filename='Scripts/scripts.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/QuickViewScript.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/JSONGetsAndSets.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/SortScript.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/AssignmentCreatingScripts.js') }}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
       </head>
 
       <body class="background">
@@ -22,7 +27,7 @@
                 <button class="button" onclick="location.href='Home.html'">Home </button>
                 <button class="button" onclick="location.href='Quick_View.html'"> Quick View</button>
                 <button class="button" onclick="location.href='AddLocation.html'"> view and Add Assignment locations</button> 
-                <select class="priorityButton" aria-label="Priority select table" id="SortSelect" onchange="sortButton(this.options[this.selectedIndex].value)">
+                <select class="priorityButton" aria-label="Priority select table" id="SortSelect" onchange="sortButtonQuick(this.options[this.selectedIndex].value)">
 					<option value="DueDate" selected>Due Date</option>
 					<option value="Priority">Priority</option>
 					<option value="StartDate" >Assigned Date</option>
@@ -30,13 +35,14 @@
 					<option value="5" disabled>Something else</option>
                 </select>
             </div>
+			<div class="AllAssignment" id="AllAssignments">
+
+			</div>
         </div>
 
-        <div id="AllAssignments">
+        
 
-	    </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        
         
 
 

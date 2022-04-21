@@ -53,9 +53,11 @@ function deleteClass(className){
 
 
 
-//takes in assignment name and returns assignment obj
-//takes in class name and assignment name
-//returns assignment obj in that class
+/** 
+takes in assignment name and returns assignment obj
+takes in class name and assignment name
+returns assignment obj in that class
+*/
 function getAssignment(inputClassName, inputAssignmentName){ 
     var classObj = getClass(inputClassName);
     var assignmentList = classObj.assignments;
@@ -71,7 +73,8 @@ function getAssignment(inputClassName, inputAssignmentName){
 
 //adds the assignment to a class Json
 function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes,isComplete){
-    //if one of the dates is empty asign it todays date 
+    //if one of the dates is empty asign it todays date
+
     if(assignmentStartDate == ""){ 
         assignmentStartDate = CurrentDateISOTime();
     }
@@ -286,25 +289,38 @@ function updateDiscription(text, assignmentName, className){
 
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
-    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
 }
-function updateURL(){
-
+function updateURL(text, assignmentName, className){
+    var assignmentObj = getAssignment(className, assignmentName);
+    //set new details
+    assignmentObj.link = text;
+    console.log(assignmentObj.link);
+    //Remove old assignment from classObj's assignments
+    deleteAssignment(className, assignmentName);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
 }
-function updateRelated(){
-
+function updateRelated(text, assignmentName, className){
+    var assignmentObj = getAssignment(className, assignmentName);
+    //set new details
+    assignmentObj.relatedLinks = text;
+    console.log(assignmentObj.link);
+    //Remove old assignment from classObj's assignments
+    deleteAssignment(className, assignmentName);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
 }
 function updatePriority(selected, assignmentName, className){
     //getting copies of objects
     //console.log(selected +" as: " + assignmentName + " class " + className);
     var assignmentObj = getAssignment(className, assignmentName);
-    
+    var assignmentID = assignmentName.replaceAll(' ', '_');
+    var classID = className.replaceAll(' ', '_');
     //this sets the html
-    document.getElementById("PriorityField"+className+assignmentName).innerText = "Priority: " + selected;    
+    document.getElementById("PriorityField"+classID+assignmentID).innerText = "Priority: " + selected;    
     assignmentObj.priority = selected;
 
 
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
-    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
 }
