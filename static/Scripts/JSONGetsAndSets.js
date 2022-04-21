@@ -11,6 +11,7 @@ function getClassList(){
     while(i--){
         classList.push(JSON.parse(localStorage.getItem(keys[i])));
     }
+   
     return classList;
 }
 
@@ -164,6 +165,7 @@ function removeClass(){
 
 //storeClass: takes in user inputted className and an array of assignments to store in local storage
 function storeClass(className, arrayAssignments, classColor){
+   
     if(arrayAssignments.length == 0){
         var newClass = {
             name: className, //text

@@ -71,9 +71,15 @@
 
 <template id="CanvasInfoTemp">
     <div class="CenterElement clearfix" id="CanvasInfo">
-        <label for="CanvasConnect" class="TextfieldLeftLabel">Enter "" Info here:</label>
+        <!-- <label for="CanvasConnect" class="TextfieldLeftLabel">Enter "" Info here:</label>
         <input type="text" id="CanvasConnect" id="canvasConnectionInfo">
-        <button class="importbutton" onclick="ImportAPICanvas()">Start Import</button>
+        <button class="importbutton" onclick="ImportAPICanvas()">Start Import</button>  -->
+        <!-- <form> -->
+            <label for="CanvasConnect" class="TextfieldLeftLabel">Enter "" Info here:</label>
+            <input type="text" id="CanvasConnect" name="CanvasConnect" placeholder="Ex. 'User Token'">
+            <!-- <input type="text" id="InputClassName" placeholder="Ex. 'User Token'">  -->
+            <button class="importbutton" onclick="ImportAPICanvas()">Start Import</button>
+        <!-- </form> -->
     </div>
 </template>
 
