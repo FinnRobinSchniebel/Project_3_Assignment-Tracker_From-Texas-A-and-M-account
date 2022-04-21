@@ -22,7 +22,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     
     var NewHTML = document.querySelector("#NewAssignmentTemp").content;
 
-
     NewHTML= NewHTML.cloneNode(true); //true makes this recursive (copy all in assignment)    
     
     for(var i=0; i <NewHTML.querySelectorAll('div').length; i++){
@@ -72,6 +71,26 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     
     //remove button
     document.getElementById('removeButton'+ NameToAddForID).onclick = function(){removeAssignment(className, assignmentName, 'Assignment'+NameToAddForID)};
+
+
+
+    //link change
+    if(typeof(onblur) != "function"){
+        
+        document.getElementById('AssignmentLink'+ NameToAddForID).setAttribute('onblur', "updateURL(this.innerText,'" + assignmentName+ "','" + className +"')");
+    }
+    else{
+        document.getElementById('AssignmentLink'+ NameToAddForID).onblur = function(){updateURL(this.innerText, assignmentName, className)};
+    }
+    //additional link change
+    if(typeof(onblur) != "function"){
+        
+        document.getElementById('RelatedLinks'+ NameToAddForID).setAttribute('onblur', "updateRelated(this.innerText,'" + assignmentName+ "','" + className +"')");
+    }
+    else{
+        document.getElementById('RelatedLinks'+ NameToAddForID).onblur = function(){updateRelated(this.innerText, assignmentName, className)};
+    }
+
 
 
     //discription change
