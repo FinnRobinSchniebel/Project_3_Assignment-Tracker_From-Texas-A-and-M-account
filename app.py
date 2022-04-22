@@ -175,8 +175,12 @@ def getGoogleJSONs():
             classObj['name'] = className
             classObj['color'] = 'rgb(162, 214, 161);'
             classObj['assignments'] = assignmentList
+<<<<<<< HEAD
             classObj['order'] = counter
             counter += 1
+=======
+
+>>>>>>> 461ba7eb443d2ec29aebe29392cb76e5b616946e
             classList.append(classObj)
 
         ##write classObj to JSON file

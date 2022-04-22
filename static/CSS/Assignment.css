@@ -288,3 +288,31 @@
     outline: none;
     font-size: 15px;
 }
+.AssignmentButton{
+    background-color: rgb(223, 106, 106);
+    margin: 5px;
+    margin-top: 10px;
+    border: 1px solid rgb(74, 95, 102);
+    color: rgb(0, 0, 0);
+    border-radius: 10px;
+    text-align: center;
+    display: inline;
+    font-size: 15px;
+    transition-duration: 5ms;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.dateEditor{
+    border-radius: 5px;
+    margin-left: 24px;
+}
+.priorEdit{
+    margin-left: 38px;
+}
+.editingSpacers{
+    margin-top: 10px;
+}
+.labelspace{
+    margin-left: 15px;
+}
