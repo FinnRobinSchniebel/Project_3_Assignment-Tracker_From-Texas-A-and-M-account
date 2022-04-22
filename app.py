@@ -81,7 +81,8 @@ def getGoogleJSONs():
         if not courses:
             print('No courses found.')
             return
-        counter = 0
+        # used to keep track of classes 
+        order = 0
         # Prints the names of the courses
         for course in courses:
             # Class name that will be stored
@@ -175,12 +176,9 @@ def getGoogleJSONs():
             classObj['name'] = className
             classObj['color'] = 'rgb(162, 214, 161);'
             classObj['assignments'] = assignmentList
-<<<<<<< HEAD
-            classObj['order'] = counter
-            counter += 1
-=======
+            classObj['order'] = order
+            order += 1
 
->>>>>>> 461ba7eb443d2ec29aebe29392cb76e5b616946e
             classList.append(classObj)
 
         ##write classObj to JSON file
@@ -257,7 +255,7 @@ def getCanvasAssignments():
     classList = []
     # print("CORSE DICTIONARY")
     # print(courseDict)
-    counter = 0
+    order = 0
     for courseID in courseDict:
         stringID = str(courseID)
         # takes course name and replaces : since it creates error later 
@@ -340,11 +338,11 @@ def getCanvasAssignments():
         classObj['name'] = courseName
         classObj['color'] = 'rgb(162, 214, 161);'
         classObj['assignments'] = assignmentList
-        classObj['order'] = counter
+        classObj['order'] = order
 
         # if(isNotPastAssignment):
         classList.append(classObj)
-        counter += 1 
+        order += 1 
         # print(classList)
         # print()
         # print()
