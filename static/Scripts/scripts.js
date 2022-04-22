@@ -1,38 +1,20 @@
-
-function addDemo(){
-    // inputs taken from user
-    var newAssignmentDisplay = document.getElementById("NewAssignmentName").innerText;
-    // takes the space away to ensure variables are properly named
-    //var newAssignment = newAssignmentDisplay.replaceAll(" ", "_"); //useful when working with nodemo items to make sure the class is correctly formated
-    var startTime = document.getElementById("NewAssignmentStart").value;
-    var endTime = document.getElementById("NewAssignmentEnd").value;
-    var notes = document.getElementById("NewAssignmentNotes").innerText;
-
-    var link = document.getElementById("NewAssignmentLink").innerText;
-    var relatedLinks = document.getElementById("NewAssignmentRelatedLinks").innerText;
-    // need to remember what this does again 
-    //document.getElementsByTagName('body')[0].appendChild(div);
-    AssignmentAddHTML("Demo", newAssignmentDisplay, "1", startTime, endTime, link, relatedLinks, notes, "");
-}
-
-
 function addAssignment(className){
     // inputs taken from user 
     // to make it dynamic, takes className from Parameter and is used to find the -
     // associated ID for variables
-    var newAssignmentDisplay = document.getElementById(''+className+'Name').innerText;
+    var newAssignmentDisplay = document.getElementById(''+className+'Name').value;
     // takes the space away to ensure variables are properly named
     var startTime = document.getElementById(''+className+'Start').value; //"`+inputClassName+`Start"
     var endTime = document.getElementById(''+className+'End').value;
     //console.log(endTime);
-    var noteDetails = document.getElementById(''+className+'Notes').innerText;
+    var noteDetails = document.getElementById(''+className+'Notes').value;
     var priority = document.getElementById("PriorityCreate" + className).value;
 
     //when these two variables are included in the html code below
     //assignment causes whole class to close
     //************************************** */
-    var relatedLinks = document.getElementById(''+className+'RelatedLinks').innerText;
-    var link = document.getElementById(''+className+'Link').innerText;
+    var relatedLinks = document.getElementById(''+className+'RelatedLinks').value;
+    var link = document.getElementById(''+className+'Link').value;
     
     
     //adds assignment to class in localstorage
@@ -209,9 +191,7 @@ function PopulateClass(className, closest, assignmentcount){
                                     <div>
                                         Assignment Name:
                                     </div>
-                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Name"> 
-                                        Add Name
-                                    </div>
+                                    <input class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Name" placeholder="Add Name"> 
                                     
                                 </p>
                                 
@@ -219,19 +199,15 @@ function PopulateClass(className, closest, assignmentcount){
                             <div class="NewAssignmentInfoBox">
                                 <p>
                                     Assignment Link:
-                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Link"> 
-                                        Add link
-                                    </div>
                                 </p>
+                                <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`Link" placeholder="Add link"></textarea>
                                 
                             </div>
                             <div class="NewAssignmentInfoBox">
                                 <p>
                                     Related Links:
-                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`RelatedLinks" style=" min-height: 100px"> 
-                                        Add links
-                                    </div>
                                 </p>
+                                <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`RelatedLinks" style=" min-height: 100px" placeholder="Add links"></textarea>
                                 
                             </div>
                         </div>
@@ -255,10 +231,8 @@ function PopulateClass(className, closest, assignmentcount){
                             <div class="NewAssignmentNotes">
                                 <p>
                                     Notes: 
-                                    <div class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Notes" style="min-height: 100px;"> 
-                                        Add notes
-                                    </div>
                                 </p>
+                                <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`Notes" style="min-height: 100px;" placeholder="Add notes"></textarea>
                             </div>
                             <div class="NewAssignmentNotes">
                                 <Label for="PriorityCreate`+inputClassName+`">Priority:</Label>

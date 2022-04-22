@@ -84,7 +84,7 @@ function assignmentPop(ClassList){
             // optionObj.innerHTML += `<option value="`+ ClassList[i].name +`" selected> `+ ClassList[i].name +`</option>`;
             var opt = document.createElement('option');
             opt.value= userClasses[j].name;
-            opt.innerHTML = userClasses[j].name ;
+            opt.innerHTML = userClasses[j].name;
             //console.log('NewLoc'+ i);
             document.getElementById('NewLoc'+ i).appendChild(opt);
         }

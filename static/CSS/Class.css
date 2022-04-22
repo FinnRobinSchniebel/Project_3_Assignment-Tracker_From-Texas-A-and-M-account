@@ -175,3 +175,10 @@
     padding-right: 10px;
 
 }
+.TextInfoBox{
+    border: 1px solid gray;
+    background-color: rgb(250, 250, 250);
+    border-radius: 5px;
+    width: 90%;
+    min-width: 40px;
+}
