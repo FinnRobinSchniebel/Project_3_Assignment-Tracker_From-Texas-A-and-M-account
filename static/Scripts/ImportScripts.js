@@ -294,8 +294,42 @@ function Finalize(){
     //clear content when done
     document.getElementById('SelectLocation').innerHTML ='';
 }
+
 //this function will remove temp objects when leaving page
+//and push current classList into database
 window.onbeforeunload = function(){
+    //this call clears local storage of temporary objects
     temp = getTempClassObjs();
-    //console.log("leaving");
+    //gets all classObjs
+    classList = getClassList(classList);
+    //console.log(classList);
+    jsonObj = JSON.stringify(classList);
+    $.ajax({
+        url:"/bgUpdateUserClasses",
+        type: "POST",
+        contentType: "application/json",
+        data: jsonObj,
+        dataType: 'json',
+        success: function (response){
+            console.log(response);
+        }
+    });
+    localStorage.clear()
+}
+
+//this function will call everytime home loads to populate localstorage
+window.onload = function(){
+    $.ajax({
+        url:"/bgLoadUserClasses",
+        type: "GET",
+        contentType: "application/json",
+        success: function (response){
+            DBclassList = JSON.parse(response)
+            alert(DBclassList);
+            DBclassList.forEach(newClassObj => {
+                updateClass(newClassObj);
+            });
+            populatePage();
+        }
+    });
 }
