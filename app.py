@@ -162,8 +162,8 @@ def getGoogleJSONs():
                     else:    
                         assignmentObj['complete'] = True
 
-
-                assignmentList.append(assignmentObj)
+                if(isNotPastAssignment):
+                    assignmentList.append(assignmentObj)
                 
 
             #creating classObj for each course
@@ -174,8 +174,7 @@ def getGoogleJSONs():
             classObj['color'] = 'rgb(162, 214, 161);'
             classObj['assignments'] = assignmentList
 
-            if(isNotPastAssignment):
-                classList.append(classObj)
+            classList.append(classObj)
 
         ##write classObj to JSON file
         with open("./static/Scripts/googleClassObjs.json", "w") as outfile:
