@@ -18,7 +18,9 @@ from googleapiclient.errors import HttpError
 #Canvas
 import requests
 from requests.structures import CaseInsensitiveDict
-
+from flask import request
+from flask import jsonify 
+from flask import session
 
 from flask import Flask
 from flask import render_template
@@ -160,8 +162,8 @@ def getGoogleJSONs():
                     else:    
                         assignmentObj['complete'] = True
 
-
-                assignmentList.append(assignmentObj)
+                if(isNotPastAssignment):
+                    assignmentList.append(assignmentObj)
                 
 
             #creating classObj for each course
@@ -172,8 +174,7 @@ def getGoogleJSONs():
             classObj['color'] = 'rgb(162, 214, 161);'
             classObj['assignments'] = assignmentList
 
-            if(isNotPastAssignment):
-                classList.append(classObj)
+            classList.append(classObj)
 
         ##write classObj to JSON file
         with open("./static/Scripts/googleClassObjs.json", "w") as outfile:
@@ -224,21 +225,31 @@ def getCanvasCourses():
     for course in resp.json():
         if course["enrollment_term_id"] == maxID:     
             courseID = course["id"]
+            # getting rid of JAPN for testing
             if courseID == 123752: continue
+            # if courseID == 133720: continue
             courseDict[courseID] = course["name"]  
-    # getting rid of JAPN messes up stuff
-    for course in courseDict:
-        if (course == 123752):
-            course.pop()
+    # print(courseDict)
     return (courseDict)
 
+# havent looked into this yet
+app.secret_key = 'dljsaklqk24e21cjn!Ew@@dsa5'
+@app.route('/bgGetUserToken', methods=['POST'])
+def get_post_json():    
+    data = request.get_json()
+    session["token"] = data
+    # print(tokenDict)
+    return jsonify(status="success", data=data)
 
 #function will call for assignments in a course
 @app.route('/bgGetCanvasAssignments', methods=['GET', 'POST'])
 def getCanvasAssignments():
+
+    tokenDict = session.get("token")
     courseDict = getCanvasCourses()
     classList = []
-    print(courseDict)
+    # print("CORSE DICTIONARY")
+    # print(courseDict)
     for courseID in courseDict:
         stringID = str(courseID)
         # takes course name and replaces : since it creates error later 
@@ -246,10 +257,11 @@ def getCanvasAssignments():
         courseName = courseDict[courseID]
         courseName = courseName.replace(':','')
         courseName = courseName.replace(' ','_')
-        url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments/"
+        url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments?include=items&per_page=1000/"
 
         #eventually will take bearer token as an argument
-        token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+        token = tokenDict['token']
+        # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
         headers = {'Authorization' : 'Bearer '+ token}
 
         resp = requests.get(url, headers=headers)
@@ -264,7 +276,8 @@ def getCanvasAssignments():
             assignmentObj['name'] = assignment['name']
             assignmentObj['class'] = courseName
             assignmentObj['priority'] = 3
-            assignmentObj['dueDate'] = assignment['due_at']
+            # issues with due date being null
+            assignmentObj['dueDate'] = '' #assignment['due_at']
             # startDate should be unlock or created at? 
             assignmentObj['startDate'] = assignment['unlock_at']
             assignmentObj['link'] = assignment['html_url']
@@ -295,6 +308,9 @@ def getCanvasAssignments():
 
         # if(isNotPastAssignment):
         classList.append(classObj)
+        # print(classList)
+        # print()
+        # print()
         # print(resp.json())
 
     ##write classObj to JSON file

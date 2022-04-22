@@ -33,9 +33,10 @@ function addinfoGet(fromTemp){
 
 function  ImportAPICanvas(){
     document.getElementById('SelectLocation').innerHTML = `<div class="loader"></div>`;
-    
+    // var userToken = document.getElementById("CanvasConnect").value;
     //function for api call here (return file or bool)
     // getCanvasCoursesJSON();
+    storeUserToken();
     classList = getCanvasJSONs();
     //populate options here (with json results) 
 
@@ -50,6 +51,8 @@ function assignmentPop(ClassList){
 
     //add options for dropdown to temperary div
     var userClasses = getClassList();
+    console.log("USER CLASSES");
+    console.log(userClasses);
 
 
     
@@ -79,7 +82,7 @@ function assignmentPop(ClassList){
         document.getElementById('SelectLocation').appendChild(NewHTML);
 
         document.getElementById('locText'+i).innerText = 'Place Contents from "' + ClassList[i].name + '" into:';
-
+       
         for(var j =0; j < userClasses.length; j++){
             // optionObj.innerHTML += `<option value="`+ ClassList[i].name +`" selected> `+ ClassList[i].name +`</option>`;
             var opt = document.createElement('option');
@@ -179,22 +182,45 @@ function getCanvasUserJSON(){
     });
 }
 
+function storeUserToken(){
+    // probably will be moved later but this puts userToken in "memory" (?)
+    // console.log(userToken);
+    var userToken =  '15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm';
+    $.ajax({
+        type: "POST",
+        url: '/bgGetUserToken',
+        contentType: "application/json",
+        data: JSON.stringify({token: userToken}),
+        dataType: "json",
+        success: function(response) {
+            console.log(response);
+        },
+        error: function(err) {
+            console.log(err);
+        }
+    });
+}
 // Uses getCanvasCourses
 // TODO: Need to find a way to pass user token
 function getCanvasJSONs(){
-
+    // let userInfo = {
+    //     'token' : '15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm'
+    // };
+    // token = '15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm';
+    // const token = JSON.stringify(token);
     var classList = [];
+    
     $.ajax({
-        url:"/bgGetCanvasAssignments",
-        type: "GET",
+        url:`/bgGetCanvasAssignments`,
+        type: "GET", 
         contentType: "application/json",
         success: function (response){
             classList = JSON.parse(response);
             console.log("Successfully Imported ClassList \n"+ response);
             assignmentPop(classList);
-            storeImports(classList);
-            console.log("STORING \n\n")
-            console.log(localStorage);
+            storeImportsCanvas(classList);
+            // console.log("STORING \n\n")
+            // console.log(localStorage);
         }
     });
     return classList;
@@ -229,16 +255,25 @@ function storeImports(classList){
     });
 }
 
+function storeImportsCanvas(classList){
+    classList.slice().reverse().forEach(classObj => {
+        importClassName = "IMPORTING-TEMP"+classObj.name;
+        importAssignment = classObj.assignments;
+        importColor = classObj.color;
+        storeClass(importClassName,importAssignment,importColor);
+    });
+}
 //this function will pull all TEMP classes from local storage & remove them
 function getTempClassObjs(){
     classList = getClassList();
+    console.log("CLASS LIST IN LOCAL STORAGE");
+    console.log(classList);
     importedClassObjs = []; // array of classObjs
     classList.forEach(classObj => {
         className = classObj.name;
         if(className.startsWith("IMPORTING-TEMP")){
             //rename classObj copy
             classObj.name = className.substring(14);
-            console.log(classObj.name);
             //append imported classObj without IMPORTING-TEMP
             importedClassObjs.push(classObj);
             //delete item in localstorage with IMPORTING-TEMP
@@ -260,10 +295,10 @@ function Finalize(){
     for(var i = 0; i < importedClassObjs.length;i++){
         // gets the selected className to import to
         var selecter = document.getElementById('NewLoc'+ i);
+       
         var selClassName = selecter.options[selecter.selectedIndex].value;
-
+       
         if(selClassName != "None"){
-            //console.log(JSON.stringify(importedClassObjs[i]));
             appendAssignmentList(selClassName, importedClassObjs[i].assignments);
         }
     }
