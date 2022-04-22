@@ -21,6 +21,7 @@ from requests.structures import CaseInsensitiveDict
 from flask import request
 from flask import jsonify 
 from flask import session
+import re
 
 from flask import Flask
 from flask import render_template
@@ -80,6 +81,7 @@ def getGoogleJSONs():
         if not courses:
             print('No courses found.')
             return
+        counter = 0
         # Prints the names of the courses
         for course in courses:
             # Class name that will be stored
@@ -162,8 +164,8 @@ def getGoogleJSONs():
                     else:    
                         assignmentObj['complete'] = True
 
-
-                assignmentList.append(assignmentObj)
+                if(isNotPastAssignment):
+                    assignmentList.append(assignmentObj)
                 
 
             #creating classObj for each course
@@ -173,9 +175,9 @@ def getGoogleJSONs():
             classObj['name'] = className
             classObj['color'] = 'rgb(162, 214, 161);'
             classObj['assignments'] = assignmentList
-
-            if(isNotPastAssignment):
-                classList.append(classObj)
+            classObj['order'] = counter
+            counter += 1
+            classList.append(classObj)
 
         ##write classObj to JSON file
         with open("./static/Scripts/googleClassObjs.json", "w") as outfile:
@@ -205,7 +207,7 @@ def getGoogleJSONs():
 #will call for all courses of a user
 @app.route('/bgGetCanvasCourses', methods=['GET', 'POST'])
 def getCanvasCourses():
-    url = "https://canvas.tamu.edu/api/v1/courses/"
+    url = "https://canvas.tamu.edu/api/v1/courses?include=items&per_page=1000/"
 
     #eventually will take bearer token as an argument
     token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
@@ -251,6 +253,7 @@ def getCanvasAssignments():
     classList = []
     # print("CORSE DICTIONARY")
     # print(courseDict)
+    counter = 0
     for courseID in courseDict:
         stringID = str(courseID)
         # takes course name and replaces : since it creates error later 
@@ -274,13 +277,36 @@ def getCanvasAssignments():
         for assignment in resp.json():
             #create a new assignmentObj to make JSON
             assignmentObj = {}
-            assignmentObj['name'] = assignment['name']
+            assignmentNameCheck = checkInvalidChar(assignment['name'])
+            assignmentObj['name'] = assignmentNameCheck
             assignmentObj['class'] = courseName
             assignmentObj['priority'] = 3
             # issues with due date being null
-            assignmentObj['dueDate'] = '' #assignment['due_at']
+            if (assignment['due_at'] == None):
+                # print(assignmentNameCheck + " is null")
+                assignmentObj['dueDate'] = ''
+                dueDate = None
+            else:
+                # [:-4] gets rid of milliseconds which cause issues with dates
+                assignmentObj['dueDate'] = assignment['due_at'][:-4]
+                # dueDate = assignment['due_at'][:10]
+                dueDateYear = int(assignment['due_at'][0:4])
+                dueDateMonth = int(assignment['due_at'][5:7])
+                dueDateDay = int(assignment['due_at'][8:10])
+
+                dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+                print(assignmentNameCheck + " is due at " + assignment['due_at'][:-4])
+                print((4 + 19) % 24)
             # startDate should be unlock or created at? 
-            assignmentObj['startDate'] = assignment['unlock_at']
+            # [:-4] gets rid of milliseconds which cause issues with dates
+            if (assignment['unlock_at'] == None):
+                # print(assignmentNameCheck + " is null")
+                assignmentObj['startDate'] = ''
+            else:
+                # [:-4] gets rid of milliseconds which cause issues with dates
+                # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
+                assignmentObj['startDate'] = assignment['unlock_at'][:-4]
+            
             assignmentObj['link'] = assignment['html_url']
             assignmentObj['relatedLinks'] = ''
             assignmentObj['notes'] = '' #assignment['description']
@@ -293,22 +319,28 @@ def getCanvasAssignments():
             #     assignmentObj['complete'] = False
             # else:    
             #     assignmentObj['complete'] = True
+            # dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+            if (dueDate != None):
+                delta = dueDate - date.today()
+                # print("Delta is " + delta)
+                ##checks if assignment is less than ten days overdue, if not then displays
+                isNotPastAssignment = delta > timedelta(days = 10)
+                if(isNotPastAssignment):
+                    assignmentList.append(assignmentObj)
+            else:
+                assignmentList.append(assignmentObj)
 
-            assignmentList.append(assignmentObj)
-
-            # delta = assignmentObj['dueDate'] - assignmentObj['startDate']
-
-        ##checks if assignment is less than ten days overdue, if not then displays
-        # isNotPastAssignment = delta > timedelta(days = 10)
-
+            # assignmentList.append(assignmentObj)
         # create classobj for each class
         classObj = {}
         classObj['name'] = courseName
         classObj['color'] = 'rgb(162, 214, 161);'
         classObj['assignments'] = assignmentList
+        classObj['order'] = counter
 
         # if(isNotPastAssignment):
         classList.append(classObj)
+        counter += 1 
         # print(classList)
         # print()
         # print()
@@ -347,7 +379,29 @@ def getCanvasJSONs(token):
 
 
 
+def checkInvalidChar(assignmentName):
+    regex = re.compile('[@!#$%^&+*(),<>?/\|}{~:]')
 
+    if(regex.search(assignmentName) == None):
+         return assignmentName
+    else:
+        assignmentName = assignmentName.replace(':',' ')
+        assignmentName = assignmentName.replace('#',' ')
+        assignmentName = assignmentName.replace('&','And')
+        assignmentName = assignmentName.replace('!','')
+        assignmentName = assignmentName.replace('?','')
+        assignmentName = assignmentName.replace('(',' ')
+        assignmentName = assignmentName.replace(')',' ')
+        assignmentName = assignmentName.replace(',','')
+        assignmentName = assignmentName.replace('+','')
+        assignmentName = assignmentName.replace('/','-')
+        # assignmentName = assignmentName.replace("\",' ')
+        assignmentName = assignmentName.replace('|',' ')
+        # assignmentName = assignmentName.replace('@','')
+     
+    return assignmentName
+
+# def removeEndTime(date):
 
 if __name__ == '__main__':
     app.run(debug=True)

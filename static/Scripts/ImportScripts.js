@@ -81,7 +81,9 @@ function assignmentPop(ClassList){
         //document.getElementById('NewLoc'+ i).innerHTML += optionObj.innerHTML;
         document.getElementById('SelectLocation').appendChild(NewHTML);
 
-        document.getElementById('locText'+i).innerText = 'Place Contents from "' + ClassList[i].name + '" into:';
+        // used number to determine order later on, what are other options? 
+        // added 1 to make it look more presentable 
+        document.getElementById('locText'+i).innerText = (ClassList[i].order + 1) +  ': Place Contents from "' + ClassList[i].name + '" into:';
        
         for(var j =0; j < userClasses.length; j++){
             // optionObj.innerHTML += `<option value="`+ ClassList[i].name +`" selected> `+ ClassList[i].name +`</option>`;
@@ -107,6 +109,7 @@ function assignmentPop(ClassList){
     document.getElementById('SelectLocation').appendChild(centDiv);
     return; //returns nothing atm
 }
+
 
 function ImportAPIGoogle(){
     document.getElementById('SelectLocation').innerHTML = `<div class="loader"></div>`;
@@ -140,46 +143,6 @@ function getGoogleJSONs(){
         }
     });
     return classList;
-}
-
-
-//this function calls python script to generate an array of canvas classObjs
-//and call assignmentPop to generate the collapses
-// function getCanvasJSONs(){
-
-//     //TODO
-//     //Get token value entered by user
-//     //Pass token value as python argument
-//     var classList = [];
-//     $.ajax({
-//         url:"/bgCanvasImport",
-//         type: "GET",
-//         contentType: "application/json",
-//         success: function (response){
-//             classList = JSON.parse(response);
-//             console.log("Successfully Imported ClassList \n"+ response);
-//             //assignmentPop(classList);
-//             //storeImports(classList);
-//             //console.log("STORING \n\n")
-//             //console.log(localStorage);
-//         }
-//     });
-//     return classList;
-// }
-
-
-
-
-//leaving this function for testing
-function getCanvasUserJSON(){
-    $.ajax({
-        url:"/bgGetCanvasUser",
-        type: "GET",
-        contentType: "application/json",
-        success: function (response){
-            console.log(response.id);
-        }
-    });
 }
 
 function storeUserToken(){
@@ -218,7 +181,7 @@ function getCanvasJSONs(){
             classList = JSON.parse(response);
             console.log("Successfully Imported ClassList \n"+ response);
             assignmentPop(classList);
-            storeImportsCanvas(classList);
+            storeImports(classList);
             // console.log("STORING \n\n")
             // console.log(localStorage);
         }
@@ -246,28 +209,28 @@ function appendAssignmentList(className, importAssignmentList){
     localStorage.setItem(className, jsonObj);
 }
 
+
 function storeImports(classList){
+    console.log("STOREIMPORTSCANVAS");
+    console.log(classList);
     classList.forEach(classObj => {
         importClassName = "IMPORTING-TEMP"+classObj.name;
         importAssignment = classObj.assignments;
         importColor = classObj.color;
-        storeClass(importClassName,importAssignment,importColor);
+        importOrder = classObj.order;
+        // console.log("IMPORT FROM CANVAS");
+        // console.log(importClassName);
+        storeClass(importClassName,importAssignment,importColor, importOrder);
     });
-}
+    // console.log("AFTER STORING CLASSES");
+    // console.log(localStorage);
 
-function storeImportsCanvas(classList){
-    classList.slice().reverse().forEach(classObj => {
-        importClassName = "IMPORTING-TEMP"+classObj.name;
-        importAssignment = classObj.assignments;
-        importColor = classObj.color;
-        storeClass(importClassName,importAssignment,importColor);
-    });
 }
 //this function will pull all TEMP classes from local storage & remove them
 function getTempClassObjs(){
     classList = getClassList();
-    console.log("CLASS LIST IN LOCAL STORAGE");
-    console.log(classList);
+    // console.log("CLASS LIST IN LOCAL STORAGE");
+    // console.log(classList);
     importedClassObjs = []; // array of classObjs
     classList.forEach(classObj => {
         className = classObj.name;
@@ -283,29 +246,54 @@ function getTempClassObjs(){
     return importedClassObjs;
 }
 
-//WIP: Debugging, does not add to exsisting
+
+
 function Finalize(){
     //these are the classObjs that were imported
     var importedClassObjs = getTempClassObjs();
-    console.log("\n\n");
-    console.log(localStorage);
-
-
     //TODO implement logic to iterate through loc0-locX
     for(var i = 0; i < importedClassObjs.length;i++){
         // gets the selected className to import to
         var selecter = document.getElementById('NewLoc'+ i);
        
         var selClassName = selecter.options[selecter.selectedIndex].value;
-       
+        // console.log("selecterthtgh");
+        // console.log(selecter.selectedIndex);
         if(selClassName != "None"){
-            appendAssignmentList(selClassName, importedClassObjs[i].assignments);
+            if (selClassName == "New"){
+                // checks the inner text to find correct order 
+                var check = document.getElementById('locText'+i).innerText;
+                var order = check.substr(0, check.indexOf(':'));
+                // change order to int to compare with order of classes
+                // takes out fake 1 
+                order = parseInt(check) - 1;
+                // loops back through list to find the correct class via order
+                for(var j = 0; j < importedClassObjs.length;j++){
+                    if (importedClassObjs[j].order == order){
+                        // stores class and populates page when user goes to Home.html
+                        storeClass(importedClassObjs[j].name,importedClassObjs[j].assignments,importedClassObjs[j].color, importedClassObjs[j].order);
+                    }
+                }    
+            }
+            else{
+                // checks the inner text to find correct order 
+                var check = document.getElementById('locText'+i).innerText;
+                var order = check.substr(0, check.indexOf(':'));
+                // change order to int to compare with order of classes
+                // takes out fake 1 
+                order = parseInt(check) - 1;
+                // loops back through list to find the correct class via order
+                for(var j = 0; j < importedClassObjs.length;j++){
+                    if (importedClassObjs[j].order == order){
+                        appendAssignmentList(selClassName, importedClassObjs[j].assignments);
+                    }
+                }
+            }
         }
     }
     //clear content when done
     document.getElementById('SelectLocation').innerHTML ='';
 }
-
 //this function will remove temp objects when leaving page
 window.onbeforeunload = function(){
     temp = getTempClassObjs();
