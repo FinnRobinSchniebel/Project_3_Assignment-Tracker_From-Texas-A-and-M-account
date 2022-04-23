@@ -19,7 +19,6 @@
 		<script src="{{ url_for('static',filename='Scripts/SortScript.js') }}"></script>
 		<script src="{{ url_for('static',filename='Scripts/JSONGetsAndSets.js') }}"></script>
 		<script src="{{ url_for('static',filename='Scripts/HTMLColor.js') }}"></script>
-		<script src="{{ url_for('static',filename='Scripts/ImportScripts.js') }}"></script>
 		<script src="{{ url_for('static',filename='Scripts/scripts.js') }}"></script>
 		
 		
@@ -227,8 +226,41 @@
 		<button class="button" type="button" value="" onclick="clearPage()">Clear</button>
 		
 		<script>
+				//this function will call everytime home loads to populate localstorage
 			window.onload = function(){
-				populatePage();
+				$.ajax({
+					url:"/bgLoadUserClasses",
+					type: "GET",
+					contentType: "application/json",
+					success: function (response){
+						DBclassList = JSON.parse(response)
+						console.log(DBclassList);
+						DBclassList.forEach(newClassObj => {
+							updateClass(newClassObj);
+						});
+						populatePage();
+					}
+				});
+			}
+
+
+			//this function will remove temp objects when leaving page
+			//and push current classList into database
+			window.onbeforeunload = function(){
+				//gets all classObjs
+				classList = getClassList(classList);
+				//console.log(classList);
+				jsonObj = JSON.stringify(classList);
+				$.ajax({
+					url:"/bgUpdateUserClasses",
+					type: "POST",
+					contentType: "application/json",
+					data: jsonObj,
+					dataType: 'json',
+					success: function (response){
+						console.log("Success");
+					}
+				});
 			}
 		</script>
 
