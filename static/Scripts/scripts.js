@@ -97,7 +97,7 @@ function PopulateAssignments(AssignmentInfoOBJ, Location){
     var ClassName= AssignmentInfoOBJ.class;
     var newAssignmentName = AssignmentInfoOBJ.name;
     // takes initial "classname+assignmentname" -> "assignmentname"
-    newAssignmentName = newAssignmentName.replace(ClassName, "");
+    //newAssignmentName = newAssignmentName.replace(ClassName, "");
     var startTime = AssignmentInfoOBJ.startDate;
     var endTime = AssignmentInfoOBJ.dueDate;
     var noteDetails = AssignmentInfoOBJ.notes;

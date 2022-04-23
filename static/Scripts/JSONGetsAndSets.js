@@ -304,7 +304,6 @@ function updateRelated(text, assignmentName, className){
     var assignmentObj = getAssignment(className, assignmentName);
     //set new details
     assignmentObj.relatedLinks = text;
-    console.log(assignmentObj.link);
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
@@ -323,4 +322,62 @@ function updatePriority(selected, assignmentName, className){
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    populatePage();
+}
+function updateStart(selected, assignmentName, className){
+    var assignmentObj = getAssignment(className, assignmentName);
+    var assignmentID = assignmentName.replaceAll(' ', '_');
+    var classID = className.replaceAll(' ', '_');
+    //this sets the html
+    document.getElementById("Start_"+classID+assignmentID).value = selected; 
+    
+    assignmentObj.startDate = selected;
+
+
+    //Remove old assignment from classObj's assignments
+    deleteAssignment(className, assignmentName);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    populatePage();
+}
+
+function updateDue(selected, assignmentName, className){
+    var assignmentObj = getAssignment(className, assignmentName);
+    var assignmentID = assignmentName.replaceAll(' ', '_');
+    var classID = className.replaceAll(' ', '_');
+    //this sets the html
+    document.getElementById("Due_"+classID+assignmentID).value = selected; 
+    
+    assignmentObj.dueDate = selected;
+
+
+    //Remove old assignment from classObj's assignments
+    deleteAssignment(className, assignmentName);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    populatePage();
+}
+
+function updateName(text, assignmentName, className){
+    console.log("c+"+ text + "+f");
+    if(text != assignmentName && text != "" && text != " "){//cant be an empty string and cant be the same as before idk why it breaks from that
+        var assignmentObj = getAssignment(className, assignmentName);
+        //set new details
+        assignmentObj.name = text;
+        //Remove old assignment from classObj's assignments
+        deleteAssignment(className, assignmentName);
+        addAssignmentToClass(assignmentObj.name, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+
+        populatePage();
+    }
+    
+
+
+
+
+
+    // if(quickview){
+    //     document.getElementById("AssignmentNameField"+classID+assignmentID).innerText = ""+ className+ "; " + selected; 
+    // }
+    // else{
+    //     document.getElementById("AssignmentNameField"+classID+assignmentID).innerText = "" + selected; 
+    // }
 }

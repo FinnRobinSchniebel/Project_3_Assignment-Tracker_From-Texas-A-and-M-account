@@ -45,12 +45,13 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         var cur = NewHTML.querySelectorAll('select')[i];
         cur.setAttribute('id', ''+cur.id + NameToAddForID);
     }
-    
+    var isQuick =false; //is this a quick view item
     if(Location == ""){
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
         document.getElementById(Location).appendChild(NewHTML);
+        isQuick =true;
     }
     
 
@@ -114,6 +115,39 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     else{
         document.getElementById('PriorityChange'+ NameToAddForID).onchange = function(){updatePriority(this.options[this.selectedIndex].value, assignmentName, className)};
     }
+
+
+    //name change
+    if(typeof(onblur) != "function"){
+        document.getElementById('Rename'+ NameToAddForID).setAttribute('value', ''+ assignmentName);
+        document.getElementById('Rename'+ NameToAddForID).setAttribute('onblur', "updateName(this.value,'" + assignmentName+ "','" + className +"')");
+    }
+    else{
+        document.getElementById('Rename'+ NameToAddForID).value = ''+ assignmentName;
+        document.getElementById('Rename'+ NameToAddForID).onblur = function(){updateName(this.value, assignmentName, className)};
+    }
+
+
+    //start change
+    if(typeof(onchange) != "function"){
+        
+        document.getElementById('EditStart'+ NameToAddForID).setAttribute('onchange', "updateStart(this.value,'" + assignmentName+ "','" + className +"')");
+        document.getElementById('EditStart'+ NameToAddForID).setAttribute('value', ""+ assignmentStartDate);
+    }
+    else{
+        document.getElementById('EditStart'+ NameToAddForID).onchange = function(){updateStart(this.value, assignmentName, className)};
+    }
+
+    //Due change area
+    if(typeof(onchange) != "function"){
+        
+        document.getElementById('EditDue'+ NameToAddForID).setAttribute('onchange', "updateDue(this.value,'" + assignmentName+ "','" + className +"')");
+        document.getElementById('EditDue'+ NameToAddForID).setAttribute('value', ""+ assignmentDueDate);
+    }
+    else{
+        document.getElementById('EditDue'+ NameToAddForID).onchange = function(){updateDue(this.value, assignmentName, className)};
+    }
+
 
 
     //set fields
@@ -190,4 +224,25 @@ function getTimeLeftLargestNonZero(DueDate){
         return "OVER DUE!!!";
     }
 
+}
+
+function ChangeIDWith(oldName, NewName){
+
+    for(var i=0; i <document.querySelectorAll('[id*="'+oldName+'"]').length; i++){
+        var cur = document.querySelectorAll('[id*="'+oldName+'"]')[i];
+        var NewName = cur.id.replaceAll(oldName, NewName);
+        cur.setAttribute('id', ''+NewName);
+        
+    }
+    for(var i=0; i< NewHTML.querySelectorAll("label").length; i++){
+        var cur = NewHTML.querySelectorAll('label')[i];
+        var currentTarget = cur.for;
+        if(currentTarget.includes(oldName)){
+            var NewName = cur.for.replaceAll(oldName, NewName);
+            cur.setAttribute('for', ''+NewName);
+        }
+        
+    }
+    //unfinished
+    //can be used for update in which tabs nolonger need to close on change
 }
