@@ -17,31 +17,183 @@ from googleapiclient.errors import HttpError
 
 #Canvas
 import requests
+import re
 from requests.structures import CaseInsensitiveDict
 from flask import request
 from flask import jsonify 
 from flask import session
 
 from flask import Flask
+from flask import flash
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, PasswordField
+from wtforms.validators import DataRequired
+from flask import url_for
+from flask import request
+from flask import redirect
+from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+
+
+
+
 app = Flask(__name__)
+
+#initialize database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SECRET_KEY'] = "Superduper secret key NOBODY KNOWS WHAT IT IS"
+db = SQLAlchemy(app)
+
+#Flask login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
+
+#db model
+class Users(db.Model, UserMixin):
+    id = db.Column(db.Integer,primary_key = True, nullable = False )
+    userEmail = db.Column(db.String(100), nullable = False, unique = True)
+    userPassword = db.Column(db.String(100), nullable = False)
+    classes = db.Column(db.JSON, nullable = True)
+    googleToken = db.Column(db.JSON, nullable = True)
+    canvasBearer = db.Column(db.String(200), nullable = True)
+
+    #function that returns string when something is added for testing
+    #returns UserInfoObj 
+    def __repr__(self):
+        return '{"Email": "'+self.userEmail+'", "Password": "'+ self.userPassword+'", "canvasBearer": "'+ self.canvasBearer +'", "googleToken": "'+self.googleToken+'", "classObjs": '+self.classes+'}'
+
+
+
+##create signup form
+class CreateAccountForm(FlaskForm):
+    email = StringField("Enter valid email address", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    confirm = PasswordField("Confrim Password", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+#login form
+class LoginForm(FlaskForm):
+    email = StringField("Enter valid email address", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+
+#login page
+@app.route("/login", methods = ['GET', 'POST'])
+@app.route("/Login", methods = ['GET', 'POST'])
+@app.route("/user/login", methods = ['GET', 'POST'])
+@app.route("/user/Login", methods = ['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.is_submitted():
+        enteredEmail = form.email.data
+        #first instance of User with that email in database
+        User = Users.query.filter_by(userEmail = enteredEmail).first()
+        app.logger.info(User)
+        #if no instance
+        if (User == None):
+            flash("Email does not have a registered accouint")
+        else:
+            #check if entered password matches userPassword
+            if (form.password.data == User.userPassword):
+                login_user(User)
+                return redirect('/Home')
+            else:
+                flash("Wrong Password - Try Again!")
+
+    return render_template('Login.html', form = form)
+
+#logout
+@app.route('/logout', methods=['GET', 'POST'])
+@app.route('/Logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    current_user = None
+    flash("Logout successful")
+    return '/login'
+
+
+@app.route("/setup", methods = ['GET', 'POST'])
+@app.route("/Signup", methods = ['GET', 'POST'])
+@app.route("/CreateAccount.html", methods = ['GET', 'POST'])
+@app.route("/user/Signup", methods = ['GET', 'POST'])
+def add_user():
+    empty = {}
+    emptyJSON = json.dumps(empty)
+    form = CreateAccountForm()
+    if form.is_submitted():
+        enteredEmail = form.email.data
+        if (Users.query.filter_by(userEmail = enteredEmail).first() == None):
+            if ((form.password.data == form.confirm.data)):
+                user = Users(userEmail = form.email.data, userPassword = form.password.data,classes = emptyJSON, googleToken = emptyJSON, canvasBearer = "" )
+                db.session.add(user)
+                db.session.commit()
+                return redirect('/Home')
+            else:
+                flash("Password entries do not match!")
+        else:
+            flash("That email is already registered!")
+
+    return render_template('CreateAccount.html', form = form)
+
+
+
+## this function will be called any time home or addlocation window closes
+@app.route("/bgUpdateUserClasses", methods = ['GET', 'POST'])
+def updateUserClasses():
+    #classList is an array of JSON
+    classList = json.loads(request.data)
+    ## Gets the userInfo of current user
+    id = current_user.id
+    currUser = Users.query.get_or_404(id)
+
+    currUser.classes = str(request.data)
+    db.session.commit()
+    app.logger.info(currUser.classes)
+    #convert userInfo JSON into a dictionary
+    #userDict = json.loads(str(currUser))
+
+    return str(classList)
+
+
+## this function will be called any time home or addlocation window opens
+@app.route("/bgLoadUserClasses", methods = ['GET', 'POST'])
+def loadUserClasses():
+    id = current_user.id
+    currUser = Users.query.get_or_404(id)
+    classList = currUser.classes
+    returnList = classList[2:len(classList)-1]
+    return returnList
+
+
+
+
 
 @app.route("/")
 @app.route("/Home.html")
 @app.route("/Home")
+@login_required
 def Home():
     return render_template("Home.html")
 
 @app.route("/Quick_View.html")
 @app.route("/Quick_View")
+@login_required
 def Quick_View():
     return render_template("Quick_View.html")
 
 @app.route("/AddLocation.html")
 @app.route("/AddLocation")
+@login_required
 def AddLocation():
     return render_template("AddLocation.html")
-
 
 
 
@@ -80,6 +232,8 @@ def getGoogleJSONs():
         if not courses:
             print('No courses found.')
             return
+        # used to keep track of classes 
+        order = 0
         # Prints the names of the courses
         for course in courses:
             # Class name that will be stored
@@ -173,6 +327,8 @@ def getGoogleJSONs():
             classObj['name'] = className
             classObj['color'] = 'rgb(162, 214, 161);'
             classObj['assignments'] = assignmentList
+            classObj['order'] = order
+            order += 1
 
             classList.append(classObj)
 
@@ -204,7 +360,7 @@ def getGoogleJSONs():
 #will call for all courses of a user
 @app.route('/bgGetCanvasCourses', methods=['GET', 'POST'])
 def getCanvasCourses():
-    url = "https://canvas.tamu.edu/api/v1/courses/"
+    url = "https://canvas.tamu.edu/api/v1/courses?include=items&per_page=1000/"
 
     #eventually will take bearer token as an argument
     token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
@@ -250,6 +406,7 @@ def getCanvasAssignments():
     classList = []
     # print("CORSE DICTIONARY")
     # print(courseDict)
+    order = 0
     for courseID in courseDict:
         stringID = str(courseID)
         # takes course name and replaces : since it creates error later 
@@ -273,13 +430,36 @@ def getCanvasAssignments():
         for assignment in resp.json():
             #create a new assignmentObj to make JSON
             assignmentObj = {}
-            assignmentObj['name'] = assignment['name']
+            assignmentNameCheck = checkInvalidChar(assignment['name'])
+            assignmentObj['name'] = assignmentNameCheck
             assignmentObj['class'] = courseName
             assignmentObj['priority'] = 3
             # issues with due date being null
-            assignmentObj['dueDate'] = '' #assignment['due_at']
+            if (assignment['due_at'] == None):
+                # print(assignmentNameCheck + " is null")
+                assignmentObj['dueDate'] = ''
+                dueDate = None
+            else:
+                # [:-4] gets rid of milliseconds which cause issues with dates
+                assignmentObj['dueDate'] = assignment['due_at'][:-4]
+                # dueDate = assignment['due_at'][:10]
+                dueDateYear = int(assignment['due_at'][0:4])
+                dueDateMonth = int(assignment['due_at'][5:7])
+                dueDateDay = int(assignment['due_at'][8:10])
+
+                dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+                print(assignmentNameCheck + " is due at " + assignment['due_at'][:-4])
+                print((4 + 19) % 24)
             # startDate should be unlock or created at? 
-            assignmentObj['startDate'] = assignment['unlock_at']
+            # [:-4] gets rid of milliseconds which cause issues with dates
+            if (assignment['unlock_at'] == None):
+                # print(assignmentNameCheck + " is null")
+                assignmentObj['startDate'] = ''
+            else:
+                # [:-4] gets rid of milliseconds which cause issues with dates
+                # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
+                assignmentObj['startDate'] = assignment['unlock_at'][:-4]
+            
             assignmentObj['link'] = assignment['html_url']
             assignmentObj['relatedLinks'] = ''
             assignmentObj['notes'] = '' #assignment['description']
@@ -292,22 +472,28 @@ def getCanvasAssignments():
             #     assignmentObj['complete'] = False
             # else:    
             #     assignmentObj['complete'] = True
+            # dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+            if (dueDate != None):
+                delta = dueDate - date.today()
+                # print("Delta is " + delta)
+                ##checks if assignment is less than ten days overdue, if not then displays
+                isNotPastAssignment = delta > timedelta(days = 10)
+                if(isNotPastAssignment):
+                    assignmentList.append(assignmentObj)
+            else:
+                assignmentList.append(assignmentObj)
 
-            assignmentList.append(assignmentObj)
-
-            # delta = assignmentObj['dueDate'] - assignmentObj['startDate']
-
-        ##checks if assignment is less than ten days overdue, if not then displays
-        # isNotPastAssignment = delta > timedelta(days = 10)
-
+            # assignmentList.append(assignmentObj)
         # create classobj for each class
         classObj = {}
         classObj['name'] = courseName
         classObj['color'] = 'rgb(162, 214, 161);'
         classObj['assignments'] = assignmentList
+        classObj['order'] = order
 
         # if(isNotPastAssignment):
         classList.append(classObj)
+        order += 1 
         # print(classList)
         # print()
         # print()
@@ -346,7 +532,29 @@ def getCanvasJSONs(token):
 
 
 
+def checkInvalidChar(assignmentName):
+    regex = re.compile('[@!#$%^&+*(),<>?/\|}{~:]')
 
+    if(regex.search(assignmentName) == None):
+         return assignmentName
+    else:
+        assignmentName = assignmentName.replace(':',' ')
+        assignmentName = assignmentName.replace('#',' ')
+        assignmentName = assignmentName.replace('&','And')
+        assignmentName = assignmentName.replace('!','')
+        assignmentName = assignmentName.replace('?','')
+        assignmentName = assignmentName.replace('(',' ')
+        assignmentName = assignmentName.replace(')',' ')
+        assignmentName = assignmentName.replace(',','')
+        assignmentName = assignmentName.replace('+','')
+        assignmentName = assignmentName.replace('/','-')
+        # assignmentName = assignmentName.replace("\",' ')
+        assignmentName = assignmentName.replace('|',' ')
+        # assignmentName = assignmentName.replace('@','')
+     
+    return assignmentName
+
+# def removeEndTime(date):
 
 if __name__ == '__main__':
     app.run(debug=True)

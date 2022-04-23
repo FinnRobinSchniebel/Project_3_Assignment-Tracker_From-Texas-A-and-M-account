@@ -291,3 +291,19 @@ function findClosestDue(ListAssignments){
 function findPastDue(listOfAssignments){
 
 }
+
+function LogoutUser(){
+    $.ajax({
+        url:"/Logout",
+        type: "POST",
+        success: function (response){
+            window.location.replace('./login')
+        }
+    });
+    localStorage.clear()
+}
+
+function updateClass(newClassObj){
+    jsonObj = JSON.stringify(newClassObj);
+    localStorage.setItem(newClassObj.name, jsonObj);
+}

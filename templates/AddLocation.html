@@ -11,6 +11,7 @@
         <link id="BasicHome" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/BasicHome.css') }}" />
         <script src="{{ url_for('static',filename='Scripts/JSONGetsAndSets.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/ImportScripts.js') }}"></script>
+        <script src="{{ url_for('static',filename='Scripts/scripts.js') }}"></script>
 
     </head>
 
@@ -21,7 +22,8 @@
             <div class=Mynavbar>
                 <button class="button" onclick="location.href='Home.html'">Home </button>
                 <button class="button" onclick="location.href='Quick_View.html'"> Quick View</button>
-                <button class="button" onclick="location.href='AddLocation.html'"> View and Add Assignment locations</button> 
+                <button class="button" onclick="location.href='AddLocation.html'"> View and Add Assignment locations</button>
+                <button class="button" onclick="LogoutUser()">Logout</button> 
                 <select class="priorityButton" aria-label="Priority select table" id="SortSelect" disabled>
                     <option value="DueDate" selected>Sort Disabled</option>
                     <option value="Priority">Priority</option>
@@ -31,8 +33,6 @@
                 </select>
                 
             </div>
-
-
 
         
             <div id="Locations" class="LocSpace"><!-- will display all existing connection here to remove-->
@@ -100,7 +100,9 @@
             Place Contents from"" into:
         </label>
         <select aria-label="Priority select table" id="NewLoc">
+            <option value="New" selected>Create New</option>
             <option value="None" selected>Don't Add</option>
+            
         </select>
     </div>
 </template>

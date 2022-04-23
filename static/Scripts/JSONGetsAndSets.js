@@ -7,7 +7,7 @@ function getClassList(){
     var classList = [];
     var keys = Object.keys(localStorage);
     var i = keys.length;
-
+   
     while(i--){
         classList.push(JSON.parse(localStorage.getItem(keys[i])));
     }
@@ -143,12 +143,9 @@ function removeAssignment(className, assignmentName, assignmentDiv){
     //console.debug(element);
     element.remove();
 
-    //console.debug("Before Delete")
-    //printClassList();
-    // removes class from classList
+
     deleteAssignment(className, assignmentName);
-    //console.debug("After Delete")
-    //printClassList();
+   
 }
 
 // should work as intended 
@@ -166,28 +163,34 @@ function removeClass(){
     deleteClass(inputClassNameDisplay);
 }
 
+ 
 //storeClass: takes in user inputted className and an array of assignments to store in local storage
-function storeClass(className, arrayAssignments, classColor){
+function storeClass(className, arrayAssignments, classColor, classOrder){
    
     if(arrayAssignments.length == 0){
         var newClass = {
             name: className, //text
             assignments: [], //array of assignment objs
-            color: classColor //text
+            color: classColor, //text
+            order: classOrder
         };
     } else{
         var newClass = {
             name: className, //text
             assignments: arrayAssignments, //array of assignment objs
-            color: classColor //text
+            color: classColor, //text
+            order: classOrder
 
         };
     }
+    // console.log("IN STORE CLASS FUNCTION");
+    // console.log(className);
     var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
     localStorage.setItem(className, jsonObj); //stores assignment in local storage as item "CLASS:className"
+    // console.log("LOCAL STORAGE IN STORE CLASS FUNCTION");
+    // console.log(localStorage);
+
 }
-
-
 function completeButton(assignmentName,className){
 
     //getting copies of objects
