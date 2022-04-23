@@ -110,42 +110,42 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     document.getElementById('PriorityChange'+ NameToAddForID).getAttribute("onchange");
     if(typeof(onchange) != "function"){
         
-        document.getElementById('PriorityChange'+ NameToAddForID).setAttribute('onchange', "updatePriority(this.options[this.selectedIndex].value,'" + assignmentName+ "','" + className +"')");
+        document.getElementById('PriorityChange'+ NameToAddForID).setAttribute('onchange', "updatePriority(this.options[this.selectedIndex].value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
     }
     else{
-        document.getElementById('PriorityChange'+ NameToAddForID).onchange = function(){updatePriority(this.options[this.selectedIndex].value, assignmentName, className)};
+        document.getElementById('PriorityChange'+ NameToAddForID).onchange = function(){updatePriority(this.options[this.selectedIndex].value, assignmentName, className, isQuick)};
     }
 
 
     //name change
     if(typeof(onblur) != "function"){
         document.getElementById('Rename'+ NameToAddForID).setAttribute('value', ''+ assignmentName);
-        document.getElementById('Rename'+ NameToAddForID).setAttribute('onblur', "updateName(this.value,'" + assignmentName+ "','" + className +"')");
+        document.getElementById('Rename'+ NameToAddForID).setAttribute('onblur', "updateName(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
     }
     else{
         document.getElementById('Rename'+ NameToAddForID).value = ''+ assignmentName;
-        document.getElementById('Rename'+ NameToAddForID).onblur = function(){updateName(this.value, assignmentName, className)};
+        document.getElementById('Rename'+ NameToAddForID).onblur = function(){updateName(this.value, assignmentName, className, isQuick)};
     }
 
 
     //start change
     if(typeof(onchange) != "function"){
         
-        document.getElementById('EditStart'+ NameToAddForID).setAttribute('onchange', "updateStart(this.value,'" + assignmentName+ "','" + className +"')");
+        document.getElementById('EditStart'+ NameToAddForID).setAttribute('onchange', "updateStart(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
         document.getElementById('EditStart'+ NameToAddForID).setAttribute('value', ""+ assignmentStartDate);
     }
     else{
-        document.getElementById('EditStart'+ NameToAddForID).onchange = function(){updateStart(this.value, assignmentName, className)};
+        document.getElementById('EditStart'+ NameToAddForID).onchange = function(){updateStart(this.value, assignmentName, className, isQuick)};
     }
 
     //Due change area
     if(typeof(onchange) != "function"){
         
-        document.getElementById('EditDue'+ NameToAddForID).setAttribute('onchange', "updateDue(this.value,'" + assignmentName+ "','" + className +"')");
+        document.getElementById('EditDue'+ NameToAddForID).setAttribute('onchange', "updateDue(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
         document.getElementById('EditDue'+ NameToAddForID).setAttribute('value', ""+ assignmentDueDate);
     }
     else{
-        document.getElementById('EditDue'+ NameToAddForID).onchange = function(){updateDue(this.value, assignmentName, className)};
+        document.getElementById('EditDue'+ NameToAddForID).onchange = function(){updateDue(this.value, assignmentName, className, isQuick)};
     }
 
 
