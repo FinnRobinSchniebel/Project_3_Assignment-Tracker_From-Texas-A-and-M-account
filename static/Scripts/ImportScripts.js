@@ -325,7 +325,7 @@ window.onload = function(){
         contentType: "application/json",
         success: function (response){
             DBclassList = JSON.parse(response)
-            alert(DBclassList);
+            //alert(DBclassList);
             DBclassList.forEach(newClassObj => {
                 updateClass(newClassObj);
             });
