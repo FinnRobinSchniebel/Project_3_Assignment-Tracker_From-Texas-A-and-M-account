@@ -302,7 +302,7 @@ window.onbeforeunload = function(){
     temp = getTempClassObjs();
     //gets all classObjs
     classList = getClassList(classList);
-    //console.log(classList);
+    alert(classList);
     jsonObj = JSON.stringify(classList);
     $.ajax({
         url:"/bgUpdateUserClasses",
@@ -314,22 +314,21 @@ window.onbeforeunload = function(){
             console.log(response);
         }
     });
-    localStorage.clear()
 }
 
-//this function will call everytime home loads to populate localstorage
+//this function will call everytime importpage loads to populate localstorage
 window.onload = function(){
     $.ajax({
         url:"/bgLoadUserClasses",
         type: "GET",
         contentType: "application/json",
         success: function (response){
-            DBclassList = JSON.parse(response)
+            DBclassList = JSON.parse(response);
             //alert(DBclassList);
+            console.log(DBclassList);
             DBclassList.forEach(newClassObj => {
                 updateClass(newClassObj);
             });
-            populatePage();
         }
     });
 }
