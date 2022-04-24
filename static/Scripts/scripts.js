@@ -302,7 +302,7 @@ function LogoutUser(){
 }
 
 function updateClass(newClassObj){
-    jsonObj = JSON.stringify(newClassObj);
+    var jsonObj = JSON.stringify(newClassObj);
     localStorage.setItem(newClassObj.name, jsonObj);
 }
 

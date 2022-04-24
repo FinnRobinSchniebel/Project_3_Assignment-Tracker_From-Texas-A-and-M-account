@@ -233,6 +233,9 @@
 		<script>
 				//this function will call everytime home loads to populate localstorage
 			window.onload = function(){
+				console.log("BEFORE: \n");
+				console.log(localStorage);
+				var DBclassList;
 				$.ajax({
 					url:"/bgLoadUserClasses",
 					type: "GET",
@@ -240,12 +243,18 @@
 					success: function (response){
 						DBclassList = JSON.parse(response);
 						console.log(DBclassList);
-						DBclassList.forEach(newClassObj => {
-							updateClass(newClassObj);
-						});
-						populatePage();
+						loadPage(DBclassList);
 					}
 				});
+			}
+
+			function loadPage(DBclassList){
+				DBclassList.forEach(newClassObj => {
+					var jsonObj = JSON.stringify(newClassObj);
+    				localStorage.setItem(newClassObj.name, jsonObj);
+                });
+				console.log(localStorage);
+				populatePage();
 			}
 
 
@@ -266,6 +275,7 @@
 						console.log("Success");
 					}
 				});
+				localStorage.clear();
 			}
 		</script>
 

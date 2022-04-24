@@ -157,7 +157,7 @@ def updateUserClasses():
 
     currUser.classes = str(request.data)
     db.session.commit()
-    app.logger.info(currUser.classes)
+    #app.logger.info(currUser.classes)
     #convert userInfo JSON into a dictionary
     #userDict = json.loads(str(currUser))
 
