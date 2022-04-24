@@ -1,6 +1,5 @@
 ## GOOGLE API IMPORTS
 from __future__ import print_function
-from concurrent.futures import thread
 
 import os.path
 
@@ -36,8 +35,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
-import threading
-import time
 
 
 
@@ -45,8 +42,6 @@ app = Flask(__name__)
 
 #initialize database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-##URI for heroku
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://urhwqbkkzaykuq:c49f78a0ac2c402b3aa934de845dd1224624a17bae603bd5977cb5f91c8b728b@ec2-54-80-123-146.compute-1.amazonaws.com:5432/d67doemhbdk8j'
 app.config['SECRET_KEY'] = "Superduper secret key NOBODY KNOWS WHAT IT IS"
 db = SQLAlchemy(app)
 
@@ -87,31 +82,6 @@ class LoginForm(FlaskForm):
     email = StringField("Enter valid email address", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Submit")
-
-
-
-#for constantly running server in background this must be commentted out and replaced with code below
-#if __name__ == '__main__':
-#    app.run(debug=True)
-
-def run_app():
-    app.run(debug = False, threaded = True)
-
-def while_function():
-    i = 0
-    while i < 10:
-        time.sleep(1)
-        #print(i)
-        i+=1
-    return 0
-
-if __name__ == '__main__':
-    first_thread = threading.Thread(target= run_app)
-    second_thread = threading.Thread(target= while_function)
-    first_thread.start()
-    second_thread.start()
-
-
 
 
 #login page
@@ -586,4 +556,6 @@ def checkInvalidChar(assignmentName):
 
 # def removeEndTime(date):
 
+if __name__ == '__main__':
+    app.run(debug=True)
 
