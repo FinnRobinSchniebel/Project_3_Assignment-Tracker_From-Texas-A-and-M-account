@@ -5,8 +5,10 @@
     left: 0px;
     position: fixed;
     width: 100%;
-    min-height: 125px;
+    min-height:fit-content;
     text-align: center; 
+    max-height: 45%;
+    height: fit-content;
 
     background-color: rgb(192, 182, 182);
     color: rgb(0, 0, 0);
@@ -16,39 +18,51 @@
     box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
     border-top: none;
 }
+.navcontainer{  
+    min-height: 125px;
+}
+
 .button{
-    background-color: rgb(90, 135, 156);
-    margin: 15px;
-    margin-top: 30px;
-    border: 3px solid rgb(74, 95, 102);
+    background-color:rgb(129, 194, 224);
+    margin: 1%;
+    margin-top: 1%;
+    border: 3px solid rgb(100, 149, 172);
     color: rgb(0, 0, 0);
     border-radius: 10px;
     text-align: center;
     display: inline;
-    font-size: 40px;
+    text-size-adjust: 100%;
+    font-size: 120%;
     transition-duration: 5ms;
-    padding: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 1.2%;
+    padding-left: 2%;
+    padding-right: 2%;
     border-top-left-radius: 0px;
-    max-height: 500px;
+    height: 70%;
+
 
 }
+.pushedButton{
+    background-color: rgb(100, 149, 172);
+    border: 3px solid rgb(112, 166, 190);
+}
+
+
 .priorityButton{
-    background-color: rgb(90, 135, 156);
-    margin: 15px;
-    margin-top: 25px;
-    border: 3px solid rgb(74, 95, 102);
+    background-color:rgb(129, 194, 224);
+    margin: 1%;
+    margin-top: 1%;
+    border: 3px solid rgb(100, 149, 172);
     color: rgb(0, 0, 0);
     border-radius: 10px;
     text-align: center;
     display: inline;
-    font-size: 35px;
+    font-size: 120%;
+    text-size-adjust: 100%;
     transition-duration: 5ms;
-    padding: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: .85%;
     border-top-left-radius: 0px;
+    height: 70%;
 }
 .priorityButton:disabled{
     background-color: rgb(137, 144, 148);
@@ -65,7 +79,7 @@
 .content{
     background-color: #ffffff;
     color: rgb(0, 0, 0);
-    padding-top: 135px;
+    padding-top: 155px;
     margin-left: 10%;
     margin-right: 10%;
     width: 80%;
@@ -76,6 +90,7 @@
     text-align: center;
     line-height: 30px;
     font-size: 25px;
+    min-height:1200px;
 }
 
 .PriorityPicker{

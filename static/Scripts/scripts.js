@@ -305,3 +305,9 @@ function updateClass(newClassObj){
     jsonObj = JSON.stringify(newClassObj);
     localStorage.setItem(newClassObj.name, jsonObj);
 }
+
+$(window).resize(function(){
+    $('.content').css({
+        'padding-top' : $('.Mynavbar').height() +50 +'px'
+    });
+});
