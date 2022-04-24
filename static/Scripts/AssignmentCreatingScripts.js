@@ -19,7 +19,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     var NameToAddForID= ClassNameAssignment+newAssignment;
 
     //makes a copy of the content in template for assignment
-    
     var NewHTML = document.querySelector("#NewAssignmentTemp").content;
 
     NewHTML= NewHTML.cloneNode(true); //true makes this recursive (copy all in assignment)    
@@ -45,11 +44,13 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         var cur = NewHTML.querySelectorAll('select')[i];
         cur.setAttribute('id', ''+cur.id + NameToAddForID);
     }
+
     var isQuick =false; //is this a quick view item
     if(Location == ""){
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
+        
         document.getElementById(Location).appendChild(NewHTML);
         isQuick =true;
     }
@@ -153,9 +154,9 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     //set fields
     document.getElementById('PriorityField'+ NameToAddForID).innerText = "Priority: " + assignmentPriority;
     document.getElementById('AssignmentNameField'+ NameToAddForID).innerText = assignmentName;
-    document.getElementById('Start_'+ NameToAddForID).setAttribute("value", assignmentStartDate);
+    document.getElementById('Start_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentStartDate);
 
-    document.getElementById('Due_'+ NameToAddForID).setAttribute("value", assignmentDueDate);
+    document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);
     //bar stuff
     document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + getDatePercent(assignmentStartDate, assignmentDueDate));
     document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
@@ -245,4 +246,31 @@ function ChangeIDWith(oldName, NewName){
     }
     //unfinished
     //can be used for update in which tabs nolonger need to close on change
+}
+function TimeToString(time){
+    var newTime = time;
+    var datestruct=  new Date(newTime);
+    //yyyy-mm-ddThh:mm
+
+    if(time != null){
+        newTime = datestruct.getMonth()+1;
+        newTime +="/"+datestruct.getDate();
+        newTime += "/"+datestruct.getFullYear();
+        var ending = " AM";
+        var hour = datestruct.getHours();
+        if(hour > 12){
+            hour = hour-12;
+            ending = " PM";
+        }
+        
+        newTime += " at " + hour;
+
+        newTime += ":" + datestruct.getMinutes();
+        newTime += ending;
+        //newTime = newTime.toString();
+        //newTime.split('-');
+        //newTime = newTime.replaceAll('-', '/');
+        //newTime = newTime.replaceAll('T', ' ');
+    }
+    return newTime;
 }

@@ -133,9 +133,7 @@ function PopulateClass(className, closest, assignmentcount){
     //document.getElementsByTagName('body')[0].appendChild(newDiv);
     var closestAssignmentDate = 'No assignments'
     if(closest != null){
-        closestAssignmentDate = closest.dueDate.toString();
-        closestAssignmentDate = closestAssignmentDate.replaceAll('-', '/');
-        closestAssignmentDate = closestAssignmentDate.replaceAll('T', ' ');
+        closestAssignmentDate = TimeToString(closest.dueDate);
     }
     var upcoming= "No Upcoming Assignments";
     

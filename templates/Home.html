@@ -19,7 +19,7 @@
 		<script src="{{ url_for('static',filename='Scripts/SortScript.js') }}"></script>
 		<script src="{{ url_for('static',filename='Scripts/JSONGetsAndSets.js') }}"></script>
 		<script src="{{ url_for('static',filename='Scripts/scripts.js') }}"></script>
-		
+		<script src="{{ url_for('static',filename='Scripts/QuickViewScript.js') }}"></script> <!--DO not use any of these they are simply here for other functions that are shared-->
 		
 		
 		
@@ -117,8 +117,11 @@
 					<!--start date-->
 					<div class="AssignmentDuedate AssignmentStartDate" id="StartDate">
 						<!-- has two classes for identification Will need unique id-->
-						<label for="Start_">Start date:</label> <input id="Start_" type="datetime-local"
-							value="2022-04-03T19:59" aria-readonly="true">
+						<label for="Start_">Start date:</label> 
+						<!-- <input id="Start_" type="datetime-local" value="2022-04-03T19:59" aria-readonly="true"> -->
+						<div id="Start_" > 
+							start Date here
+						</div>
 					</div>
 
 					<!--Progress bar item-->
@@ -134,7 +137,10 @@
 					<!--end date-->
 					<div class="AssignmentDuedate" id="EndDate">
 						<!-- Will need unique id -->
-						<label for="Due_">Due date:</label> <input id="Due_" type="datetime-local" value="2022-04-09T19:59">
+						<label for="Due_">Due date:</label> 
+						<div id="Due_" > 
+							Due Date here
+						</div>
 					</div>
 
 				</button>

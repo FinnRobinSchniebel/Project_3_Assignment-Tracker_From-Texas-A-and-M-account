@@ -328,7 +328,7 @@ function updatePriority(selected, assignmentName, className ,isQuick){
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
     
-    if(isQuick){
+    if(isQuick == true){
         populateQuickView();
     }
     else{
@@ -341,7 +341,7 @@ function updateStart(selected, assignmentName, className, isQuick){
     var assignmentID = assignmentName.replaceAll(' ', '_');
     var classID = className.replaceAll(' ', '_');
     //this sets the html
-    document.getElementById("Start_"+classID+assignmentID).value = selected; 
+    document.getElementById("Start_"+classID+assignmentID).innerText = TimeToString(selected); 
     
     assignmentObj.startDate = selected;
 
@@ -349,11 +349,12 @@ function updateStart(selected, assignmentName, className, isQuick){
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
-    if(isQuick){
+    if(isQuick == true){
         populateQuickView();
     }
-    else
+    else{
         populatePage();
+    }
 }
 
 function updateDue(selected, assignmentName, className, isQuick){
@@ -361,7 +362,7 @@ function updateDue(selected, assignmentName, className, isQuick){
     var assignmentID = assignmentName.replaceAll(' ', '_');
     var classID = className.replaceAll(' ', '_');
     //this sets the html
-    document.getElementById("Due_"+classID+assignmentID).value = selected; 
+    document.getElementById("Due_"+classID+assignmentID).innerText = TimeToString(selected); 
     
     assignmentObj.dueDate = selected;
 
@@ -369,7 +370,7 @@ function updateDue(selected, assignmentName, className, isQuick){
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
-    if(isQuick){
+    if(isQuick == true){
         populateQuickView();
     }
     else
@@ -384,7 +385,7 @@ function updateName(text, assignmentName, className, isQuick){
         //Remove old assignment from classObj's assignments
         deleteAssignment(className, assignmentName);
         addAssignmentToClass(assignmentObj.name, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
-        if(isQuick){
+        if(isQuick == true){
             populateQuickView();
         }
         else
