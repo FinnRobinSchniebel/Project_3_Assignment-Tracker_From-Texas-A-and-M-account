@@ -35,7 +35,3 @@ function populateQuickView(){
     colorAllAssignment(classeslist);
 
 }
-
-window.onload = function(){
-    populateQuickView();
-}
