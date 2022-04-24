@@ -238,7 +238,7 @@
 					type: "GET",
 					contentType: "application/json",
 					success: function (response){
-						DBclassList = JSON.parse(response)
+						DBclassList = JSON.parse(response);
 						console.log(DBclassList);
 						DBclassList.forEach(newClassObj => {
 							updateClass(newClassObj);
