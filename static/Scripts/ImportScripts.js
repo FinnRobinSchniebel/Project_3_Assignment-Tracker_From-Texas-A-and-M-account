@@ -491,6 +491,13 @@ function FinalizeGoogle(){
 
 
 function FinalizeCanvas(){
+    // TODO: Need to implement loader 
+    // var loadDiv = document.createElement('div');
+    // loadDiv.setAttribute('class', 'loader');
+    // // loadDiv.appendChild(but);
+    
+    // document.getElementById('SelectLocation').appendChild(loadDiv);
+    // document.getElementById('SelectLocation').innerHTML = `<div class="loader"></div>`;
     //these are the classObjs that were imported
     var importedClassObjs = getTempClassObjs();
     //TODO implement logic to iterate through loc0-locX
@@ -500,6 +507,7 @@ function FinalizeCanvas(){
         var selecter = document.getElementById('NewLoc'+ i);
        
         var selClassName = selecter.options[selecter.selectedIndex].value;
+        
        
         if(selClassName != "None"){
             // creates new Class from import
@@ -520,6 +528,7 @@ function FinalizeCanvas(){
                         storeCourseList["name"] = importedClassObjs[j].name
                         storeCourseList["ID"] = importedClassObjs[j].ID
                         storeCourseID(importedClassObjs[j]);
+                        
                        
                     }
                 }    
@@ -545,16 +554,10 @@ function FinalizeCanvas(){
     }
     //clear content when done
     document.getElementById('SelectLocation').innerHTML ='';
-    updateCourse(storeCourseList, true);
+
 }
 
-// function updateCourse(storeCourseList, bool){
-//     if (bool == true){
-//         setTimeout(updateCourseCall(storeCourseList), 1000);
-//     }
-// }
 
-// function updateCourseCall(storeCourseList){
 
 // }
 //this function will remove temp objects when leaving page

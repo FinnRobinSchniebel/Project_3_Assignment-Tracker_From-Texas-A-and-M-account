@@ -387,7 +387,7 @@ def getCanvasCourses():
             # getting rid of JAPN for testing
             if courseID == 123752: continue
             # if courseID == 133720: continue
-            
+
             # creates Dict of needed courseINFO
             courseDict = {}
             courseDict['name'] = course["name"]  
@@ -418,6 +418,9 @@ def storeCourseINFO():
     # stores user courseINFO
     courseData = request.get_json()
     session["courseINFO"] = courseData
+    courseStuff = session.get("courseINFO")
+    courseName  = courseStuff['name']
+    courseID  = courseStuff['id']
     return jsonify(status="success", data=courseData)
 
 
