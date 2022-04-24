@@ -97,7 +97,7 @@ function PopulateAssignments(AssignmentInfoOBJ, Location){
     var ClassName= AssignmentInfoOBJ.class;
     var newAssignmentName = AssignmentInfoOBJ.name;
     // takes initial "classname+assignmentname" -> "assignmentname"
-    // newAssignmentName2 = newAssignmentName.replace(ClassName, "");
+    //newAssignmentName = newAssignmentName.replace(ClassName, "");
     var startTime = AssignmentInfoOBJ.startDate;
     var endTime = AssignmentInfoOBJ.dueDate;
     var noteDetails = AssignmentInfoOBJ.notes;
@@ -133,9 +133,7 @@ function PopulateClass(className, closest, assignmentcount){
     //document.getElementsByTagName('body')[0].appendChild(newDiv);
     var closestAssignmentDate = 'No assignments'
     if(closest != null){
-        closestAssignmentDate = closest.dueDate.toString();
-        closestAssignmentDate = closestAssignmentDate.replaceAll('-', '/');
-        closestAssignmentDate = closestAssignmentDate.replaceAll('T', ' ');
+        closestAssignmentDate = TimeToString(closest.dueDate);
     }
     var upcoming= "No Upcoming Assignments";
     
@@ -291,3 +289,25 @@ function findClosestDue(ListAssignments){
 function findPastDue(listOfAssignments){
 
 }
+
+function LogoutUser(){
+    $.ajax({
+        url:"/Logout",
+        type: "POST",
+        success: function (response){
+            window.location.replace('./login')
+        }
+    });
+    localStorage.clear()
+}
+
+function updateClass(newClassObj){
+    var jsonObj = JSON.stringify(newClassObj);
+    localStorage.setItem(newClassObj.name, jsonObj);
+}
+
+$(window).resize(function(){
+    $('.content').css({
+        'padding-top' : $('.Mynavbar').height() +50 +'px'
+    });
+});

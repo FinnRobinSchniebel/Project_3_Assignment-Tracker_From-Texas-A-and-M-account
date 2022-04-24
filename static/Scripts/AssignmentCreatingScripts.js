@@ -19,7 +19,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     var NameToAddForID= ClassNameAssignment+newAssignment;
 
     //makes a copy of the content in template for assignment
-    
     var NewHTML = document.querySelector("#NewAssignmentTemp").content;
 
     NewHTML= NewHTML.cloneNode(true); //true makes this recursive (copy all in assignment)    
@@ -45,12 +44,15 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         var cur = NewHTML.querySelectorAll('select')[i];
         cur.setAttribute('id', ''+cur.id + NameToAddForID);
     }
-    
+
+    var isQuick =false; //is this a quick view item
     if(Location == ""){
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
+        
         document.getElementById(Location).appendChild(NewHTML);
+        isQuick =true;
     }
     
 
@@ -109,19 +111,59 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     document.getElementById('PriorityChange'+ NameToAddForID).getAttribute("onchange");
     if(typeof(onchange) != "function"){
         
-        document.getElementById('PriorityChange'+ NameToAddForID).setAttribute('onchange', "updatePriority(this.options[this.selectedIndex].value,'" + assignmentName+ "','" + className +"')");
+        document.getElementById('PriorityChange'+ NameToAddForID).setAttribute('onchange', "updatePriority(this.options[this.selectedIndex].value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
     }
     else{
-        document.getElementById('PriorityChange'+ NameToAddForID).onchange = function(){updatePriority(this.options[this.selectedIndex].value, assignmentName, className)};
+        document.getElementById('PriorityChange'+ NameToAddForID).onchange = function(){updatePriority(this.options[this.selectedIndex].value, assignmentName, className, isQuick)};
     }
+
+
+    //name change
+    if(typeof(onblur) != "function"){
+        document.getElementById('Rename'+ NameToAddForID).setAttribute('value', ''+ assignmentName);
+        document.getElementById('Rename'+ NameToAddForID).setAttribute('onblur', "updateName(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
+    }
+    else{
+        document.getElementById('Rename'+ NameToAddForID).value = ''+ assignmentName;
+        document.getElementById('Rename'+ NameToAddForID).onblur = function(){updateName(this.value, assignmentName, className, isQuick)};
+    }
+
+
+    //start change
+    if(typeof(onchange) != "function"){
+        
+        document.getElementById('EditStart'+ NameToAddForID).setAttribute('onchange', "updateStart(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
+        document.getElementById('EditStart'+ NameToAddForID).setAttribute('value', ""+ assignmentStartDate);
+    }
+    else{
+        document.getElementById('EditStart'+ NameToAddForID).onchange = function(){updateStart(this.value, assignmentName, className, isQuick)};
+    }
+
+    //Due change area
+    if(typeof(onchange) != "function"){
+        
+        document.getElementById('EditDue'+ NameToAddForID).setAttribute('onchange', "updateDue(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
+        document.getElementById('EditDue'+ NameToAddForID).setAttribute('value', ""+ assignmentDueDate);
+    }
+    else{
+        document.getElementById('EditDue'+ NameToAddForID).onchange = function(){updateDue(this.value, assignmentName, className, isQuick)};
+    }
+
 
 
     //set fields
     document.getElementById('PriorityField'+ NameToAddForID).innerText = "Priority: " + assignmentPriority;
-    document.getElementById('AssignmentNameField'+ NameToAddForID).innerText = assignmentName;
-    document.getElementById('Start_'+ NameToAddForID).setAttribute("value", assignmentStartDate);
+    if(Location == ""){
+        document.getElementById('AssignmentNameField'+ NameToAddForID).innerText = assignmentName;
+    }
+    else{
+        document.getElementById('AssignmentNameField'+ NameToAddForID).innerText = className + " : " + assignmentName;
+    }
 
-    document.getElementById('Due_'+ NameToAddForID).setAttribute("value", assignmentDueDate);
+    
+    document.getElementById('Start_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentStartDate);
+
+    document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);
     //bar stuff
     document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + getDatePercent(assignmentStartDate, assignmentDueDate));
     document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
@@ -190,4 +232,52 @@ function getTimeLeftLargestNonZero(DueDate){
         return "OVER DUE!!!";
     }
 
+}
+
+function ChangeIDWith(oldName, NewName){
+
+    for(var i=0; i <document.querySelectorAll('[id*="'+oldName+'"]').length; i++){
+        var cur = document.querySelectorAll('[id*="'+oldName+'"]')[i];
+        var NewName = cur.id.replaceAll(oldName, NewName);
+        cur.setAttribute('id', ''+NewName);
+        
+    }
+    for(var i=0; i< NewHTML.querySelectorAll("label").length; i++){
+        var cur = NewHTML.querySelectorAll('label')[i];
+        var currentTarget = cur.for;
+        if(currentTarget.includes(oldName)){
+            var NewName = cur.for.replaceAll(oldName, NewName);
+            cur.setAttribute('for', ''+NewName);
+        }
+        
+    }
+    //unfinished
+    //can be used for update in which tabs nolonger need to close on change
+}
+function TimeToString(time){
+    var newTime = time;
+    var datestruct=  new Date(newTime);
+    //yyyy-mm-ddThh:mm
+
+    if(time != null){
+        newTime = datestruct.getMonth()+1;
+        newTime +="/"+datestruct.getDate();
+        newTime += "/"+datestruct.getFullYear();
+        var ending = " AM";
+        var hour = datestruct.getHours();
+        if(hour > 12){
+            hour = hour-12;
+            ending = " PM";
+        }
+        
+        newTime += " at " + hour;
+
+        newTime += ":" + datestruct.getMinutes();
+        newTime += ending;
+        //newTime = newTime.toString();
+        //newTime.split('-');
+        //newTime = newTime.replaceAll('-', '/');
+        //newTime = newTime.replaceAll('T', ' ');
+    }
+    return newTime;
 }
