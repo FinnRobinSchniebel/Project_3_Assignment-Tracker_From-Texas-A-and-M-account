@@ -7,6 +7,7 @@ import json
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
+from dateutil import tz
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -226,113 +227,475 @@ def getCanvasCourses():
 
     # creates dictionary w/ current semesters courseIDs as the key and names as the values
     # this is done by looping through the courses again to find the ones with maxID
-    courseDict = {}
+    courseList = []
+    orderCount = 0
     for course in resp.json():
         if course["enrollment_term_id"] == maxID:     
             courseID = course["id"]
             # getting rid of JAPN for testing
             if courseID == 123752: continue
             # if courseID == 133720: continue
-            courseDict[courseID] = course["name"]  
-    # print(courseDict)
-    return (courseDict)
+            
+            # creates Dict of needed courseINFO
+            courseDict = {}
+            courseDict['name'] = course["name"]  
+            courseDict['id'] = courseID
+            courseDict['order'] = orderCount
+            orderCount += 1
+            courseList.append(courseDict)
+
+    jsonStr = json.dumps(courseList)
+    return jsonStr
+    # return (courseDict)
 
 # havent looked into this yet
 app.secret_key = 'dljsaklqk24e21cjn!Ew@@dsa5'
 @app.route('/bgGetUserToken', methods=['POST'])
-def get_post_json():    
+def get_post_json():   
+
+    # stores user Token 
     data = request.get_json()
     session["token"] = data
-    # print(tokenDict)
+
     return jsonify(status="success", data=data)
+
+
+@app.route('/bgStoreCourseINFO', methods=['POST'])
+def storeCourseINFO():    
+
+    # stores user courseINFO
+    courseData = request.get_json()
+    session["courseINFO"] = courseData
+    return jsonify(status="success", data=courseData)
+
+
 
 #function will call for assignments in a course
 @app.route('/bgGetCanvasAssignments', methods=['GET', 'POST'])
 def getCanvasAssignments():
 
+    courseDict = {}
+    # takes Token from session to use to access APIs
     tokenDict = session.get("token")
-    courseDict = getCanvasCourses()
-    classList = []
-    # print("CORSE DICTIONARY")
-    # print(courseDict)
+    # grabs courseINFO that was passed in
+    courseDict = session.get("courseINFO")
+    courseName = courseDict['name']
+    courseID = courseDict['id']
+
+    # was used before change, may not be needed anymore
     order = 0
-    for courseID in courseDict:
-        stringID = str(courseID)
-        # takes course name and replaces : since it creates error later 
-        # TODO: what should the courseName be? Spaces? underscores? 
-        courseName = courseDict[courseID]
-        courseName = courseName.replace(':','')
-        courseName = courseName.replace(' ','_')
-        url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments?include=items&per_page=1000/"
+    
+    # makes a call to get moduleINFO for each course 
+    stringID = str(courseID)
+    # takes course name and replaces : since it creates error later 
+    # TODO: what should the courseName be? Spaces? underscores? 
+    courseName = courseName.replace(':','')
+    courseName = courseName.replace(' ','_')
+    print(courseName)
+    # module search section
+    url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/modules?include=items&per_page=1000/"
 
-        #eventually will take bearer token as an argument
-        token = tokenDict['token']
-        # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
-        headers = {'Authorization' : 'Bearer '+ token}
+    #eventually will take bearer token as an argument
+    token = tokenDict['token']
+    # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+    headers = {'Authorization' : 'Bearer '+ token}
 
-        resp = requests.get(url, headers=headers)
+    resp = requests.get(url, headers=headers)
+
+    # Takes every moduleID and puts it into a dict 
+    moduleDict = {}
+    for module in resp.json():
+        moduleID = module["id"]
+        moduleDict[moduleID] = module["name"]  
+
+    # may need to change localtion of this   
+    assignmentList = []
+
+    for moduleCheck in resp.json():
+        # print(assignmentCHECK)
+        # print(assignmentCHECK['name'])
+        assignmentItems =  moduleCheck['items']
+        for assignmentCheck in assignmentItems:
+            # checking for assignments in the module
+            # print(assignmentCheck['type'])
+            assignmentType = assignmentCheck['type']
+            if (assignmentType == 'Quiz'):
+                #assignmentNameCheck = checkInvalidChar(assignment['title'])
+                # need to make another call to get assignment info
+                content_id = str(assignmentCheck['content_id'])
+
+                url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/quizzes/"+content_id+"/"
+
+                #eventually will take bearer token as an argument
+                token = tokenDict['token']
+                # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+                headers = {'Authorization' : 'Bearer '+ token}
+
+                resp = requests.get(url, headers=headers)
+                assignment = resp.json()
         
-        # loops through current class's assignmnents
-        # puts everything required into assignmentObj
-        # TODO: Noticed some dates are null for assignments need to check
-        assignmentList = []
-        for assignment in resp.json():
-            #create a new assignmentObj to make JSON
-            assignmentObj = {}
-            assignmentNameCheck = checkInvalidChar(assignment['name'])
-            assignmentObj['name'] = assignmentNameCheck
-            assignmentObj['class'] = courseName
-            assignmentObj['priority'] = 3
-            # issues with due date being null
-            if (assignment['due_at'] == None):
-                # print(assignmentNameCheck + " is null")
-                assignmentObj['dueDate'] = ''
-                dueDate = None
-            else:
-                # [:-4] gets rid of milliseconds which cause issues with dates
-                assignmentObj['dueDate'] = assignment['due_at'][:-4]
-                # dueDate = assignment['due_at'][:10]
-                dueDateYear = int(assignment['due_at'][0:4])
-                dueDateMonth = int(assignment['due_at'][5:7])
-                dueDateDay = int(assignment['due_at'][8:10])
+                # TODO: Noticed some dates are null for assignments need to check
+                assignmentObj = {}
+                assignmentNameCheck = checkInvalidChar(assignment['title'])
+                assignmentObj['name'] = assignmentNameCheck
+                assignmentObj['class'] = courseName
+                assignmentObj['priority'] = 3
+                # issues with due date being null
+                if (assignment['due_at'] == None):
+                    # print(assignmentNameCheck + " is null")
+                    assignmentObj['dueDate'] = ''
+                    dueDate = None
+                else:
+                    # [:-4] gets rid of milliseconds which cause issues with dates
 
-                dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
-                print(assignmentNameCheck + " is due at " + assignment['due_at'][:-4])
-                print((4 + 19) % 24)
-            # startDate should be unlock or created at? 
-            # [:-4] gets rid of milliseconds which cause issues with dates
-            if (assignment['unlock_at'] == None):
-                # print(assignmentNameCheck + " is null")
-                assignmentObj['startDate'] = ''
-            else:
-                # [:-4] gets rid of milliseconds which cause issues with dates
-                # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
-                assignmentObj['startDate'] = assignment['unlock_at'][:-4]
-            
-            assignmentObj['link'] = assignment['html_url']
-            assignmentObj['relatedLinks'] = ''
-            assignmentObj['notes'] = '' #assignment['description']
-            # print("Assignment Name:")
-            # print(assignment['name'])
+                    assignDate = assignment['due_at'][:-1]
+                    assignDate = assignDate.replace('T', " ")
+                   
+                    # taken from https://stackoverflow.com/questions/4770297/convert-utc-datetime-string-to-local-datetime#comment7256053_4771733
+                    # METHOD 2: Auto-detect zones:
+                    from_zone = tz.tzutc()
+                    to_zone = tz.tzlocal()
+                    # utc = datetime.utcnow()
+                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                  
+                    # Tell the datetime object that it's in UTC time zone since 
+                    # datetime objects are 'naive' by default
+                    utc = utc.replace(tzinfo=from_zone)
+                  
+                    # Convert time zone
+                    dueTimeFinal = str(utc.astimezone(to_zone))
+                   
+                    # parses info from date to use in final date
+                    dueDateNew = dueTimeFinal[0:10]
+                    dueTimeEnd = dueTimeFinal[13:16]
+                    dueTimeChange = dueTimeFinal[11:13]
+                   
+                    # creates new final due Date for assignment
+                    dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
+                    print(assignmentNameCheck + " due time is " + dueDateFinal)
+                    assignmentObj['dueDate'] = dueDateFinal
+                   
+                    # parses info from date to use in checking if overdue
+                    dueDateYear = int(assignment['due_at'][0:4])
+                    dueDateMonth = int(assignment['due_at'][5:7])
+                    dueDateDay = int(assignment['due_at'][8:10])
 
-            #check if the assignment has a submission
-            # submission = assignment['has_submitted_submissions']
-            # if(submission == False):
-            #     assignmentObj['complete'] = False
-            # else:    
-            #     assignmentObj['complete'] = True
-            # dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
-            if (dueDate != None):
-                delta = dueDate - date.today()
-                # print("Delta is " + delta)
-                ##checks if assignment is less than ten days overdue, if not then displays
-                isNotPastAssignment = delta > timedelta(days = 10)
-                if(isNotPastAssignment):
+                    dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+                   
+                # startDate should be unlock or created at? 
+                # [:-4] gets rid of milliseconds which cause issues with dates
+                if (assignment['unlock_at'] == None):
+                    # print(assignmentNameCheck + " is null")
+                    assignmentObj['startDate'] = ''
+                else:
+                    # [:-4] gets rid of milliseconds which cause issues with dates
+                    # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
+                    # assignmentObj['startDate'] = assignment['unlock_at'][:-4]
+                    assignDate = assignment['unlock_at'][:-1]
+                    assignDate = assignDate.replace('T', " ")
+                  
+                    # METHOD 2: Auto-detect zones:
+                    from_zone = tz.tzutc()
+                    to_zone = tz.tzlocal()
+                
+                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+                    # Tell the datetime object that it's in UTC time zone since 
+                    # datetime objects are 'naive' by default
+                    utc = utc.replace(tzinfo=from_zone)
+             
+                    # Convert time zone
+                    unlockTimeFinal = str(utc.astimezone(to_zone))
+
+                    # splits unlock time so I can append them to the correct format 
+                    unlockDateNew = unlockTimeFinal[0:10]
+                    unlockTimeEnd = unlockTimeFinal[13:16]
+                    unlockTimeChange = unlockTimeFinal[11:13]
+                    
+                     # splits unlock time so I can append them to the correct format 
+                    unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
+                    print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+                    assignmentObj['startDate'] = unlockDateFinal
+                
+                assignmentObj['link'] = assignment['html_url']
+                assignmentObj['relatedLinks'] = ''
+                assignmentObj['notes'] = '' #assignment['description']
+               
+
+                #check if the assignment has a submission
+                # submission = assignment['has_submitted_submissions']
+                # if(submission == False):
+                #     assignmentObj['complete'] = False
+                # else:    
+                #     assignmentObj['complete'] = True
+                # dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+                if (dueDate != None):
+                    delta = dueDate - date.today()
+                    # print("Delta is " + delta)
+                    ##checks if assignment is less than ten days overdue, if not then displays
+                    isNotPastAssignment = delta > timedelta(days = 1)
+                    if(isNotPastAssignment):
+                        assignmentList.append(assignmentObj)
+                    else:
+                        print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+                else:
                     assignmentList.append(assignmentObj)
-            else:
-                assignmentList.append(assignmentObj)
 
-            # assignmentList.append(assignmentObj)
+                # assignmentList.append(assignmentObj)
+            elif (assignmentType == 'Discussion'):
+                #assignmentNameCheck = checkInvalidChar(assignment['title'])
+                # need to make another call to get assignment info
+                content_id = str(assignmentCheck['content_id'])
+
+                url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/discussion_topics/"+content_id+"/"
+
+                #eventually will take bearer token as an argument
+                token = tokenDict['token']
+                # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+                headers = {'Authorization' : 'Bearer '+ token}
+
+                resp = requests.get(url, headers=headers)
+       
+                assignment = resp.json()
+                # TODO: Noticed some dates are null for assignments need to check
+                # assignmentList = []
+                #create a new assignmentObj to make JSON
+                # print(assignment)
+                # print(assignment)
+                assignmentObj = {}
+                assignmentNameCheck = checkInvalidChar(assignment['assignment']['name'])
+                # print(assignmentNameCheck)
+                # print(assignmentNameCheck)
+                assignmentObj['name'] = assignmentNameCheck
+                assignmentObj['class'] = courseName
+                assignmentObj['priority'] = 3
+                # issues with due date being null
+                if (assignment['assignment']['due_at'] == None):
+                    # print(assignmentNameCheck + " is null")
+                    assignmentObj['dueDate'] = ''
+                    dueDate = None
+                else:
+                    # [:-4] gets rid of milliseconds which cause issues with dates
+                    assignDate = assignment['assignment']['due_at'][:-1]
+                    assignDate = assignDate.replace('T', " ")
+                 
+                    # METHOD 2: Auto-detect zones:
+                    from_zone = tz.tzutc()
+                    to_zone = tz.tzlocal()
+                    # utc = datetime.utcnow()
+                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+                    # Tell the datetime object that it's in UTC time zone since 
+                    # datetime objects are 'naive' by default
+                    utc = utc.replace(tzinfo=from_zone)
+                  
+                    # Convert time zone
+                    dueTimeFinal = str(utc.astimezone(to_zone))
+
+                    # parses info from date to use in final date
+                    dueDateNew = dueTimeFinal[0:10]
+                    dueTimeEnd = dueTimeFinal[13:16]
+                    dueTimeChange = dueTimeFinal[11:13]
+        
+                    # parses info from date to use in final date
+                    dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
+                    print(assignmentNameCheck + " due time is " + dueDateFinal)
+                    assignmentObj['dueDate'] = dueDateFinal
+
+                    # parses info from date to use in checking if overdue
+                    dueDateYear = int(assignment['assignment']['due_at'][0:4])
+                    dueDateMonth = int(assignment['assignment']['due_at'][5:7])
+                    dueDateDay = int(assignment['assignment']['due_at'][8:10])
+                    dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+                  
+
+                
+                if (assignment['assignment']['unlock_at'] == None):
+                    # print(assignmentNameCheck + " is null")
+                    assignmentObj['startDate'] = ''
+                else:
+                    # [:-1] gets rid of Z which cause issues with dates
+
+                    assignDate = assignment['assignment']['unlock_at'][:-1]
+                    assignDate = assignDate.replace('T', " ")
+                  
+                    # METHOD 2: Auto-detect zones:
+                    from_zone = tz.tzutc()
+                    to_zone = tz.tzlocal()
+                
+                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+                    # Tell the datetime object that it's in UTC time zone since 
+                    # datetime objects are 'naive' by default
+                    utc = utc.replace(tzinfo=from_zone)
+             
+                    # Convert time zone
+                    unlockTimeFinal = str(utc.astimezone(to_zone))
+
+                    # parses info from date to use in final date
+                    unlockDateNew = unlockTimeFinal[0:10]
+                    unlockTimeEnd = unlockTimeFinal[13:16]
+                    unlockTimeChange = unlockTimeFinal[11:13]
+                    
+                    # splits unlock time so I can append them to the correct format 
+                    unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
+                    print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+                    assignmentObj['startDate'] = unlockDateFinal
+                    
+                assignmentObj['link'] = assignment['html_url']
+                assignmentObj['relatedLinks'] = ''
+                assignmentObj['notes'] = '' #assignment['assignment']['description']
+           
+                #check if the assignment has a submission
+                # submission = assignment['has_submitted_submissions']
+                # if(submission == False):
+                #     assignmentObj['complete'] = False
+                # else:    
+                #     assignmentObj['complete'] = True
+
+                if (dueDate != None):
+                    delta = dueDate - date.today()
+                    # print("Delta is " + delta)
+                    ##checks if assignment is less than ten days overdue, if not then displays
+                    isNotPastAssignment = delta > timedelta(days = 1)
+                    if(isNotPastAssignment):
+                        assignmentList.append(assignmentObj)
+                    else:
+                        print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+                else:
+                    assignmentList.append(assignmentObj)
+
+                # assignmentList.append(assignmentObj)
+            elif (assignmentType == 'Assignment'):
+                #assignmentNameCheck = checkInvalidChar(assignment['title'])
+                # need to make another call to get assignment info
+                content_id = str(assignmentCheck['content_id'])
+
+                url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments/"+content_id+"/"
+
+                #eventually will take bearer token as an argument
+                token = tokenDict['token']
+                # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+                headers = {'Authorization' : 'Bearer '+ token}
+
+                resp = requests.get(url, headers=headers)
+            
+                assignment = resp.json()
+        
+                # loops through current class assignmnent
+                # puts everything required into assignmentObj
+                # TODO: Noticed some dates are null for assignments need to check
+                assignmentObj = {}
+                assignmentNameCheck = checkInvalidChar(assignment['name'])
+                assignmentObj['name'] = assignmentNameCheck
+                assignmentObj['class'] = courseName
+                assignmentObj['priority'] = 3
+                # issues with due date being null
+                if (assignment['due_at'] == None):
+                    assignmentObj['dueDate'] = ''
+                    dueDate = None
+                else:
+                    # [:-4] gets rid of milliseconds which cause issues with dates
+
+                    assignDate = assignment['due_at'][:-1]
+                    assignDate = assignDate.replace('T', " ")
+                  
+                    # METHOD 2: Auto-detect zones:
+                    from_zone = tz.tzutc()
+                    to_zone = tz.tzlocal()
+                
+                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+                    # Tell the datetime object that it's in UTC time zone since 
+                    # datetime objects are 'naive' by default
+                    utc = utc.replace(tzinfo=from_zone)
+             
+                    # Convert time zone
+                    dueTimeFinal = str(utc.astimezone(to_zone))
+
+                    # parses info from date to use in final date
+                    dueDateNew = dueTimeFinal[0:10]
+                    dueTimeEnd = dueTimeFinal[13:16]
+                    dueTimeChange = dueTimeFinal[11:13]
+                    
+                    # splits due time so I can append them to the correct format 
+                    dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
+                    assignmentObj['dueDate'] = dueDateFinal
+
+                    # parses info from date to use in checking if overdue
+                    dueDateYear = int(assignment['due_at'][0:4])
+                    dueDateMonth = int(assignment['due_at'][5:7])
+                    dueDateDay = int(assignment['due_at'][8:10])
+
+                    dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+               
+                # startDate should be unlock or created at? 
+                # [:-1] gets rid of Z which cause issues with dates
+                if (assignment['unlock_at'] == None):
+                    # print(assignmentNameCheck + " is null")
+                    assignmentObj['startDate'] = ''
+                else:
+                    # [:-1] gets rid of Z which cause issues with dates
+                
+                    assignDate = assignment['unlock_at'][:-1]
+                    assignDate = assignDate.replace('T', " ")
+                  
+                    # METHOD 2: Auto-detect zones:
+                    from_zone = tz.tzutc()
+                    to_zone = tz.tzlocal()
+                
+                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+                    # Tell the datetime object that it's in UTC time zone since 
+                    # datetime objects are 'naive' by default
+                    utc = utc.replace(tzinfo=from_zone)
+             
+                    # Convert time zone
+                    unlockTimeFinal = str(utc.astimezone(to_zone))
+
+                    # parses info from date to use in final date
+                    unlockDateNew = unlockTimeFinal[0:10]
+                    unlockTimeEnd = unlockTimeFinal[13:16]
+                    unlockTimeChange = unlockTimeFinal[11:13]
+
+                    # splits unlock time so I can append them to the correct format 
+                    unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
+                    print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+                    assignmentObj['startDate'] = unlockDateFinal
+                
+                assignmentObj['link'] = assignment['html_url']
+                assignmentObj['relatedLinks'] = ''
+                # pass in description to use later in assignment section (not atm)
+                assignmentObj['notes'] = '' #assignment['description']
+
+
+                #check if the assignment has a submission NOT IN CANVAS>?
+                # submission = assignment['has_submitted_submissions']
+                # if(submission == False):
+                #     assignmentObj['complete'] = False
+                # else:    
+                #     assignmentObj['complete'] = True
+                
+
+                if (dueDate != None):
+                    delta = dueDate - date.today()
+                    # print("Delta is " + delta)
+                    ##checks if assignment is less than ten days overdue, if not then displays
+                    isNotPastAssignment = delta > timedelta(days = 1)
+                    if(isNotPastAssignment):
+                        assignmentList.append(assignmentObj)
+                    else:
+                        print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+                else:
+                    assignmentList.append(assignmentObj)
+
+                
+            else:
+                continue
+        # print("End of Module")  
+
+
+
         # create classobj for each class
         classObj = {}
         classObj['name'] = courseName
@@ -340,45 +703,13 @@ def getCanvasAssignments():
         classObj['assignments'] = assignmentList
         classObj['order'] = order
 
-        # if(isNotPastAssignment):
-        classList.append(classObj)
-        order += 1 
-        # print(classList)
-        # print()
-        # print()
-        # print(resp.json())
 
     ##write classObj to JSON file
-    with open("./static/Scripts/CanvasObjs.json", "w") as outfile:
-        json.dump(classList, outfile) 
-
-    jsonStr = json.dumps(classList)
+    with open("./static/Scripts/Canvas"+courseName+".json", "w") as outfile:
+        json.dump(classObj, outfile) 
+    session.pop("courseINFO", None)
+    jsonStr = json.dumps(classObj)
     return jsonStr
-
-#this will be the main function for getting all classes and assignments from a user
-@app.route('/bgCanvasImport', methods=['GET', 'POST'])
-def getCanvasJSONs(token):
-    ## TO DO
-    
-    ## This function needs to take in the token entered by user
-
-    ## For testing purposes 
-    token = "15924~j9hFN1TVjJHgUCE7CyTdrKaWKSLsf8yIRaCtCfQlXp4PkASi8ts3UJEqn2ackRq1"
-
-    #get canvas userID using this function
-    #userID = getCanvasUser(token)
-
-    #get an array of classIDs using this function
-    #courseIDs = getCanvasCourses(token, userID)
-
-    #iterate through classID list and get all assignments for each course
-    #for each course: assignmentList = getCanvasAssignments(token, courseID)
-        #create dictionarys and structure just like local JSON objects (classObjs & assignmentObjs)
-
-    
-    #return an array of dictionarys (classObjs)
-
-
 
 
 def checkInvalidChar(assignmentName):

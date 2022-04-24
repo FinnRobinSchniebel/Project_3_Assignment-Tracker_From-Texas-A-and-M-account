@@ -163,7 +163,24 @@ function removeClass(){
     deleteClass(inputClassNameDisplay);
 }
 
- 
+//storeClass: takes in user inputted className and an array of assignments to store in local storage
+function storeCanvasClass(className, classColor, classOrder, classID){
+   
+        var newClass = {
+            name: className, //text
+            color: classColor, //text
+            order: classOrder,
+            ID: classID
+
+        };
+    // console.log("IN STORE CLASS FUNCTION");
+    // console.log(className);
+    var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
+    localStorage.setItem(className, jsonObj); //stores assignment in local storage as item "CLASS:className"
+    // console.log("LOCAL STORAGE IN STORE CLASS FUNCTION");
+    // console.log(localStorage);
+
+}
 //storeClass: takes in user inputted className and an array of assignments to store in local storage
 function storeClass(className, arrayAssignments, classColor, classOrder){
    
@@ -171,14 +188,14 @@ function storeClass(className, arrayAssignments, classColor, classOrder){
         var newClass = {
             name: className, //text
             assignments: [], //array of assignment objs
-            color: classColor, //text
+            color: classColor,
             order: classOrder
         };
     } else{
         var newClass = {
             name: className, //text
             assignments: arrayAssignments, //array of assignment objs
-            color: classColor, //text
+            color: classColor, 
             order: classOrder
 
         };

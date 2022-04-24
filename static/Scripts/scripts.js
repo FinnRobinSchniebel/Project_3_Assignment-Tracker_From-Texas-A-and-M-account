@@ -97,7 +97,7 @@ function PopulateAssignments(AssignmentInfoOBJ, Location){
     var ClassName= AssignmentInfoOBJ.class;
     var newAssignmentName = AssignmentInfoOBJ.name;
     // takes initial "classname+assignmentname" -> "assignmentname"
-    newAssignmentName = newAssignmentName.replace(ClassName, "");
+    // newAssignmentName2 = newAssignmentName.replace(ClassName, "");
     var startTime = AssignmentInfoOBJ.startDate;
     var endTime = AssignmentInfoOBJ.dueDate;
     var noteDetails = AssignmentInfoOBJ.notes;
@@ -109,8 +109,8 @@ function PopulateAssignments(AssignmentInfoOBJ, Location){
     //console.log(AssignmentInfoOBJ.link);
     var priority = AssignmentInfoOBJ.priority; //test, still needs to be implemented
     var isComplete = AssignmentInfoOBJ.complete;
-
-
+    console.log("ASSIGNMENT NAME IN POP ASSIGN");
+    console.log(newAssignmentName);
     AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails, isComplete, Location);
 
 
