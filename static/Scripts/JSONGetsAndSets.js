@@ -344,15 +344,15 @@ function updateStart(selected, assignmentName, className, isQuick){
     document.getElementById("Start_"+classID+assignmentID).innerText = TimeToString(selected); 
     
     assignmentObj.startDate = selected;
-
+    console.log(isQuick);
 
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
-    if(isQuick == true){
+    if(isQuick===true){
         populateQuickView();
     }
-    else{
+    else if(isQuick === false){
         populatePage();
     }
 }

@@ -89,7 +89,7 @@ function loadClassColor(className){
     //to added assignments
     var assignmentList = [];
     assignmentList = getAssignments(className);
-    assignmentList.forEach((assignmentObj, i, array) => {
+    assignmentList.forEach((assignmentObj) => {
         var assignmentID = assignmentObj.name;
         assignmentID = assignmentID.replaceAll(" ", "_");
         if(assignmentObj.complete == false){
@@ -101,4 +101,44 @@ function loadClassColor(className){
             document.getElementById("CheckBoxComplete"+classID+assignmentID).checked = true;
         }
     }); 
+}
+
+
+/**This function is used to color assignments in quick view.
+ * Takes in classList containing a list of classes as objects
+ * Out of efficency reasons this function is seperate from the above and not a continuation.
+ * This Also lets the function be easily called from other locations without issue
+ */
+function colorAllAssignment(classList){
+    console.log(classList);
+    classList.forEach((classObj)=>{ 
+        var classColor = classObj.color;
+        var classID = classObj.name;
+        classId = classID.replaceAll(" ", "_");
+        //parsing rgb string into array of numbers
+        var inputSubstring = classColor.substring(4,classColor.length-1);
+        var RGBstringArray = inputSubstring.split(",");
+        var RGB = [];
+
+        RGBstringArray.forEach(str => {
+            RGB.push(Number(str));
+        });
+
+        var darker = darkColor(RGB);
+        //to added assignments
+        var assignmentList = [];
+        assignmentList = classObj.assignments;
+        assignmentList.forEach((assignmentObj) => {
+            var assignmentID = assignmentObj.name;
+            assignmentID = assignmentID.replaceAll(" ", "_");
+            if(assignmentObj.complete == false){
+                document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+                document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+            } else {
+                document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+                document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+                document.getElementById("CheckBoxComplete"+classID+assignmentID).checked = true;
+            }
+        }); 
+    });
 }

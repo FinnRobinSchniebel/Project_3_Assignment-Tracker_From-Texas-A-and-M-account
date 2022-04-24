@@ -153,7 +153,14 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     //set fields
     document.getElementById('PriorityField'+ NameToAddForID).innerText = "Priority: " + assignmentPriority;
-    document.getElementById('AssignmentNameField'+ NameToAddForID).innerText = assignmentName;
+    if(Location == ""){
+        document.getElementById('AssignmentNameField'+ NameToAddForID).innerText = assignmentName;
+    }
+    else{
+        document.getElementById('AssignmentNameField'+ NameToAddForID).innerText = className + " : " + assignmentName;
+    }
+
+    
     document.getElementById('Start_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentStartDate);
 
     document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);

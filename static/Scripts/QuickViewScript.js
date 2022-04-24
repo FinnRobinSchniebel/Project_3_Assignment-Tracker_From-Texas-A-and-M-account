@@ -29,9 +29,10 @@ function populateQuickView(){
     // loops through array of assignments and add each one to page
     for(var i =0; i < size; i++){
         //console.log(assignmentList[index]);
-        console.log(assignmentList[i]);
         PopulateAssignments(assignmentList[i], "AllAssignments");
     }
+    var classeslist = getClassList();
+    colorAllAssignment(classeslist);
 
 }
 
