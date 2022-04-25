@@ -557,7 +557,84 @@ function FinalizeCanvas(){
 
 }
 
+function PopulateImporterOptions(){
+    //todo
+}
+function CreateOptionPannel(info, locationType){
 
+    
+    var id = "Demo"; //todo  ****
+    var Data = "key"; //todo
+
+    var NewHTML = document.querySelector("#currentAPITemp").content;
+
+    NewHTML= NewHTML.cloneNode(true); //true makes this recursive (copy all in assignment)    
+    
+    for(var i=0; i <NewHTML.querySelectorAll('div').length; i++){
+        var cur = NewHTML.querySelectorAll('div')[i];
+        cur.setAttribute('id', ''+cur.id + id);
+        
+    }
+    for(var i=0; i< NewHTML.querySelectorAll('button').length; i++){
+        var cur = NewHTML.querySelectorAll('button')[i];
+        cur.setAttribute('id', ''+cur.id + id);
+    }
+    for(var i=0; i< NewHTML.querySelectorAll('input').length; i++){
+        var cur = NewHTML.querySelectorAll('input')[i];
+        cur.setAttribute('id', ''+cur.id + id);
+    }
+    for(var i=0; i< NewHTML.querySelectorAll("label").length; i++){
+        var cur = NewHTML.querySelectorAll('label')[i];
+        cur.setAttribute('for', ''+cur.getAttribute('for') + id);
+    }
+    for(var i=0; i< NewHTML.querySelectorAll("select").length; i++){
+        var cur = NewHTML.querySelectorAll('select')[i];
+        cur.setAttribute('id', ''+cur.id + id);
+    }
+    
+
+    
+    
+
+    if(typeof(onclick) != "function"){
+        document.getElementById('RequestB'+ id).setAttribute('onclick', "ForceRequest('" + id + "','" + Data +"')");
+    }
+    else{
+        document.getElementById('RequestB'+ id).onclick = function(){ForceRequest(id, Data)};
+    }
+    if(typeof(onclick) != "function"){
+        document.getElementById('RemoveB'+ id).setAttribute('onclick', "DeleteRequest('" + id + "','" + Data +"')");
+    }
+    else{
+        document.getElementById('RemoveB'+ id).onclick = function(){DeleteRequest(id, Data)};
+    }
+    
+
+    document.getElementById('Locations').appendChild(NewHTML);
+
+    document.getElementById('LocationType'+ id).innerText = locationType;
+    document.getElementById('info'+ id).innerText = Data;
+}
+
+
+
+
+
+/**
+ * This function is desinged to forcfully make a server side update of the content comming from this source
+ */
+ function ForceRequest(id, requesttype){
+    //todo
+}
+
+/**
+ * this function is used to send a request to the server to stop the import from this location and delete all related information to the process 
+ * @param {*} id 
+ * @param {*} requesttype 
+ */
+function DeleteRequest(id, requesttype){
+    //todo
+}
 
 // }
 //this function will remove temp objects when leaving page
@@ -565,3 +642,4 @@ window.onbeforeunload = function(){
     temp = getTempClassObjs();
     //console.log("leaving");
 }
+

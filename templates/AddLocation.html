@@ -23,7 +23,7 @@
             <div class=Mynavbar>
                 <button class="button" onclick="location.href='Home.html'">Home </button>
                 <button class="button" onclick="location.href='Quick_View.html'"> Quick View</button>
-                <button class="button pushedButton" onclick="location.href='AddLocation.html'"> View and Add Assignment locations</button>
+                <button class="button pushedButton" onclick="location.href='AddLocation.html'"> Imports and Notifications</button>
                 
                 <select class="priorityButton" aria-label="Priority select table" id="SortSelect" disabled>
                     <option value="DueDate" selected>Sort Disabled</option>
@@ -154,5 +154,30 @@
 </template>
 
 <template id="currentAPITemp">
+    <div id="Assignment" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1"> <!-- Data here is not currently used and can be redefined-->
+        <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse"
+            aria-expanded="false" aria-controls="CollapseCourse" id="Overview">
+            <!-- Will need unique target in future-->
+            <div class="AssignmentPriority" id="LocationType">
+                Location type
+            </div>
+            <div class="AssignmentPriority" id="info">
+                Token info
+            </div>
+
+        </button>
+
+        <div class="collapse" id="Collapse">
+            <!-- Will need unique id in future-->
+            <div id="LeftCont" class="leftDiv">
+                <button class="importbutton" id="RequestB"  onclick="ForceRequest('id', 'type')">Force Import</button>
+            </div>
+            <div id="RightCont" class="rightDiv">
+                <button class="importbutton" id="RemoveB" onclick="DeleteRequest('id', 'type')">Delete</button>
+            </div>
+        </div>
+    </div>
+
+
     
 </template>
