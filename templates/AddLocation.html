@@ -12,7 +12,7 @@
         <script src="{{ url_for('static',filename='Scripts/JSONGetsAndSets.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/ImportScripts.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/scripts.js') }}"></script>
-
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
     </head>
 
@@ -62,7 +62,7 @@
         </div>
     
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        
         <script>
 			window.onload = function(){
 				//console.log("BEFORE: \n");
@@ -78,6 +78,7 @@
 						loadPage(DBclassList);
 					}
 				});
+                CreateOptionPannel('info', 'locationType');
 			}
 
 			function loadPage(DBclassList){
@@ -154,8 +155,8 @@
 </template>
 
 <template id="currentAPITemp">
-    <div id="Assignment" class="Assignment" data-due="05/20 03:25" data-timeleft="2" data-priority="1"> <!-- Data here is not currently used and can be redefined-->
-        <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse"
+    <div id="OptionPannel" class="Assignment"> <!-- Data here is not currently used and can be redefined-->
+        <button class="AssignmentOverview" id="View" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse"
             aria-expanded="false" aria-controls="CollapseCourse" id="Overview">
             <!-- Will need unique target in future-->
             <div class="AssignmentPriority" id="LocationType">
@@ -170,7 +171,7 @@
         <div class="collapse" id="Collapse">
             <!-- Will need unique id in future-->
             <div id="LeftCont" class="leftDiv">
-                <button class="importbutton" id="RequestB"  onclick="ForceRequest('id', 'type')">Force Import</button>
+                <button class="importbutton" id="RequestB" onclick="ForceRequest('id', 'type')">Force Import</button>
             </div>
             <div id="RightCont" class="rightDiv">
                 <button class="importbutton" id="RemoveB" onclick="DeleteRequest('id', 'type')">Delete</button>
