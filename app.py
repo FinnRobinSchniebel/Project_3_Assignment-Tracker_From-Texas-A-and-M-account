@@ -70,6 +70,18 @@ class Users(db.Model, UserMixin):
     def __repr__(self):
         return '{"Email": "'+self.userEmail+'", "Password": "'+ self.userPassword+'", "canvasBearer": "'+ self.canvasBearer +'", "googleToken": "'+self.googleToken+'", "classObjs": '+self.classes+'}'
 
+############# Queries needed for refreshing DB ####################
+
+#given a classObj Dictionary
+# return a list of assignmentObj dictionaries that are from a google class
+def getAllGoogleAssignmentObjs(classObj):
+    assignmentList = classObj['assignments']
+    length = len(assignmentList)
+
+    #iterate through all assignments and check 'googleLocation'
+    #for i in range(length):
+    return 0
+
 
 
 ##create signup form
@@ -321,6 +333,10 @@ def getGoogleJSONs():
 
 
                 assignmentObj['notes'] = assignment['description']
+
+                assignmentObj['googleLocation'] = className
+
+                assignmentObj['canvasLocation'] = ''
 
 
                 #check if the assignment has a submission

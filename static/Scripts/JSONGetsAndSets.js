@@ -72,7 +72,7 @@ function getAssignment(inputClassName, inputAssignmentName){
 
 
 //adds the assignment to a class Json
-function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes,isComplete){
+function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes,isComplete, googleClass, canvasClass){
     //if one of the dates is empty asign it todays date
 
     if(assignmentStartDate == ""){ 
@@ -91,7 +91,9 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
         link: assignmentLink,                   //text
         relatedLinks: assignmentRelatedLinks,   //text
         notes: assignmentNotes,                 //text
-        complete: isComplete
+        complete: isComplete,
+        googleLocation: googleClass,
+        canvasLocation: canvasClass
     };
 
 
@@ -232,7 +234,7 @@ function completeButton(assignmentName,className){
     //TODO
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
-    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
     //console.debug(assignmentObj.complete);
 }
 
@@ -309,7 +311,7 @@ function updateDiscription(text, assignmentName, className){
 
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
-    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
 }
 function updateURL(text, assignmentName, className){
     var assignmentObj = getAssignment(className, assignmentName);
@@ -318,7 +320,7 @@ function updateURL(text, assignmentName, className){
     console.log(assignmentObj.link);
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
-    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
 }
 function updateRelated(text, assignmentName, className){
     var assignmentObj = getAssignment(className, assignmentName);
@@ -326,7 +328,7 @@ function updateRelated(text, assignmentName, className){
     assignmentObj.relatedLinks = text;
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
-    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
 }
 function updatePriority(selected, assignmentName, className ,isQuick){
     //getting copies of objects
@@ -343,7 +345,7 @@ function updatePriority(selected, assignmentName, className ,isQuick){
 
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
-    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
     
     if(isQuick == true){
         populateQuickView();
@@ -365,7 +367,7 @@ function updateStart(selected, assignmentName, className, isQuick){
 
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
-    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
     if(isQuick===true){
         populateQuickView();
     }
@@ -386,7 +388,7 @@ function updateDue(selected, assignmentName, className, isQuick){
 
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
-    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
     if(isQuick == true){
         populateQuickView();
     }
@@ -401,7 +403,7 @@ function updateName(text, assignmentName, className, isQuick){
         assignmentObj.name = text;
         //Remove old assignment from classObj's assignments
         deleteAssignment(className, assignmentName);
-        addAssignmentToClass(assignmentObj.name, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete);
+        addAssignmentToClass(assignmentObj.name, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
         if(isQuick == true){
             populateQuickView();
         }

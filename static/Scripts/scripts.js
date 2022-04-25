@@ -18,7 +18,7 @@ function addAssignment(className){
     
     
     //adds assignment to class in localstorage
-    addAssignmentToClass(newAssignmentDisplay,className,priority,endTime,startTime, link, relatedLinks,noteDetails,false);
+    addAssignmentToClass(newAssignmentDisplay,className,priority,endTime,startTime, link, relatedLinks,noteDetails,false, '', '');
 
     populatePage();
 
