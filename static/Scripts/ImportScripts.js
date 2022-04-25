@@ -570,6 +570,7 @@ function CreateOptionPannel(info, locationType){
 
     NewHTML= NewHTML.cloneNode(true); //true makes this recursive (copy all in assignment)    
     
+    //fix all ids befor adding
     for(var i=0; i <NewHTML.querySelectorAll('div').length; i++){
         var cur = NewHTML.querySelectorAll('div')[i];
         cur.setAttribute('id', ''+cur.id + id);
@@ -590,11 +591,16 @@ function CreateOptionPannel(info, locationType){
     for(var i=0; i< NewHTML.querySelectorAll("select").length; i++){
         var cur = NewHTML.querySelectorAll('select')[i];
         cur.setAttribute('id', ''+cur.id + id);
-    }
-    
+    } 
 
-    
-    
+
+    document.getElementById('Locations').appendChild(NewHTML);
+    //can use getelementByID after adding
+
+
+    var overviewlink = document.getElementById('View'+ id);
+    overviewlink.setAttribute('data-bs-target', ''+overviewlink.getAttribute("data-bs-target") + id);
+
 
     if(typeof(onclick) != "function"){
         document.getElementById('RequestB'+ id).setAttribute('onclick', "ForceRequest('" + id + "','" + Data +"')");
@@ -602,6 +608,7 @@ function CreateOptionPannel(info, locationType){
     else{
         document.getElementById('RequestB'+ id).onclick = function(){ForceRequest(id, Data)};
     }
+
     if(typeof(onclick) != "function"){
         document.getElementById('RemoveB'+ id).setAttribute('onclick', "DeleteRequest('" + id + "','" + Data +"')");
     }
@@ -610,7 +617,7 @@ function CreateOptionPannel(info, locationType){
     }
     
 
-    document.getElementById('Locations').appendChild(NewHTML);
+    
 
     document.getElementById('LocationType'+ id).innerText = locationType;
     document.getElementById('info'+ id).innerText = Data;
