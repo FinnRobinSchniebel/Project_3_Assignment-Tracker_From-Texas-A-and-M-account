@@ -54,6 +54,24 @@
     box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.932);
     border-radius: 20px;
 }
+.GroupName{
+    background-color:rgb(6, 173, 179);
+    margin: .2%;
+    margin-left: 1%;
+    margin-top: 1%;
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    text-align: center;
+    display: inline;
+    text-size-adjust: 100%;
+    font-size: 120%;
+    transition-duration: 5ms;
+    padding: 1.2%;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-top-left-radius: 0px;
+    height: 70%;
+}
 
 
 
@@ -66,6 +84,7 @@
 .priorityButton{
     background-color:rgb(129, 194, 224);
     margin: 1%;
+    margin-left: .2%;
     margin-top: 1%;
     border: 3px solid rgb(100, 149, 172);
     color: rgb(0, 0, 0);
