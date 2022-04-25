@@ -62,7 +62,7 @@ class Users(db.Model, UserMixin):
     userEmail = db.Column(db.String(100), nullable = False, unique = True)
     userPassword = db.Column(db.String(100), nullable = False)
     classes = db.Column(db.JSON, nullable = True)
-    googleToken = db.Column(db.JSON, nullable = True)
+    googleToken = db.Column(db.Text, nullable = True)
     canvasBearer = db.Column(db.String(200), nullable = True)
 
     #function that returns string when something is added for testing
@@ -97,7 +97,7 @@ def login():
         enteredEmail = form.email.data
         #first instance of User with that email in database
         User = Users.query.filter_by(userEmail = enteredEmail).first()
-        app.logger.info(User)
+        #app.logger.info(User)
         #if no instance
         if (User == None):
             flash("Email does not have a registered accouint")
@@ -105,10 +105,10 @@ def login():
             #check if entered password matches userPassword
             if (form.password.data == User.userPassword):
                 login_user(User)
+                loadGoogleToken(User.id)
                 return redirect('/Home')
             else:
                 flash("Wrong Password - Try Again!")
-
     return render_template('Login.html', form = form)
 
 #logout
@@ -118,6 +118,8 @@ def login():
 def logout():
     logout_user()
     current_user = None
+    if os.path.exists('token.json'):
+        os.remove('token.json')
     flash("Logout successful")
     return '/login'
 
@@ -198,6 +200,12 @@ def AddLocation():
     return render_template("AddLocation.html")
 
 
+def loadGoogleToken(userID):
+    tokenText = Users.query.filter_by(id = userID).first().googleToken
+    tokenJSON = json.loads(tokenText)
+    with open('token.json', 'w') as tokenfile:
+        tokenfile.write(tokenText)
+    return print(tokenJSON)
 
 
 #background process happening without any refreshing
@@ -221,6 +229,13 @@ def getGoogleJSONs():
         # Save the credentials for the next run
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
+
+    with open('token.json') as tokenfile:
+        store = json.load(tokenfile)
+
+    replace = json.dumps(store)
+    Users.query.filter_by(id = current_user.id).first().googleToken = replace
+    db.session.commit()
 
     try:
         service = build('classroom', 'v1', credentials=creds)
