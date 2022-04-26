@@ -401,6 +401,9 @@ function updateDue(selected, assignmentName, className, isQuick){
 }
 
 function updateName(text, assignmentName, className, isQuick){
+    console.log(text+ " " + assignmentName+" "+className+" "+isQuick);
+
+
     if(text != assignmentName && text != "" && text != " "){//cant be an empty string and cant be the same as before idk why it breaks from that
         var assignmentObj = getAssignment(className, assignmentName);
         //set new details
