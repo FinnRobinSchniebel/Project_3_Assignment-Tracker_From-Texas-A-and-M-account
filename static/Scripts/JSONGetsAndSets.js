@@ -12,6 +12,7 @@ function getClassList(){
         classList.push(JSON.parse(localStorage.getItem(keys[i])));
     }
    
+    // console.log("CLASS LIST: " + classList);
     return classList;
 }
 

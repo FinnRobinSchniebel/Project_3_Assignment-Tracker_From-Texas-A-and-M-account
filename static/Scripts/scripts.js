@@ -43,19 +43,20 @@ function AddClass(){
 
 //WIP: removeAssignment
 //edits HTML
-function removeAssignment(className, assignmentName){
+function removeAssignment(className, assignmentName, assignmentDiv){
 
     // console.debug(inputClassNameDisplay);
     //used to remove class
     var removeAssignment = assignmentName.replaceAll(" ", "_");
-    const element = document.getElementById(removeAssignment);
+    var removeClass = className.replaceAll(" ", "_");
+    const element = document.getElementById(assignmentDiv);
     //console.debug(element);
     element.remove();
 
     //console.debug("Before Delete")
     printClassList();
     // removes class from classList
-    deleteAssignment(className, assignmentName);
+    deleteAssignment(removeClass, removeAssignment);
     //console.debug("After Delete")
     printClassList();
 }
@@ -65,6 +66,7 @@ function populatePage(){
     document.getElementById("classList").innerHTML = "";
    
     var classList = getClassList(); //array of class objects
+    console.log(classList);
     //console.debug(classList);
     // makes classes reverse display 
     // color not saved ATM
@@ -111,6 +113,8 @@ function PopulateAssignments(AssignmentInfoOBJ, Location){
     var isComplete = AssignmentInfoOBJ.complete;
     console.log("ASSIGNMENT NAME IN POP ASSIGN");
     console.log(newAssignmentName);
+    console.log("ASSIGNMENT NOTES IN POP ASSIGN");
+    console.log(noteDetails);
     AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails, isComplete, Location);
 
 

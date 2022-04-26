@@ -255,7 +255,13 @@ function storeCourseID(courseINFO){
         dataType: "json",
         success: function(response) {
             console.log(response);
-            getCanvasAssignment();
+            try{
+                getCanvasAssignment();
+            }
+            catch(err) {
+                print("error occured, retrying")
+                getCanvasAssignment();
+              }
         },
         error: function(err) {
             console.log(err);
@@ -334,7 +340,7 @@ function getCanvasAssignment(){
             classObj = JSON.parse(response);
             console.log("Successfully Imported ClassList \n"+ response);
             storeClass(classObj.name,classObj.assignments,classObj.color);
-            console.log("Successfully Imported ClassList \n"+ classObj.name);
+            console.log("Successfully Imported Class \n"+ classObj.name);
             // assignmentPop(classList);
             // storeImports(classList);
             // console.log("STORING \n\n")
