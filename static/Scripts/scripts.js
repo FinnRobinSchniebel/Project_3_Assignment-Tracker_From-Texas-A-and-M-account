@@ -43,19 +43,20 @@ function AddClass(){
 
 //WIP: removeAssignment
 //edits HTML
-function removeAssignment(className, assignmentName){
+function removeAssignment(className, assignmentName, assignmentDiv){
 
     // console.debug(inputClassNameDisplay);
     //used to remove class
     var removeAssignment = assignmentName.replaceAll(" ", "_");
-    const element = document.getElementById(removeAssignment);
+    var removeClass = className.replaceAll(" ", "_");
+    const element = document.getElementById(assignmentDiv);
     //console.debug(element);
     element.remove();
 
     //console.debug("Before Delete")
     printClassList();
     // removes class from classList
-    deleteAssignment(className, assignmentName);
+    deleteAssignment(removeClass, removeAssignment);
     //console.debug("After Delete")
     printClassList();
 }
@@ -65,6 +66,7 @@ function populatePage(){
     document.getElementById("classList").innerHTML = "";
    
     var classList = getClassList(); //array of class objects
+    console.log(classList);
     //console.debug(classList);
     // makes classes reverse display 
     // color not saved ATM
@@ -111,6 +113,8 @@ function PopulateAssignments(AssignmentInfoOBJ, Location){
     var isComplete = AssignmentInfoOBJ.complete;
     console.log("ASSIGNMENT NAME IN POP ASSIGN");
     console.log(newAssignmentName);
+    console.log("ASSIGNMENT NOTES IN POP ASSIGN");
+    console.log(noteDetails);
     AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails, isComplete, Location);
 
 
@@ -147,111 +151,116 @@ function PopulateClass(className, closest, assignmentcount){
     // need to input dynamic info where needed
     newDiv.innerHTML += `
     <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
-    <div class="ClassName">
-        `+inputClassNameDisplay+`
-    </div>
-    <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
-        `+upcoming+`
-    </div> 
-    <div class="DueDateSection" id="Class1_TimeLeftOnClosestAssignment">
-        Nearest Due Date: `+ closestAssignmentDate +`
-    </div> 
-</button>
+        <div class="ClassName">
+            `+inputClassNameDisplay+`
+        </div>
+        <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
+            `+upcoming+`
+        </div> 
+        <div class="DueDateSection" id="Class1_TimeLeftOnClosestAssignment">
+            Nearest Due Date: `+ closestAssignmentDate +`
+        </div> 
+    </button>
 
 
-<div class="collapse" id="Collapse`+inputClassName+`">
-    <div class="ClassAssignmentsOutline" id = "`+inputClassName+`AssignmentsOutline">
-        <div class="ClassAssignments" id= "`+inputClassName+`ClassAssignments">
-            <div align="right" >
-                <label for="colorpicker">Color Picker:</label>
-                <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#246A81>
-            </div>
-
-            <!-- Class to dynamically add assignments to class -->
-            <div class="demoAssignments" id="`+inputClassName+`Assignments">
-
-            </div>
-            <!-- demo assignment end -->
-            
-            <!-- add new assignment -->
-            <button class="AddAssignmentTop" id="`+inputClassName+`AddAssignment" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`NewAssignment" aria-expanded="false" aria-controls="CollapseCourse">
-                <div class="AddAssignmentText">
-                    Add new Assignment
+    <div class="collapse" id="Collapse`+inputClassName+`">
+        <div class="ClassAssignmentsOutline" id = "`+inputClassName+`AssignmentsOutline">
+            <div class="ClassAssignments" id= "`+inputClassName+`ClassAssignments">
+                <div align="right" >
+                    <label for="colorpicker">Color Picker:</label>
+                    <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#246A81>
                 </div>
-            </button>
 
-            <div class="collapse" id="Collapse`+inputClassName+`NewAssignment">
-                <div class="AssignmentOutline" id="`+inputClassName+`AddNewAssignmentOutline">
-                    <div class="AssignmentInfo clearfix">
-                        <div class="leftside">
-                            <div class="NewAssignmentInfoBox" id="`+inputClassName+`InfoBox">
-                                <p> 
-                                    <div>
-                                        Assignment Name:
-                                    </div>
-                                    <input class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Name" placeholder="Add Name"> 
-                                    
-                                </p>
-                                
-                            </div>
-                            <div class="NewAssignmentInfoBox">
-                                <p>
-                                    Assignment Link:
-                                </p>
-                                <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`Link" placeholder="Add link"></textarea>
-                                
-                            </div>
-                            <div class="NewAssignmentInfoBox">
-                                <p>
-                                    Related Links:
-                                </p>
-                                <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`RelatedLinks" style=" min-height: 100px" placeholder="Add links"></textarea>
-                                
-                            </div>
-                        </div>
-                        <div class="rightside">
-                            <div class="NewAssignmentInfoRightSideAreas leftside">
-                                <p>
-                                    Start date/ time: 
-                                    <input class="genericWrittingBox" id="`+inputClassName+`Start" type="datetime-local"> 
-                                                        
-                                    </input>
-                                </p>
-                            </div>
-                            <div class="NewAssignmentInfoRightSideAreas rightside">
-                                <p>
-                                    End date/ time: 
-                                    <input class="genericWrittingBox" id="`+inputClassName+`End" type="datetime-local"> 
-                                                        
-                                    </input>
-                                </p>
-                            </div>
-                            <div class="NewAssignmentNotes">
-                                <p>
-                                    Notes: 
-                                </p>
-                                <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`Notes" style="min-height: 100px;" placeholder="Add notes"></textarea>
-                            </div>
-                            <div class="NewAssignmentNotes">
-                                <Label for="PriorityCreate`+inputClassName+`">Priority:</Label>
-                                <select class="PriorityPicker" aria-label="Priority select table" id="PriorityCreate`+inputClassName+`">
-									<option value="1" selected>1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">5</option>
-								</select>
-                            </div>
-                            <button class="btn btn-primary" onclick="addAssignment('`+inputClassName+`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                submit
-                            </button>
-                        </div>
+                <!-- Class to dynamically add assignments to class -->
+                <div class="demoAssignments" id="`+inputClassName+`Assignments">
+
+
+                
+                </div>
+                
+                <!-- add new assignment -->
+                <button class="AddAssignmentTop" id="`+inputClassName+`AddAssignment" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`NewAssignment" aria-expanded="false" aria-controls="CollapseCourse">
+                    <div class="AddAssignmentText">
+                        Add new Assignment
                     </div>
+                </button>
+
+                <div class="collapse" id="Collapse`+inputClassName+`NewAssignment">
+                    <div class="AddAssignmentcontent" id="`+inputClassName+`AddNewAssignmentOutline">
+                        <div class="AssignmentInfo clearfix">
+                            <div class="leftside">
+                                <div class="NewAssignmentInfoBox" id="`+inputClassName+`InfoBox">
+                                    <p> 
+                                        <div>
+                                            Assignment Name:
+                                        </div>
+                                        <input class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Name" placeholder="Add Name"> 
+                                        
+                                    </p>
+                                    
+                                </div>
+                                <div class="NewAssignmentInfoBox">
+                                    <p>
+                                        Assignment Link:
+                                    </p>
+                                    <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`Link" placeholder="Add link"></textarea>
+                                    
+                                </div>
+                                <div class="NewAssignmentInfoBox">
+                                    <p>
+                                        Related Links:
+                                    </p>
+                                    <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`RelatedLinks" style=" min-height: 100px" placeholder="Add links"></textarea>
+                                    
+                                </div>
+                            </div>
+                            <div class="rightside">
+                                <div class="NewAssignmentInfoRightSideAreas leftside">
+                                    <p>
+                                        Start date/ time: 
+                                        <input class="genericWrittingBox" id="`+inputClassName+`Start" type="datetime-local"> 
+                                                            
+                                        </input>
+                                    </p>
+                                </div>
+                                <div class="NewAssignmentInfoRightSideAreas rightside">
+                                    <p>
+                                        End date/ time: 
+                                        <input class="genericWrittingBox" id="`+inputClassName+`End" type="datetime-local"> 
+                                                            
+                                        </input>
+                                    </p>
+                                </div>
+                                <div class="NewAssignmentNotes">
+                                    <p>
+                                        Notes: 
+                                    </p>
+                                    <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`Notes" style="min-height: 100px;" placeholder="Add notes"></textarea>
+                                </div>
+                                <div class="NewAssignmentNotes">
+                                    <Label for="PriorityCreate`+inputClassName+`">Priority:</Label>
+                                    <select class="PriorityPicker" aria-label="Priority select table" id="PriorityCreate`+inputClassName+`">
+                                        <option value="1" selected>1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" onclick="addAssignment('`+inputClassName+`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    submit
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div style="float: center;">
+                    <button class="forceRemove" type="button" id="`+ inputClassName + `ForceRemove" onclick="removeClass('`+ inputClassName +`')">Delete</button>
                 </div>
             </div>
         </div>
-    </div>
-</div>`;
+    </div>`;
     var ClassesDiv = document.getElementById("classList");
     ClassesDiv.innerHTML += newDiv.innerHTML;
 } 

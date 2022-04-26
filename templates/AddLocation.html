@@ -3,7 +3,6 @@
     <head>
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- for sorting -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
         <title>Assignment Stacker Imports and Notifications</title>
         <link id="BasicHome" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/AddLocation.css') }}" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -13,7 +12,7 @@
         <script src="{{ url_for('static',filename='Scripts/ImportScripts.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/scripts.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
+        
     </head>
 
     <body class="background">
@@ -21,10 +20,11 @@
 
             <!-- Navigation Bar -->
             <div class=Mynavbar>
+                <div class="GroupName" style="float: left;">Assignment Stacker</div> 
                 <button class="button" onclick="location.href='Home.html'">Home </button>
                 <button class="button" onclick="location.href='Quick_View.html'"> Quick View</button>
                 <button class="button pushedButton" onclick="location.href='AddLocation.html'"> Imports and Notifications</button>
-                
+                <label for="SortSelect"><p style="font-size: 36px;">Sort:</p> </label>
                 <select class="priorityButton" aria-label="Priority select table" id="SortSelect" disabled>
                     <option value="DueDate" selected>Sort Disabled</option>
                     <option value="Priority">Priority</option>
@@ -35,7 +35,7 @@
             </div>
 
         
-            <div id="Locations"><!-- will display all existing connection here to remove-->
+            <div id="Locations" style="margin-bottom: 50px; margin-top: 30px;"><!-- will display all existing connection here to remove-->
 
             </div>
 
@@ -122,7 +122,7 @@
         <input type="text" id="CanvasConnect" id="canvasConnectionInfo">
         <button class="importbutton" onclick="ImportAPICanvas()">Start Import</button>  -->
         <!-- <form> -->
-            <label for="CanvasConnect" class="TextfieldLeftLabel">Enter "" Info here:</label>
+            <label for="CanvasConnect" class="TextfieldLeftLabel">Enter Canvas Token here: <strong style="font-size: 23px; color: blue;">&#9432;</strong> </label>
             <input type="text" id="CanvasConnect" name="CanvasConnect" placeholder="Ex. 'User Token'">
             <!-- <input type="text" id="InputClassName" placeholder="Ex. 'User Token'">  -->
             <button class="importbutton" onclick="ImportAPICanvas()">Start Import</button>
@@ -147,7 +147,7 @@
             Place Contents from"" into:
         </label>
         <select aria-label="Priority select table" id="NewLoc">
-            <option value="New" selected>Create New</option>
+            <option value="New" selected>Create New Class from name</option>
             <option value="None" selected>Don't Add</option>
             
         </select>
@@ -155,13 +155,13 @@
 </template>
 
 <template id="currentAPITemp">
-    <div id="OptionPannel" class="Assignment"> <!-- Data here is not currently used and can be redefined--> 
-        <button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse" aria-expanded="false" aria-controls="CollapseCourse" id="View">
+    <div id="OptionPannel" class="Location"> <!-- Data here is not currently used and can be redefined--> 
+        <button class="LocationOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse" aria-expanded="false" aria-controls="CollapseCourse" id="View">
             <!-- Will need unique target in future-->
-            <div class="AssignmentPriority" id="LocationType">
+            <div class="LocViewType" id="LocationType">
                 Location type
             </div>
-            <div class="AssignmentPriority" id="info">
+            <div class="LocViewInfo" id="info">
                 Token info
             </div>
 
@@ -169,10 +169,10 @@
         <div class="collapse" id="Collapse">
             <div class="contentImp clearfix" id="container">
                 <div id="LeftCont" class="leftDiv">
-                    <button class="importbutton" id="RequestB" onclick="ForceRequest('id', 'type')">Force Import</button>
+                    <button class="forcePushB" id="RequestB" onclick="ForceRequest('id', 'type')">Force Import</button>
                 </div>
                 <div id="RightCont" class="rightDiv">
-                    <button class="importbutton" id="RemoveB" onclick="DeleteRequest('id', 'type')">Delete</button>
+                    <button class="forceRemove" id="RemoveB" onclick="DeleteRequest('id', 'type')">Delete</button>
                 </div>
             </div> 
         </div>

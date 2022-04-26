@@ -12,6 +12,7 @@ function getClassList(){
         classList.push(JSON.parse(localStorage.getItem(keys[i])));
     }
    
+    // console.log("CLASS LIST: " + classList);
     return classList;
 }
 
@@ -112,6 +113,8 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
 }
 //delete assignment does not work
 function deleteAssignment(className, assignmentName){
+
+    console.log(className+ " " + assignmentName);
     //copies of respective class and assignment objs & arrays
     var classObj = getClass(className);
     var assignmentObj = getAssignment(className, assignmentName);
@@ -152,14 +155,16 @@ function removeAssignment(className, assignmentName, assignmentDiv){
 
 // should work as intended 
 //edits HTML
-function removeClass(){
+function removeClass(inputClassNameDisplay){
     // input from user
-    var inputClassNameDisplay = document.getElementById("RemoveClassName").value;
-    var classDiv = inputClassNameDisplay + 'Section';
+    var classDiv = inputClassNameDisplay;
 
     //used to remove class
-    const element = document.getElementById(classDiv);
+    const element = document.getElementById(classDiv+ 'Section');
     element.remove();
+    //remove the drop down
+    const collapse = document.getElementById("Collapse"+classDiv);
+    collapse.remove();
 
     // removes class from classList
     deleteClass(inputClassNameDisplay);
@@ -264,6 +269,8 @@ function changeClassColor(className){
     document.getElementById(className+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
     document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
 
+    document.getElementById(classID+'ForceRemove').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+
     //to added assignments
     var assignmentList = [];
     assignmentList = getAssignments(className);
@@ -347,7 +354,7 @@ function updatePriority(selected, assignmentName, className ,isQuick){
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
     
-    if(isQuick == true){
+    if(isQuick == 1){
         populateQuickView();
     }
     else{
@@ -368,10 +375,10 @@ function updateStart(selected, assignmentName, className, isQuick){
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
-    if(isQuick===true){
+    if(isQuick==1){
         populateQuickView();
     }
-    else if(isQuick === false){
+    else if(isQuick == 0){
         populatePage();
     }
 }
@@ -389,7 +396,7 @@ function updateDue(selected, assignmentName, className, isQuick){
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
-    if(isQuick == true){
+    if(isQuick == 1){
         populateQuickView();
     }
     else
@@ -397,6 +404,9 @@ function updateDue(selected, assignmentName, className, isQuick){
 }
 
 function updateName(text, assignmentName, className, isQuick){
+    console.log(text+ " " + assignmentName+" "+className+" "+isQuick);
+
+
     if(text != assignmentName && text != "" && text != " "){//cant be an empty string and cant be the same as before idk why it breaks from that
         var assignmentObj = getAssignment(className, assignmentName);
         //set new details
@@ -404,7 +414,7 @@ function updateName(text, assignmentName, className, isQuick){
         //Remove old assignment from classObj's assignments
         deleteAssignment(className, assignmentName);
         addAssignmentToClass(assignmentObj.name, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
-        if(isQuick == true){
+        if(isQuick == 1){
             populateQuickView();
         }
         else

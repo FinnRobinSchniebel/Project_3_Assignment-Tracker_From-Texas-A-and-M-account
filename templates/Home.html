@@ -38,9 +38,12 @@
 			<!-- Navigation Bar -->
 			<div class=Mynavbar>
 				<div class="navcontainer">
+					
+					<div class="GroupName" style="float: left;">Assignment Stacker</div> 
 					<button class="button pushedButton" onclick="location.href='Home.html'">Home </button>
 					<button class="button" onclick="location.href='Quick_View.html'">Quick View</button>
 					<button class="button" onclick="location.href='AddLocation.html'">Imports and Notifications</button>
+					<label for="SortSelect"><p style="font-size: 36px;">Sort:</p> </label>
 					<select class="priorityButton" aria-label="Priority select table" id="SortSelect" onchange="sortButton(this.options[this.selectedIndex].value)">
 						<option value="DueDate" selected>Due Date</option>
 						<option value="Priority">Priority</option>
@@ -78,7 +81,7 @@
 			<!-- Add Class Button End-->
 
 			<!-- Remove Class Button Start-->
-			<button class="AddClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseRemoveClass"
+			<!-- <button class="AddClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseRemoveClass"
 				aria-expanded="false" aria-controls="CollapseCourse">
 				<div class="AddClass">
 					Remove Class
@@ -94,8 +97,8 @@
 						</form>
 					</div>
 				</div>
-			</div>
-			<!-- Remove Class Button End-->
+			</div> -->
+			<!-- Remove Class Button End -->
 		</div>
 
 
@@ -127,8 +130,8 @@
 					<!--Progress bar item-->
 					<div class="progress justify-content-end" id="progressbarCont"
 						style="width: 25%; float: left; margin-top: 15px">
-						<div class="progress-bar" role="progressbar" id="ProgressBar" style="width: 50%" aria-valuenow="25"
-							aria-valuemin="100" aria-valuemax="0">
+						<div class="progress-bar" role="progressbar" id="ProgressBar" style="width: 50%; background-color: purple;" aria-valuenow="25"
+							aria-valuemin="0" aria-valuemax="100">
 							<div id="TimeLeftBarText">
 								2 days
 							</div>
@@ -209,10 +212,10 @@
 									</select>
 
 									<div id="Spacerstart" class="editingSpacers">
-										<label for="EditStart" class="labelspace">Start date:</label> <input id="EditStart" class="dateEditor" type="datetime-local" value="2022-04-03T19:59" onchange="">
+										<label for="EditStart" class="labelspace">Start date:</label> <input id="EditStart" class="dateEditor" type="datetime-local" value="2022-04-03T19:59" onblur="">
 									</div>
 									<div id="SpacerEnd" class="editingSpacers">
-										<label for="EditDue" class="labelspace"><p>Due date:</p></label> <input id="EditDue" class="dateEditor" type="datetime-local" value="2022-04-09T19:59" onchange="">
+										<label for="EditDue" class="labelspace"><p>Due date:</p></label> <input id="EditDue" class="dateEditor" type="datetime-local" value="2022-04-09T19:59" onblur="">
 									</div>									
 
 									

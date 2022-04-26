@@ -16,6 +16,14 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var ClassNameAssignment = className.replaceAll(" ", "_");
 
+    var isCanvasAssignment = false;
+    var isCanvasCheck = newAssignment.substring(0, 6);
+    // console.log("isCanvasCheck: " + isCanvasCheck);
+    // console.log("Assignment Notes: " + assignmentNotes);
+    if (isCanvasCheck == "Canvas"){
+        isCanvasAssignment = true;
+    }
+
     var NameToAddForID= ClassNameAssignment+newAssignment;
 
     //makes a copy of the content in template for assignment
@@ -45,14 +53,14 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         cur.setAttribute('id', ''+cur.id + NameToAddForID);
     }
 
-    var isQuick =false; //is this a quick view item
+    var isQuick =0; //is this a quick view item
     if(Location == ""){
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
         
         document.getElementById(Location).appendChild(NewHTML);
-        isQuick =true;
+        isQuick =1;
     }
     
 
@@ -132,21 +140,21 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     //start change
     if(typeof(onchange) != "function"){
         
-        document.getElementById('EditStart'+ NameToAddForID).setAttribute('onchange', "updateStart(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
+        document.getElementById('EditStart'+ NameToAddForID).setAttribute('onblur', "updateStart(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
         document.getElementById('EditStart'+ NameToAddForID).setAttribute('value', ""+ assignmentStartDate);
     }
     else{
-        document.getElementById('EditStart'+ NameToAddForID).onchange = function(){updateStart(this.value, assignmentName, className, isQuick)};
+        document.getElementById('EditStart'+ NameToAddForID).onblur = function(){updateStart(this.value, assignmentName, className, isQuick)};
     }
 
     //Due change area
     if(typeof(onchange) != "function"){
         
-        document.getElementById('EditDue'+ NameToAddForID).setAttribute('onchange', "updateDue(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
+        document.getElementById('EditDue'+ NameToAddForID).setAttribute('onblur', "updateDue(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
         document.getElementById('EditDue'+ NameToAddForID).setAttribute('value', ""+ assignmentDueDate);
     }
     else{
-        document.getElementById('EditDue'+ NameToAddForID).onchange = function(){updateDue(this.value, assignmentName, className, isQuick)};
+        document.getElementById('EditDue'+ NameToAddForID).onblur = function(){updateDue(this.value, assignmentName, className, isQuick)};
     }
 
 
@@ -165,12 +173,32 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);
     //bar stuff
-    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + getDatePercent(assignmentStartDate, assignmentDueDate));
+    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + getDatePercent(assignmentStartDate, assignmentDueDate) + "; background-color: purple;");
     document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
 
     document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
     document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
-    document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
+
+    // WIP FOR INCLUDING HTML DESCRIPTIONS FOR CANVAS
+    if (isCanvasAssignment == true){
+        document.getElementById('AssigmentDetailWrapper'+ NameToAddForID).innerHTML = 
+        `<p>
+        Details: <br>
+        `+assignmentNotes+`
+
+        <div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
+            <!-- Will need unique id in future-->
+            
+        </div>
+        </p>`
+        
+        // document.getElementById('Details'+ NameToAddForID).innerText = '';
+    }
+    else{
+        document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
+
+    }
+    // document.getElementById('Details'+ NameToAddForID).innerText = "";
 
 
 }
@@ -192,6 +220,8 @@ function getDatePercent(StartDate, DueDate){
 //this function will return the largest nonzero value of the time left for the progress bar
 function getTimeLeftLargestNonZero(DueDate){
     //cannot really be condensed much more than this
+
+
     var curDate = new Date(CurrentDateISOTime());
     var Year = new Date(DueDate).getFullYear() - curDate.getFullYear(); //unlikely to be ever needed but still here
     if(Year > 0){
@@ -201,7 +231,10 @@ function getTimeLeftLargestNonZero(DueDate){
         return Year + " Years";
     }
     var Month = new Date(DueDate).getMonth() - curDate.getMonth();
-    if(Month > 0){
+    
+    var daysBetween = (new Date( (curDate).getFullYear(), curDate.month(), 0)).getDate() - curDate.getDate() + new Date(DueDate).getDate(); //max days in month - current date + days in following month
+
+    if(Month > 0 && daysBetween > 30){ //30 as average length of a month
         if(Month == 1){
             return Month + " Month";
         }
