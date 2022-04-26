@@ -9,6 +9,7 @@
 		<link id="BasicHome" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/BasicHome.css') }}" />
 		<link id="Assignment" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/Assignment.css') }}" />
 		<link id="Class" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/Class.css') }}" />
+		<link id="Class" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/DefaultFonts.css') }}" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- for sorting -->
 
 		<!--Script loading-->
@@ -39,31 +40,25 @@
 			<div class=Mynavbar>
 				<div class="navcontainer">
 					
-					<div class="GroupName" style="float: left;">Assignment Stacker</div> 
-					<button class="button pushedButton" onclick="location.href='Home.html'">Home </button>
-					<button class="button" onclick="location.href='Quick_View.html'">Quick View</button>
-					<button class="button" onclick="location.href='AddLocation.html'">Imports and Notifications</button>
-					<label for="SortSelect"><p style="font-size: 36px;">Sort:</p> </label>
-					<select class="priorityButton" aria-label="Priority select table" id="SortSelect" onchange="sortButton(this.options[this.selectedIndex].value)">
-						<option value="DueDate" selected>Due Date</option>
-						<option value="Priority">Priority</option>
-						<option value="StartDate" >Assigned Date</option>
-						<option value="TimePast" >Time Expired</option>
+					<div class="GroupName Font1" style="float: left;">Assignment Stacker</div> 
+					<button class="button pushedButton Font1" onclick="location.href='Home.html'">Home </button>
+					<button class="button Font1" onclick="location.href='Quick_View.html'">Quick View</button>
+					<button class="button Font1" onclick="location.href='AddLocation.html'">Imports and Notifications</button>
+					<label for="SortSelect"><p style="font-size: 36px; " class="Font1">Sort:</p> </label>
+					<select class="priorityButton Font1" aria-label="Priority select table" id="SortSelect" onchange="sortButton(this.options[this.selectedIndex].value)">
+						<option value="DueDate Font1" selected>Due Date</option>
+						<option value="Priority Font1">Priority</option>
+						<option value="StartDate Font1" >Assigned Date</option>
+						<option value="TimePast Font1" >Time Expired</option>
 					</select>
-					<button class="button" onclick="LogoutUser()">Logout</button>
+					<button class="button Font1" onclick="LogoutUser()">Logout</button>
 				</div>
 			</div>
 
-			<!-- Put all new classes made in here -->
-			<div class="Classes" id="classList">
-				<p>
-					No Assignments and classes here at the moment :)
-				</p>
-			</div>
 			<!-- Add Class Button **This section was copy pasted in** -->
 			<button class="AddClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAddClass"
 				aria-expanded="false" aria-controls="CollapseCourse">
-				<div class="AddClass">
+				<div class="Font2 AddClass">
 					Add Class
 				</div>
 			</button>
@@ -71,14 +66,23 @@
 			<div class="collapse" id="CollapseAddClass">
 				<div class="ClassAssignmentsOutline">
 					<div class="NewClassName">
-						<form>
+						<form class="Font2">
 							Enter Class Name: <input type="text" id="InputClassName" placeholder="Ex. 'CSCE 315'">
-							<button class="SubmitButton" type="button" value="" onclick="AddClass()">Submit</button>
+							<button class="SubmitButton Font1" type="button" value="" onclick="AddClass()">Submit</button>
 						</form>
 					</div>
 				</div>
 			</div>
 			<!-- Add Class Button End-->
+
+
+			<!-- Put all new classes made in here -->
+			<div class="Classes" id="classList">
+				<p>
+					No Assignments and classes here at the moment :)
+				</p>
+			</div>
+			
 
 			<!-- Remove Class Button Start-->
 			<!-- <button class="AddClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseRemoveClass"
@@ -111,18 +115,18 @@
 				<button class="AssignmentOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse"
 					aria-expanded="false" aria-controls="CollapseCourse" id="Overview">
 					<!-- Will need unique target in future-->
-					<div class="AssignmentPriority" id="PriorityField">
+					<div class="AssignmentPriority Font1" id="PriorityField">
 						Priority: 1
 					</div>
-					<div class="AssignmentName" id="AssignmentNameField">
+					<div class="AssignmentName Font2" id="AssignmentNameField">
 						!!!!error occured!!!
 					</div>
 					<!--start date-->
 					<div class="AssignmentDuedate AssignmentStartDate" id="StartDate">
 						<!-- has two classes for identification Will need unique id-->
-						<label for="Start_">Start date:</label> 
+						<label for="Start_" class="Font1">Assigned date:</label> 
 						<!-- <input id="Start_" type="datetime-local" value="2022-04-03T19:59" aria-readonly="true"> -->
-						<div id="Start_" > 
+						<div id="Start_" class="Font1" > 
 							start Date here
 						</div>
 					</div>
@@ -132,7 +136,7 @@
 						style="width: 25%; float: left; margin-top: 15px">
 						<div class="progress-bar" role="progressbar" id="ProgressBar" style="width: 50%; background-color: purple;" aria-valuenow="25"
 							aria-valuemin="0" aria-valuemax="100">
-							<div id="TimeLeftBarText">
+							<div id="TimeLeftBarText" class="Font1">
 								2 days
 							</div>
 						</div>
@@ -140,8 +144,8 @@
 					<!--end date-->
 					<div class="AssignmentDuedate" id="EndDate">
 						<!-- Will need unique id -->
-						<label for="Due_">Due date:</label> 
-						<div id="Due_" > 
+						<label for="Due_" class="Font1">Due date:</label> 
+						<div id="Due_" class="Font1"> 
 							Due Date here
 						</div>
 					</div>
@@ -155,9 +159,9 @@
 						<div class="AssignmentInfo" id="AssignmentInfo">
 							<div class="leftside" id="LeftDivs">
 								<div class="AssignmentLink" id="AssignmentWarper">
-									<p>
+									<p class="Font2">
 										Assignment Link:
-									<div class="genericWrittingBox" contenteditable="true" id="AssignmentLink" onblur="">
+									<div class="genericWrittingBox Font1" contenteditable="true" id="AssignmentLink" onblur="">
 										<!-- Will need unique id in future-->
 									</div>
 
@@ -165,9 +169,9 @@
 
 								</div>
 								<div class="AssignmentRelatedLinks" id="RelatedlinkWrapper" onblur="">
-									<p>
+									<p class="Font2">
 										Related Links:
-									<div class="genericWrittingBox" contenteditable="true" id="RelatedLinks">
+									<div class="genericWrittingBox Font1" contenteditable="true" id="RelatedLinks">
 										<!-- needs unique id-->
 
 									</div>
@@ -177,9 +181,9 @@
 							</div>
 							<div class="rightside" id="RightDivs">
 								<div class="AssignmentDetails" id="AssigmentDetailWrapper">
-									<p>
+									<p class="Font2">
 										Details:
-									<div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
+									<div class="genericWrittingBox Font1" contenteditable="true" id="Details" onblur="updateDiscription()">
 										<!-- Will need unique id in future-->
 										
 									</div>
@@ -189,39 +193,39 @@
 									<input type="checkbox" class="btn-check" id="CheckBoxComplete" autocomplete="off"
 										onclick="completeButton('Overview', 'CheckBoxComplete')">
 									<!-- Will need unique ids in future-->
-									<label class="btn btn-outline-success" for="CheckBoxComplete">Complete</label><br>
+									<label class="btn btn-outline-success Font1" for="CheckBoxComplete">Complete</label><br>
 								</div>
 								<div class="AssignmentDetails" id="priorWrapper">
-									<p style="font-size: 20px;">
+									<p style="font-size: 20px;" class="Font2">
 										Edit: <span style="font-size: 15px; color: red;">[Editing fields in this area may result in the content of the page to reload]</span>
 									</p>
 									<div id="SpacerRename" class="editingSpacers">
-										<label for="Rename" class="labelspace">
+										<label for="Rename" class="labelspace Font2">
 											Rename Name:
 										</label>
-										<input class="genericWrittingBox" contenteditable="true" id="Rename" value="">
+										<input class="genericWrittingBox Font1" contenteditable="true" id="Rename" value="">
 									</div>
 
 									<Label for="PriorityChange" class="labelspace">Priority:</Label>
-									<select class="PriorityPicker editingSpacers priorEdit" aria-label="Priority select table" id="PriorityChange" onchange="">
-										<option value="1" selected>1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">5</option>
+									<select class="PriorityPicker editingSpacers priorEdit Font2" aria-label="Priority select table" id="PriorityChange" onchange="">
+										<option value="1" class="Font2" selected>1</option>
+										<option value="2" class="Font2">2</option>
+										<option value="3" class="Font2">3</option>
+										<option value="4" class="Font2">4</option>
+										<option value="5" class="Font2">5</option>
 									</select>
 
 									<div id="Spacerstart" class="editingSpacers">
-										<label for="EditStart" class="labelspace">Start date:</label> <input id="EditStart" class="dateEditor" type="datetime-local" value="2022-04-03T19:59" onblur="">
+										<label for="EditStart" class="labelspace Font2">Assigned date:</label> <input id="EditStart" class="dateEditor" type="datetime-local" value="2022-04-03T19:59" onblur="">
 									</div>
 									<div id="SpacerEnd" class="editingSpacers">
-										<label for="EditDue" class="labelspace"><p>Due date:</p></label> <input id="EditDue" class="dateEditor" type="datetime-local" value="2022-04-09T19:59" onblur="">
+										<label for="EditDue" class="labelspace Font2"><p>Due date:</p></label> <input id="EditDue" class="dateEditor" type="datetime-local" value="2022-04-09T19:59" onblur="">
 									</div>									
 
 									
 									
 									<div class="AssignmentRemoval" id="AssignmentRemove">
-										<button class="AssignmentButton" id="removeButton" onclick="removeAssignment('className', 'assignmentName')">Force Remove</button>
+										<button class="AssignmentButton Font1" id="removeButton" onclick="removeAssignment('className', 'assignmentName')">Force Remove</button>
 									</div>
 								</div>
 								
@@ -231,7 +235,7 @@
 				</div>
 			</div>
 		</template>
-		<button class="button" type="button" value="" onclick="clearPage()">Clear</button>
+		<button class="button Font2" type="button" value="" onclick="clearPage()">Clear</button>
 		
 		<script>
 				//this function will call everytime home loads to populate localstorage

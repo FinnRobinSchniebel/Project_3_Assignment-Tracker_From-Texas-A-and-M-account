@@ -68,32 +68,29 @@
 
 }
 .importbutton{
-    background-color: rgb(126, 159, 206);
+    background-color: rgb(129, 194, 224);
     margin: 15px;
     margin-top: 30px;
-    border: 3px solid rgb(15, 136, 173);
+    border: 1px solid rgb(145, 145, 145);
     color: rgb(0, 0, 0);
     border-radius: 10px;
     text-align: center;
     display: inline;
-    font-size: 18px;
+    font-size: 20px;
     transition-duration: 5ms;
-    padding: 5px;
+    padding: 7px;
     padding-left: 10px;
     padding-right: 10px;
 }
 .importbutton:hover{
     background-color: rgb(101, 217, 221);
-    margin: 15px;
-    margin-top: 30px;
-    border: 3px solid rgb(89, 115, 122);
+    border: 1px solid rgb(89, 115, 122);
     color: rgb(0, 0, 0);
     border-radius: 10px;
     text-align: center;
     display: inline;
-    font-size: 18px;
     transition-duration: 5ms;
-    padding: 5px;
+    padding: 7px;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -115,12 +112,12 @@
 }
 .TextfieldLeftLabel{
     background-color: white;
-    border-bottom-left-radius: 5px;
-    border-top-left-radius: 5px;
+    border-radius: 8px;
     color: rgb(0, 0, 0);
     border: 1px black solid;
-
-    padding: 2px;
+    font-size: 30px;
+    padding: 4px;
+    padding-left: 20px;
 }
 .CreateInfo{
     text-align: center;
