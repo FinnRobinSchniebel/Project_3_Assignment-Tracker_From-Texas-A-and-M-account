@@ -9,7 +9,8 @@
 		<link id="BasicHome" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/BasicHome.css') }}" />
 		<link id="Assignment" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/Assignment.css') }}" />
 		<link id="Class" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/Class.css') }}" />
-		<link id="Class" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/DefaultFonts.css') }}" />
+		<link id="DefaultFonts" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/DefaultFonts.css')}}"/>
+		<link id="ReadabilityFonts" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/ReadabilityFont.css') }} " disabled="disabled"/>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- for sorting -->
 
 		<!--Script loading-->
@@ -52,6 +53,7 @@
 						<option value="TimePast Font1" >Time Expired</option>
 					</select>
 					<button class="button Font1" onclick="LogoutUser()">Logout</button>
+					<button class="button Font1" onclick="toggle()">Readability Support</button>
 				</div>
 			</div>
 
