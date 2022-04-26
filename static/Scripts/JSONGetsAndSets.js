@@ -152,14 +152,16 @@ function removeAssignment(className, assignmentName, assignmentDiv){
 
 // should work as intended 
 //edits HTML
-function removeClass(){
+function removeClass(inputClassNameDisplay){
     // input from user
-    var inputClassNameDisplay = document.getElementById("RemoveClassName").value;
-    var classDiv = inputClassNameDisplay + 'Section';
+    var classDiv = inputClassNameDisplay;
 
     //used to remove class
-    const element = document.getElementById(classDiv);
+    const element = document.getElementById(classDiv+ 'Section');
     element.remove();
+    //remove the drop down
+    const collapse = document.getElementById("Collapse"+classDiv);
+    collapse.remove();
 
     // removes class from classList
     deleteClass(inputClassNameDisplay);
@@ -263,6 +265,8 @@ function changeClassColor(className){
     var darker = darkColor(RGB);
     document.getElementById(className+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
     document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+
+    document.getElementById(classID+'ForceRemove').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
 
     //to added assignments
     var assignmentList = [];
