@@ -1,5 +1,6 @@
 ## GOOGLE API IMPORTS
 from __future__ import print_function
+from getpass import getuser
 
 import os.path
 
@@ -397,6 +398,61 @@ def add_user():
 
     return render_template('CreateAccount.html', form = form)
 
+
+
+@app.route("/bgUpdateAssignment", methods = ['GET', 'POST'])
+def updateAssignment():
+    assignmentObj = json.loads(request.data)
+
+    userClasslist = getUserClasses(current_user.id)
+    assignments = []
+    #iterate through classList of a user
+    for i in range(len(userClasslist)):
+        #find class for assignment
+        if(userClasslist[i]['name'] == assignmentObj['class']):
+            assignments = userClasslist[i]['assignments']
+            #iterate through assignmentlist
+            for j in range(len(assignments)):
+                #find assignment
+                if(assignments[j]['name'] == assignmentObj['name']):
+                    #replace assignment
+                    assignments[j] = assignmentObj
+            #replace assignmentlist in class
+            userClasslist[i]['assignments'] = assignments
+            
+    Users.query.filter_by(id = current_user.id).first().classes = 'b\'' + str(userClasslist)
+    return ('b\'' + str(userClasslist))
+
+
+@app.route("/bgAddAssignment", methods = ['GET', 'POST'])
+def addAssignment():
+    assignmentObj = json.loads(request.data)
+
+    userClasslist = getUserClasses(current_user.id)
+    assignments = []
+    #iterate through classList of a user
+    for i in range(len(userClasslist)):
+        #find class for assignment
+        if(userClasslist[i]['name'] == assignmentObj['class']):
+            assignments = userClasslist[i]['assignments']
+
+            assignments.append(assignmentObj)
+
+            userClasslist[i]['assignments'] = assignments
+            
+    Users.query.filter_by(id = current_user.id).first().classes = 'b\'' + str(userClasslist)
+    return ('b\'' + str(userClasslist))
+
+
+@app.route("/bgAddAssignment", methods = ['GET', 'POST'])
+def addClass():
+    classObj = json.loads(request.data)
+
+    userClasslist = getUserClasses(current_user.id)
+    userClasslist.append(classObj)
+            
+    Users.query.filter_by(id = current_user.id).first().classes = 'b\'' + str(userClasslist)
+    return ('b\'' + str(userClasslist))
 
 
 ## this function will be called any time home or addlocation window closes
