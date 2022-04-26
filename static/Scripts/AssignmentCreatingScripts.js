@@ -53,14 +53,14 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         cur.setAttribute('id', ''+cur.id + NameToAddForID);
     }
 
-    var isQuick =false; //is this a quick view item
+    var isQuick =0; //is this a quick view item
     if(Location == ""){
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
         
         document.getElementById(Location).appendChild(NewHTML);
-        isQuick =true;
+        isQuick =1;
     }
     
 
@@ -140,21 +140,21 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     //start change
     if(typeof(onchange) != "function"){
         
-        document.getElementById('EditStart'+ NameToAddForID).setAttribute('onchange', "updateStart(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
+        document.getElementById('EditStart'+ NameToAddForID).setAttribute('onblur', "updateStart(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
         document.getElementById('EditStart'+ NameToAddForID).setAttribute('value', ""+ assignmentStartDate);
     }
     else{
-        document.getElementById('EditStart'+ NameToAddForID).onchange = function(){updateStart(this.value, assignmentName, className, isQuick)};
+        document.getElementById('EditStart'+ NameToAddForID).onblur = function(){updateStart(this.value, assignmentName, className, isQuick)};
     }
 
     //Due change area
     if(typeof(onchange) != "function"){
         
-        document.getElementById('EditDue'+ NameToAddForID).setAttribute('onchange', "updateDue(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
+        document.getElementById('EditDue'+ NameToAddForID).setAttribute('onblur', "updateDue(this.value,'" + assignmentName+ "','" + className +"', '"+ isQuick +"')");
         document.getElementById('EditDue'+ NameToAddForID).setAttribute('value', ""+ assignmentDueDate);
     }
     else{
-        document.getElementById('EditDue'+ NameToAddForID).onchange = function(){updateDue(this.value, assignmentName, className, isQuick)};
+        document.getElementById('EditDue'+ NameToAddForID).onblur = function(){updateDue(this.value, assignmentName, className, isQuick)};
     }
 
 
@@ -173,7 +173,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);
     //bar stuff
-    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + getDatePercent(assignmentStartDate, assignmentDueDate));
+    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + getDatePercent(assignmentStartDate, assignmentDueDate) + "; background-color: purple;");
     document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
 
     document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;

@@ -216,3 +216,34 @@
     width: 90%;
     min-width: 40px;
 }
+
+.forceRemove{
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.932);
+    float: center;
+    background-color: rgb(71, 58, 104);
+    margin: 10px;
+    margin-top: 20px;
+    margin-left: 15%;
+    border: 3px solid rgb(79, 2, 102);
+    color: rgb(180, 0, 0);
+    border-radius: 15px;
+    text-align: center;
+    display: inline;
+    font-size: 25px;
+    transition-duration: 5ms;
+    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 35%;
+    height: 90%;
+    margin-left: 0px;
+}
+.forceRemove:hover{
+    background-color:rgba(160, 0, 0, 0.932);
+    border: 3px solid rgba(87, 0, 0, 0.932);
+
+}
+.forceRemove:active{
+    transform: translateY(3px);
+    background-color: 3px solid rgb(69, 90, 29);
+}
