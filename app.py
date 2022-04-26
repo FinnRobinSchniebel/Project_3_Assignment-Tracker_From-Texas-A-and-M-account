@@ -444,7 +444,7 @@ def addAssignment():
     return ('b\'' + str(userClasslist))
 
 
-@app.route("/bgAddAssignment", methods = ['GET', 'POST'])
+@app.route("/bgAddClass", methods = ['GET', 'POST'])
 def addClass():
     classObj = json.loads(request.data)
 
