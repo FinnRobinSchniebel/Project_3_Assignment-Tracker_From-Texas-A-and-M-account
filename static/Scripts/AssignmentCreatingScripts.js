@@ -16,6 +16,14 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var ClassNameAssignment = className.replaceAll(" ", "_");
 
+    var isCanvasAssignment = false;
+    var isCanvasCheck = newAssignment.substring(0, 6);
+    // console.log("isCanvasCheck: " + isCanvasCheck);
+    // console.log("Assignment Notes: " + assignmentNotes);
+    if (isCanvasCheck == "Canvas"){
+        isCanvasAssignment = true;
+    }
+
     var NameToAddForID= ClassNameAssignment+newAssignment;
 
     //makes a copy of the content in template for assignment
@@ -170,7 +178,27 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
     document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
-    document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
+
+    // WIP FOR INCLUDING HTML DESCRIPTIONS FOR CANVAS
+    if (isCanvasAssignment == true){
+        document.getElementById('AssigmentDetailWrapper'+ NameToAddForID).innerHTML = 
+        `<p>
+        Details: <br>
+        `+assignmentNotes+`
+
+        <div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
+            <!-- Will need unique id in future-->
+            
+        </div>
+        </p>`
+        
+        // document.getElementById('Details'+ NameToAddForID).innerText = '';
+    }
+    else{
+        document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
+
+    }
+    // document.getElementById('Details'+ NameToAddForID).innerText = "";
 
 
 }
