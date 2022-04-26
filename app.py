@@ -1,5 +1,6 @@
 ## GOOGLE API IMPORTS
 from __future__ import print_function
+from getpass import getuser
 
 import os.path
 
@@ -7,6 +8,7 @@ import json
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
+from xml.dom.minidom import TypeInfo
 from dateutil import tz
 
 from google.auth.transport.requests import Request
@@ -72,16 +74,253 @@ class Users(db.Model, UserMixin):
 
 ############# Queries needed for refreshing DB ####################
 
-#given a classObj Dictionary
-# return a list of assignmentObj dictionaries that are from a google class
-def getAllGoogleAssignmentObjs(classObj):
-    assignmentList = classObj['assignments']
-    length = len(assignmentList)
 
-    #iterate through all assignments and check 'googleLocation'
-    #for i in range(length):
+@app.route('/TESTING', methods = ['GET', 'POST'])
+def refreshGoogleDB():
+    #get a list of all existing users
+    userList = Users.query.all()
+    numUsers = len(userList)
+
+    #iterate through all existing users
+    for i in range(numUsers):
+        userID = userList[i].id
+        token = userList[i].googleToken
+        if(token != ''):
+            #delete old and load new refresh token
+            if os.path.exists('refreshToken.json'):
+                os.remove('refreshToken.json')
+            #load new token
+            loadRefreshToken(userID)
+            # for testing made this equal to the actual return  
+            #incomingClassList = refreshGoogleJSONs()
+            incomingClassList = [{'name': 'CSCE315', 'color': 'rgb(162, 214, 161);', 'assignments': [{'name': 'HW1', 'class': 'CSCE315', 'priority': 3, 'dueDate': '2022-05-13T23:59', 'startDate': '2022-04-13T00:36', 'link': 'https://classroom.google.com/c/NTAwMjk2MDEyNTU4/a/NTAwMjk2MDEyNjI1/details', 'relatedLinks': '', 'notes': 'This is a test HW assignment.\nThis would be the instructions of an assignment.', 'googleLocation': 'CSCE315', 'canvasLocation': '', 'complete': False}], 'order': 0}, {'name': 'Project 3 Demo Course', 'color': 'rgb(162, 214, 161);', 'assignments': [{'name': 'FINAL', 'class': 'Project 3 Demo Course', 'priority': 3, 'dueDate': '2022-05-19T23:59', 'startDate': '2022-04-13T16:58', 'link': 'https://classroom.google.com/c/MzU0NDUyMDYwODEy/a/NTAwNDQ5MTUzMzQy/details', 'relatedLinks': '', 'notes': 'Very difficult test, not fun.', 'googleLocation': 'Project 3 Demo Course', 'canvasLocation': '', 'complete': False}, {'name': 'MIDTERM ', 'class': 'Project 3 Demo Course', 'priority': 3, 'dueDate': '2022-05-06T23:59', 'startDate': '2022-04-13T16:57', 'link': 'https://classroom.google.com/c/MzU0NDUyMDYwODEy/a/NTAwNDQ5MTUzMTg5/details', 'relatedLinks': '', 'notes': 'Whoa, its the instructions for my midterm!', 'googleLocation': 'Project 3 Demo Course', 'canvasLocation': '', 'complete': False}], 'order': 1}]
+            incomingAssignmentList = getAssignments(incomingClassList)
+            existingClassList = getUserClasses(userID)
+            for j in range(len(existingClassList)):
+                existingAssignments = existingClassList[j]['assignments']
+                #this calls function that returns a list of all googleClasses contained in a class
+                containedGoogleClasses = getAllGoogleClassesInExistingClass(existingClassList[j])
+                refreshedAssignments = refreshGoogleAssignmentList(existingAssignments, incomingAssignmentList, containedGoogleClasses)
+
+                #replace the existing class' assignmentList with the refreshedAssignments
+                existingClassList[j]['assignments'] = refreshedAssignments
+                #print(Users.query.filter_by(id = userID).first().classes)
+                #print(str(existingClassList[j]))
+
+                Users.query.filter_by(id = userID).first().classes = 'b\'' + str(existingClassList[j])
+                
+
+    db.session.commit()
+    return str(incomingClassList)
+
+
+#tool function to get UserClasses
+#returns it as a list of dictionarires
+def getUserClasses(userID):
+    User = Users.query.get_or_404(userID)
+    classList = User.classes
+    returnList = json.loads(classList[2:len(classList)-1])
+    return returnList
+
+#this function takes in a classObj
+#it returns a list of every googleClass that it contains
+def getAllGoogleClassesInExistingClass(classObj):
+    assignmentList = classObj['assignments']
+    googleClasses = []
+
+    for i in range(len(assignmentList)):
+        if assignmentList[i]['googleLocation'] in googleClasses:
+            pass
+        else:
+            googleClasses.append(assignmentList[i]['googleLocation'])
+
+    return googleClasses
+
+#this function takes in a list of incoming assignments, a list of a class' existing assignments,
+    # and a list of all of the googleClasses stored in that class
+#it returns an updated list of assignments for that class 
+def refreshGoogleAssignmentList(existingAssignments, incomingAssignmentList, googleLocations): 
+    updatedAssignments = [] #result list
+
+    #iterate through all existing assignments
+    for i in range (len(existingAssignments)):
+        #add all manual assignments first
+        if(existingAssignments[i]['googleLocation'] == ''):
+            updatedAssignments.append(existingAssignments[i])
+
+    #iterate through all incomingAssignments
+    for i in range (len(incomingAssignmentList)):
+        #check if this class is stored within this class
+        if incomingAssignmentList[i]['googleLocation'] in googleLocations:
+            updatedAssignments.append(incomingAssignmentList[i])
+
+    #print(updatedAssignments)
+    return updatedAssignments
+            
+#this function takes a list of classes and returns a list of assignments
+def getAssignments(incomingClassList):
+    result = []
+    for i in range(len(incomingClassList)):
+        assignments = incomingClassList[i]['assignments']
+        for j in range(len(assignments)):
+            result.append(assignments[j])
+    return result
+
+
+def loadRefreshToken(userID):
+    tokenText = Users.query.filter_by(id = userID).first().googleToken
+    tokenJSON = json.loads(tokenText)
+    with open('refreshToken.json', 'w') as tokenfile:
+        tokenfile.write(tokenText)
     return 0
 
+def refreshGoogleJSONs():
+    creds = None
+    SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly', 'https://www.googleapis.com/auth/classroom.coursework.me']
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('refreshToken.json'):
+        creds = Credentials.from_authorized_user_file('refreshToken.json', SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('refreshToken.json', 'w') as token:
+            token.write(creds.to_json())
+
+    with open('refreshToken.json') as tokenfile:
+        store = json.load(tokenfile)
+
+    replace = json.dumps(store)
+    Users.query.filter_by(id = current_user.id).first().googleToken = replace
+    db.session.commit()
+
+    try:
+        service = build('classroom', 'v1', credentials=creds)
+
+        # Call the Classroom API
+        results = service.courses().list().execute()
+        courses = results.get('courses', [])
+
+
+        classList = []
+        if not courses:
+            print('No courses found.')
+            return
+        # used to keep track of classes 
+        order = 0
+        # Prints the names of the courses
+        for course in courses:
+            # Class name that will be stored
+            className = course['name']
+            # print(className)
+            # print("\n")
+
+            #classID for accessing coursework
+            classID = course['id']
+
+            #all users assignments in a course
+            coursework = service.courses().courseWork().list(courseId=classID).execute()
+            assignments = coursework.get('courseWork', [])
+
+
+            # iterate through all of their coursework and create assignmentObjs in dictionarys
+            assignmentList = []
+            for assignment in assignments:
+                #create a new assignmentObj to make JSON
+                assignmentObj = {}
+                assignmentObj['name'] = assignment['title']
+                assignmentObj['class'] = className
+                assignmentObj['priority'] = 3
+
+                # NEED TO PARSE DATE AND TIME CORRECTLY FOR OUR FORMATTING
+                assignmentDueDateGoogle = assignment['dueDate']
+                assignmentDueTimeGoogle = assignment['dueTime']
+                dueYear = assignmentDueDateGoogle['year']
+
+                if(assignmentDueDateGoogle['month'] < 10):
+                    dueMonth = '0'+str(assignmentDueDateGoogle['month'])
+                else:
+                    dueMonth = ''+str(assignmentDueDateGoogle['month'])
+                    
+                if(assignmentDueDateGoogle['day'] < 10):
+                    dueDay = '0'+str(assignmentDueDateGoogle['day'])
+                else:
+                    dueDay = ''+str(assignmentDueDateGoogle['day'])
+                dueHour = (assignmentDueTimeGoogle['hours'] + 19) % 24
+                dueMin = assignmentDueTimeGoogle['minutes']
+                
+                objDueDate = str(dueYear)+ '-' + str(dueMonth)+ '-' + str(dueDay) + 'T' + str(dueHour) + ':' + str(dueMin)
+                assignmentObj['dueDate'] = objDueDate
+
+
+                startDateTime = str(assignment['creationTime'])
+
+                ## Creating DateTime datatypes for comparison
+                dueDateYear = int(dueYear)
+                dueDateMonth = int(dueMonth)
+                dueDateDay = int(dueDay)
+
+                dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+                delta = dueDate - date.today()
+
+                ##checks if assignment is less than ten days overdue, if not then displays
+                isNotPastAssignment = delta < timedelta(days = 1)
+
+
+
+                assignmentObj['startDate'] = startDateTime[0:16]
+
+
+                assignmentObj['link'] = assignment['alternateLink']
+
+                # WIP
+                assignmentObj['relatedLinks'] = ''
+
+
+                assignmentObj['notes'] = assignment['description']
+
+                assignmentObj['googleLocation'] = className
+
+                assignmentObj['canvasLocation'] = ''
+
+
+                #check if the assignment has a submission
+                assignmentID = assignment['id']
+                studentSubmissions = service.courses().courseWork().studentSubmissions().list(courseId=classID, courseWorkId = assignmentID).execute()
+                submissions = studentSubmissions.get('studentSubmissions', [])
+                for submission in submissions:
+                    if(submission['assignmentSubmission'] == {}):
+                        assignmentObj['complete'] = False
+                    else:    
+                        assignmentObj['complete'] = True
+
+                if(isNotPastAssignment):
+                    assignmentList.append(assignmentObj)
+                
+
+            #creating classObj for each course
+            #store assignmentList of each course
+            #set default color for added courses
+            classObj = {}
+            classObj['name'] = className
+            classObj['color'] = 'rgb(162, 214, 161);'
+            classObj['assignments'] = assignmentList
+            classObj['order'] = order
+            order += 1
+
+            classList.append(classObj)
+
+        return classList
+            
+    except HttpError as error:
+        print('An error occurred: %s' % error)
 
 
 ##create signup form
@@ -161,6 +400,61 @@ def add_user():
 
 
 
+@app.route("/bgUpdateAssignment", methods = ['GET', 'POST'])
+def updateAssignment():
+    assignmentObj = json.loads(request.data)
+
+    userClasslist = getUserClasses(current_user.id)
+    assignments = []
+    #iterate through classList of a user
+    for i in range(len(userClasslist)):
+        #find class for assignment
+        if(userClasslist[i]['name'] == assignmentObj['class']):
+            assignments = userClasslist[i]['assignments']
+            #iterate through assignmentlist
+            for j in range(len(assignments)):
+                #find assignment
+                if(assignments[j]['name'] == assignmentObj['name']):
+                    #replace assignment
+                    assignments[j] = assignmentObj
+            #replace assignmentlist in class
+            userClasslist[i]['assignments'] = assignments
+            
+    Users.query.filter_by(id = current_user.id).first().classes = 'b\'' + str(userClasslist)
+    return ('b\'' + str(userClasslist))
+
+
+@app.route("/bgAddAssignment", methods = ['GET', 'POST'])
+def addAssignment():
+    assignmentObj = json.loads(request.data)
+
+    userClasslist = getUserClasses(current_user.id)
+    assignments = []
+    #iterate through classList of a user
+    for i in range(len(userClasslist)):
+        #find class for assignment
+        if(userClasslist[i]['name'] == assignmentObj['class']):
+            assignments = userClasslist[i]['assignments']
+
+            assignments.append(assignmentObj)
+
+            userClasslist[i]['assignments'] = assignments
+            
+    Users.query.filter_by(id = current_user.id).first().classes = 'b\'' + str(userClasslist)
+    return ('b\'' + str(userClasslist))
+
+
+@app.route("/bgAddClass", methods = ['GET', 'POST'])
+def addClass():
+    classObj = json.loads(request.data)
+
+    userClasslist = getUserClasses(current_user.id)
+    userClasslist.append(classObj)
+            
+    Users.query.filter_by(id = current_user.id).first().classes = 'b\'' + str(userClasslist)
+    return ('b\'' + str(userClasslist))
+
+
 ## this function will be called any time home or addlocation window closes
 @app.route("/bgUpdateUserClasses", methods = ['GET', 'POST'])
 def updateUserClasses():
@@ -187,10 +481,6 @@ def loadUserClasses():
     classList = currUser.classes
     returnList = classList[2:len(classList)-1]
     return returnList
-
-
-
-
 
 @app.route("/")
 @app.route("/Home.html")
@@ -318,8 +608,8 @@ def getGoogleJSONs():
                 dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
                 delta = dueDate - date.today()
 
-                ##checks if assignment is less than ten days overdue, if not then displays
-                isNotPastAssignment = delta > timedelta(days = 10)
+                ##checks if assignment is less than one days overdue, if not then displays
+                isNotPastAssignment = delta > timedelta(days = 1)
 
 
 
@@ -351,7 +641,8 @@ def getGoogleJSONs():
 
                 if(isNotPastAssignment):
                     assignmentList.append(assignmentObj)
-                
+            
+            
 
             #creating classObj for each course
             #store assignmentList of each course
@@ -626,7 +917,7 @@ def getCanvasAssignments():
                 if (dueDate != None):
                     delta = dueDate - date.today()
                     # print("Delta is " + delta)
-                    ##checks if assignment is less than ten days overdue, if not then displays
+                    ##checks if assignment is less than one day overdue, if not then displays
                     isNotPastAssignment = delta > timedelta(days = 1)
                     if(isNotPastAssignment):
                         assignmentList.append(assignmentObj)
@@ -757,7 +1048,7 @@ def getCanvasAssignments():
                 if (dueDate != None):
                     delta = dueDate - date.today()
                     # print("Delta is " + delta)
-                    ##checks if assignment is less than ten days overdue, if not then displays
+                    ##checks if assignment is less than one day overdue, if not then displays
                     isNotPastAssignment = delta > timedelta(days = 1)
                     if(isNotPastAssignment):
                         assignmentList.append(assignmentObj)
@@ -888,7 +1179,7 @@ def getCanvasAssignments():
                 if (dueDate != None):
                     delta = dueDate - date.today()
                     # print("Delta is " + delta)
-                    ##checks if assignment is less than ten days overdue, if not then displays
+                    ##checks if assignment is less than one day overdue, if not then displays
                     isNotPastAssignment = delta > timedelta(days = 1)
                     if(isNotPastAssignment):
                         assignmentList.append(assignmentObj)
