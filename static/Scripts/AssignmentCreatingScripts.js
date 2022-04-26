@@ -192,6 +192,8 @@ function getDatePercent(StartDate, DueDate){
 //this function will return the largest nonzero value of the time left for the progress bar
 function getTimeLeftLargestNonZero(DueDate){
     //cannot really be condensed much more than this
+
+
     var curDate = new Date(CurrentDateISOTime());
     var Year = new Date(DueDate).getFullYear() - curDate.getFullYear(); //unlikely to be ever needed but still here
     if(Year > 0){
@@ -201,7 +203,10 @@ function getTimeLeftLargestNonZero(DueDate){
         return Year + " Years";
     }
     var Month = new Date(DueDate).getMonth() - curDate.getMonth();
-    if(Month > 0){
+    
+    var daysBetween = (new Date( (curDate).getFullYear(), curDate.month(), 0)).getDate() - curDate.getDate() + new Date(DueDate).getDate(); //max days in month - current date + days in following month
+
+    if(Month > 0 && daysBetween > 30){ //30 as average length of a month
         if(Month == 1){
             return Month + " Month";
         }

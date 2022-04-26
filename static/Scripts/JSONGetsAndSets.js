@@ -112,6 +112,8 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
 }
 //delete assignment does not work
 function deleteAssignment(className, assignmentName){
+
+    console.log(className+ " " + assignmentName);
     //copies of respective class and assignment objs & arrays
     var classObj = getClass(className);
     var assignmentObj = getAssignment(className, assignmentName);
