@@ -351,7 +351,7 @@ function updatePriority(selected, assignmentName, className ,isQuick){
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
     
-    if(isQuick == true){
+    if(isQuick == 1){
         populateQuickView();
     }
     else{
@@ -372,10 +372,10 @@ function updateStart(selected, assignmentName, className, isQuick){
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
-    if(isQuick===true){
+    if(isQuick==1){
         populateQuickView();
     }
-    else if(isQuick === false){
+    else if(isQuick == 0){
         populatePage();
     }
 }
@@ -393,7 +393,7 @@ function updateDue(selected, assignmentName, className, isQuick){
     //Remove old assignment from classObj's assignments
     deleteAssignment(className, assignmentName);
     addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
-    if(isQuick == true){
+    if(isQuick == 1){
         populateQuickView();
     }
     else
@@ -408,7 +408,7 @@ function updateName(text, assignmentName, className, isQuick){
         //Remove old assignment from classObj's assignments
         deleteAssignment(className, assignmentName);
         addAssignmentToClass(assignmentObj.name, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
-        if(isQuick == true){
+        if(isQuick == 1){
             populateQuickView();
         }
         else

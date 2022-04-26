@@ -45,14 +45,14 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         cur.setAttribute('id', ''+cur.id + NameToAddForID);
     }
 
-    var isQuick =false; //is this a quick view item
+    var isQuick =0; //is this a quick view item
     if(Location == ""){
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
         
         document.getElementById(Location).appendChild(NewHTML);
-        isQuick =true;
+        isQuick =1;
     }
     
 
