@@ -412,9 +412,13 @@ function printClassList(){
 
 //clears everything including the storage
 function clearPage(){
+    
     printClassList();
+    var classList = getClassList();
+    classList.forEach((classObj) => {
+        deleteClass(classObj.name);
+    });
     localStorage.clear();
-
     // reset to original html
     document.getElementById('classList').innerHTML = ""
 }
