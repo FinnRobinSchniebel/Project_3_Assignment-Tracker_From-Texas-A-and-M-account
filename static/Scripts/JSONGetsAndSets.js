@@ -347,7 +347,7 @@ function completeButton(assignmentName,className){
 //this function is called when the color picker changes
 //this function stores the new color into local storage
 function changeClassColor(className){
-    let color = document.getElementById(classID+'ColorPicker').value;
+    let color = document.getElementById(className+'ColorPicker').value;
     var RGB = parseColor(color);
 
     //setting color update into localstorage
