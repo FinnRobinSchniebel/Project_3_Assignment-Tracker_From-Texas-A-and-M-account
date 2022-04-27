@@ -153,6 +153,37 @@
     box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.932);
     border-radius: 20px;
 }
+.Accessbutton{
+    background-color:rgb(129, 194, 224);
+    margin: .3%;
+    margin-top: 0px;
+    border: 1px solid rgb(100, 149, 172);
+    color: rgb(0, 0, 0);
+    border-radius: 10px;
+    text-align: center;
+    display: inline;
+    text-size-adjust: 60%;
+    font-size: 90%;
+    transition-duration: 5ms;
+    padding: .4%;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-top-left-radius: 0px;
+    height: 40%;
+
+
+}
+.Accessbutton:hover{
+    background-color:rgb(146, 200, 224);
+    transform: translateY(-3px);
+    box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.932);
+}
+.Accessbutton:active{
+    background-color:rgb(121, 172, 194);
+    transform: translateY(5px);
+    box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.932);
+    border-radius: 20px;
+}
 
 
 

@@ -223,46 +223,52 @@ function getTimeLeftLargestNonZero(DueDate){
 
 
     var curDate = new Date(CurrentDateISOTime());
-    var Year = new Date(DueDate).getFullYear() - curDate.getFullYear(); //unlikely to be ever needed but still here
-
-
-
-    if(Year > 0){
-        if(Year == 1){
-            return Year + " Year";
-        }
-        return Year + " Years";
-    }
-    var Month = new Date(DueDate).getMonth() - curDate.getMonth();
     
+
+
+    var timeSec = Math.abs(new Date(DueDate) - curDate)/1000;
+
+    //var Seconds = timeSec%60;
+    var minutes = Math.floor(timeSec/60)%60;
+    var hours = Math.floor(timeSec/3600)%24;
+    var days = Math.floor(timeSec/86400)%30;
+    var months = Math.floor(timeSec/(2.69*Math.pow(10,6)))%12;
+    var years = Math.floor(Math.floor(timeSec/(2.69*Math.pow(10,6)))/12);
+
+    if(years > 0){
+        if(years == 1){
+            return years + " Year";
+        }
+        return years + " Years";
+    }
    // var daysBetween = (new Date( (curDate).getFullYear(), curDate.month(), 0)).getDate() - curDate.getDate() + new Date(DueDate).getDate(); //max days in month - current date + days in following month
 
-    if(Month > 0){ //30 as average length of a month
-        if(Month == 1){
-            return Month + " Month";
+    if(months > 0){ //30 as average length of a month
+        if(months == 1){
+            return months + " Month";
         }
-        return Month + " Months";
+        return months + " Months";
     }
-    var Day = new Date(DueDate).getDate() - curDate.getDate();
-    if(Day > 0){
-        if(Day == 1){
-            return Day + " Day";
+
+    if(days > 0){
+        if(days == 1){
+            return days + " Day";
         }
-        return Day + " Days";
+        return days + " Days";
     }
-    var Hour = new Date(DueDate).getHours() - curDate.getHours();
-    if(Hour > 0){
-        if(Hour == 1){
-            return Hour + " Hour";
+
+    if(hours > 0){
+        if(hours == 1){
+            return hours + " Hour";
         }
-        return Hour + " Hours";
+        return hours + " Hours";
     }
-    var Minutes = new Date(DueDate).getMinutes() - curDate.getMinutes();
-    if(Minutes > 0){
-        if(Minutes == 1){
-            return Minutes + " Minute";
+
+    if(minutes > 0){
+        if(minutes == 1){
+            return minutes + " Minute";
         }
-        return Minutes + " Minutess";
+        return minutes + " Minutess";
     }
     else{
         return "OVER DUE!!!";
