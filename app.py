@@ -63,7 +63,7 @@ class Users(db.Model, UserMixin):
     id = db.Column(db.Integer,primary_key = True, nullable = False )
     userEmail = db.Column(db.String(100), nullable = False, unique = True)
     userPassword = db.Column(db.String(100), nullable = False)
-    classes = db.Column(db.JSON, nullable = True)
+    classes = db.Column(db.Text, nullable = True)
     googleToken = db.Column(db.Text, nullable = True)
     canvasBearer = db.Column(db.String(200), nullable = True)
 
@@ -107,7 +107,7 @@ def refreshGoogleDB():
                 #print(Users.query.filter_by(id = userID).first().classes)
                 #print(str(existingClassList[j]))
 
-                Users.query.filter_by(id = userID).first().classes = 'b\'' + str(existingClassList[j])
+                Users.query.filter_by(id = userID).first().classes = json.dumps(existingClassList[j])
                 
 
     db.session.commit()
@@ -117,9 +117,13 @@ def refreshGoogleDB():
 #tool function to get UserClasses
 #returns it as a list of dictionarires
 def getUserClasses(userID):
-    User = Users.query.get_or_404(userID)
-    classList = User.classes
-    returnList = json.loads(classList[2:len(classList)-1])
+    classText = Users.query.filter_by(id = userID).first().classes
+    if(classText == '{}'):
+        returnList = []
+    else:
+        returnList = json.loads(classText)
+
+    #app.logger.info("getUserClasses ReturnList: "+ str(type(returnList)))
     return returnList
 
 #this function takes in a classObj
@@ -165,6 +169,16 @@ def getAssignments(incomingClassList):
         for j in range(len(assignments)):
             result.append(assignments[j])
     return result
+
+#gets a class of a user
+def getClass(className, userID):
+    classList = getUserClasses(userID)
+    for i in range(len(classList)):
+        if(classList[i]['name'] == className):
+            return classList[i]
+    
+    return {}
+
 
 
 def loadRefreshToken(userID):
@@ -399,6 +413,31 @@ def add_user():
     return render_template('CreateAccount.html', form = form)
 
 
+@app.route("/bgAddImportedAssignments", methods = ['GET', 'POST'])
+def AddImportedAssignments():
+
+    dataObj = json.loads(request.data)
+    #app.logger.info(type(dataObj))
+
+    className = dataObj['class']
+    assignments = dataObj['assignments']
+
+    classObj = getClass(className, current_user.id)
+
+    classList = getUserClasses(current_user.id)
+    for i in range(len(classList)):
+        if(classList[i] == classObj):
+            #app.logger.info(classObj)
+            classList[i]['assignments'] = assignments
+
+    Users.query.filter_by(id = current_user.id).first().classes = json.dumps(classList)
+    db.session.commit()
+
+    #app.logger.info(str(classList))
+
+    return getClass(className, current_user.id)
+
+
 
 @app.route("/bgUpdateAssignment", methods = ['GET', 'POST'])
 def updateAssignment():
@@ -416,20 +455,25 @@ def updateAssignment():
                 #find assignment
                 if(assignments[j]['name'] == assignmentObj['name']):
                     #replace assignment
+                    app.logger.info("REPLACING: " + str(assignments[j]))
+                    app.logger.info("WITH: " + str(assignmentObj))
                     assignments[j] = assignmentObj
             #replace assignmentlist in class
             userClasslist[i]['assignments'] = assignments
             
-    Users.query.filter_by(id = current_user.id).first().classes = 'b\'' + str(userClasslist)
-    return ('b\'' + str(userClasslist))
+    Users.query.filter_by(id = current_user.id).first().classes = json.dumps(userClasslist)
+    db.session.commit()
+    return json.dumps(userClasslist)
 
 
 @app.route("/bgAddAssignment", methods = ['GET', 'POST'])
 def addAssignment():
     assignmentObj = json.loads(request.data)
+    #app.logger.info(assignmentObj)
 
     userClasslist = getUserClasses(current_user.id)
     assignments = []
+
     #iterate through classList of a user
     for i in range(len(userClasslist)):
         #find class for assignment
@@ -439,20 +483,67 @@ def addAssignment():
             assignments.append(assignmentObj)
 
             userClasslist[i]['assignments'] = assignments
-            
-    Users.query.filter_by(id = current_user.id).first().classes = 'b\'' + str(userClasslist)
-    return ('b\'' + str(userClasslist))
+    
+    #update and commit to db
+    Users.query.filter_by(id = current_user.id).first().classes = json.dumps(userClasslist)
+    db.session.commit()
+    
+    #app.logger.info(str(userClasslist))
+    return (str(userClasslist))
 
 
 @app.route("/bgAddClass", methods = ['GET', 'POST'])
 def addClass():
+
+    classObj = json.loads(request.data)
+    #app.logger.info(type(classObj))
+
+    userClassList = getUserClasses(current_user.id)
+    userClassList.append(classObj)
+    #app.logger.info(json.dumps(userClassList))
+
+    Users.query.filter_by(id = current_user.id).first().classes = json.dumps(userClassList)
+    db.session.commit()
+
+    return str(classObj)
+
+
+@app.route("/bgDeleteClass", methods = ['GET', 'POST'])
+def deleteClass():
+
     classObj = json.loads(request.data)
 
-    userClasslist = getUserClasses(current_user.id)
-    userClasslist.append(classObj)
-            
-    Users.query.filter_by(id = current_user.id).first().classes = 'b\'' + str(userClasslist)
-    return ('b\'' + str(userClasslist))
+    userClassList = getUserClasses(current_user.id)
+
+    for i in range(len(userClassList)):
+        if(userClassList[i]['name'] == classObj['name']):
+            app.logger.info("DELETING: " + userClassList[i]['name'])
+            userClassList.remove(userClassList[i])
+            break
+
+
+    Users.query.filter_by(id = current_user.id).first().classes = json.dumps(userClassList)
+    db.session.commit()
+
+    return str(classObj)
+
+
+@app.route("/bgUpdateClass", methods = ['GET', 'POST'])
+def updateClass():
+
+    classObj = json.loads(request.data)
+
+    userClassList = getUserClasses(current_user.id)
+    for i in range(len(userClassList)):
+        if(userClassList[i]['name'] == classObj['name']):
+            userClassList[i] = classObj
+            break
+
+
+    Users.query.filter_by(id = current_user.id).first().classes = json.dumps(userClassList)
+    db.session.commit()
+
+    return str(classObj)
 
 
 ## this function will be called any time home or addlocation window closes
@@ -476,11 +567,9 @@ def updateUserClasses():
 ## this function will be called any time home or addlocation window opens
 @app.route("/bgLoadUserClasses", methods = ['GET', 'POST'])
 def loadUserClasses():
-    id = current_user.id
-    currUser = Users.query.get_or_404(id)
-    classList = currUser.classes
-    returnList = classList[2:len(classList)-1]
-    return returnList
+    userClassList = getUserClasses(current_user.id)
+    #app.logger.info(json.dumps(userClassList))
+    return json.dumps(userClassList)
 
 @app.route("/")
 @app.route("/Home.html")
@@ -505,8 +594,11 @@ def AddLocation():
 def loadGoogleToken(userID):
     tokenText = Users.query.filter_by(id = userID).first().googleToken
     tokenJSON = json.loads(tokenText)
-    with open('token.json', 'w') as tokenfile:
-        tokenfile.write(tokenText)
+    if os.path.exists('token.json'):
+        os.remove('token.json')
+    if(tokenText != '{}'):
+        with open('token.json', 'w') as tokenfile:
+            tokenfile.write(tokenText)
     return print(tokenJSON)
 
 
@@ -536,6 +628,7 @@ def getGoogleJSONs():
         store = json.load(tokenfile)
 
     replace = json.dumps(store)
+    #app.logger.info(replace)
     Users.query.filter_by(id = current_user.id).first().googleToken = replace
     db.session.commit()
 
@@ -736,7 +829,6 @@ def get_post_json():
 
 @app.route('/bgStoreCourseINFO', methods=['POST'])
 def storeCourseINFO():    
-
     # stores user courseINFO
     courseData = request.get_json()
     session["courseINFO"] = courseData
@@ -755,6 +847,7 @@ def getCanvasAssignments():
     # takes Token from session to use to access APIs
     tokenDict = session.get("token")
     # grabs courseINFO that was passed in
+    time.sleep(1)
     courseDict = session.get("courseINFO")
     courseName = courseDict['name']
     courseID = courseDict['id']

@@ -50,7 +50,7 @@ function removeAssignment(className, assignmentName, assignmentDiv){
     var removeAssignment = assignmentName.replaceAll(" ", "_");
     var removeClass = className.replaceAll(" ", "_");
     const element = document.getElementById(assignmentDiv);
-    //console.debug(element);
+    console.log(className);
     element.remove();
 
     //console.debug("Before Delete")
