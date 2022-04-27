@@ -512,7 +512,7 @@ def addClass():
 def deleteClass():
 
     classObj = json.loads(request.data)
-    # print("ClassObj : ")
+    print("Deleting ClassObj : " + str(classObj))
     # print(classObj)
     userClassList = getUserClasses(current_user.id)
     # print("userClassList : ")
@@ -525,6 +525,7 @@ def deleteClass():
 
 
     Users.query.filter_by(id = current_user.id).first().classes = json.dumps(userClassList)
+    print("UserClassList After Deletion: " + str(userClassList))
     db.session.commit()
 
     return str(classObj)

@@ -180,7 +180,7 @@ function deleteAssignment(className, assignmentID){
     //TODO: 
     //Remove class & store it again without assignment
     deleteClass(className);
-    console.log("Removing 1 assignment: "+ assignmentList);
+    console.log("Removing 1 assignment: "+ JSON.stringify(assignmentList));
     storeClass(classObj.name, assignmentList, classObj.color);
 
     //console.debug(assignmentList);
@@ -260,8 +260,8 @@ function storeClass(className, arrayAssignments, classColor, classOrder){
     // console.log(className);
     var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
     localStorage.setItem(className, jsonObj); 
-    console.log("LOCAL STORAGE IN STORE CLASS FUNCTION");
-    console.log(localStorage);
+    //console.log("LOCAL STORAGE IN STORE CLASS FUNCTION");
+    console.log("JSON given to storeClassDB: " + jsonObj);
     storeClassDB(jsonObj);  
 
 }
