@@ -232,7 +232,7 @@ function getTimeLeftLargestNonZero(DueDate){
     }
     var Month = new Date(DueDate).getMonth() - curDate.getMonth();
     
-    var daysBetween = (new Date( (curDate).getFullYear(), curDate.month(), 0)).getDate() - curDate.getDate() + new Date(DueDate).getDate(); //max days in month - current date + days in following month
+    var daysBetween = (new Date( (curDate).getFullYear(), curDate.getMonth(), 0)).getDate() - curDate.getDate() + new Date(DueDate).getDate(); //max days in month - current date + days in following month
 
     if(Month > 0 && daysBetween > 30){ //30 as average length of a month
         if(Month == 1){

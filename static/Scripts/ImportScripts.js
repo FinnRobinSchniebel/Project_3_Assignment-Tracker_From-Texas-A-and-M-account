@@ -206,11 +206,8 @@ function getGoogleJSONs(){
         contentType: "application/json",
         success: function (response){
             classList = JSON.parse(response);
-            //console.log("Successfully Imported ClassList \n"+ response);
             assignmentGooglePop(classList);
             storeGoogleImports(classList);
-            //console.log("STORING \n\n")
-            //console.log(localStorage);
         }
     });
     return classList;
@@ -376,8 +373,8 @@ function getCanvasAssignmentManual(selClassName){
     return classObj;
 }
 
-//this function is to add assignments from an imported class INTO an already existing class
-//this function takes in a className that is currently in local storage and adds all the assignments in assignment list
+//this function makes an ajax call to add assignments from an imported class INTO an already existing class
+//this function takes in a className that is currently in DB storage and adds all the assignments in assignment list
 function appendAssignmentList(className, importAssignmentList){
     console.log(className);
     console.log(importAssignmentList);
@@ -395,6 +392,9 @@ function appendAssignmentList(className, importAssignmentList){
     localStorage.setItem(className, jsonObj);
 }
 
+
+
+
 function storeGoogleImports(classList){
     classList.forEach(classObj => {
         importClassName = "IMPORTING-TEMP"+classObj.name;
@@ -404,7 +404,7 @@ function storeGoogleImports(classList){
         importAssign = classObj.assignments;
         // console.log("IMPORT FROM CANVAS");
         // console.log(importClassName);
-        storeClass(importClassName, importAssign, importColor, importOrder,);
+        storeTempClass(importClassName, importAssign, importColor, importOrder);
     });
     // console.log("AFTER STORING CLASSES");
     // console.log(localStorage);
@@ -428,6 +428,23 @@ function storeCanvasImports(classList){
     // console.log(localStorage);
 
 }
+
+
+function appendAssignmentListDB(className, assignmentList){
+    jsonObj = JSON.stringify({class: className, assignments: assignmentList});
+    $.ajax({
+        url:"/bgAddImportedAssignments",
+        type: "POST",
+        contentType: "application/json",
+        data: jsonObj,
+        dataType: 'json',
+        success: function (response){
+        }
+    });
+}
+
+
+
 //this function will pull all TEMP classes from local storage & remove them
 function getTempClassObjs(){
     classList = getClassList();
@@ -486,6 +503,7 @@ function FinalizeGoogle(){
                 for(var j = 0; j < importedClassObjs.length;j++){
                     if (importedClassObjs[j].order == order){
                         appendAssignmentList(selClassName, importedClassObjs[j].assignments);
+                        appendAssignmentListDB(selClassName, importedClassObjs[j].assignments);
                     }
                 }
             }
@@ -553,6 +571,7 @@ function FinalizeCanvas(){
                         storeCourseManualID(importedClassObjs[k]);
                         classObj = getCanvasAssignmentManual(selClassName);
                         appendAssignmentList(selClassName, classObj.assignments);
+                        appendAssignmentListDB(selClassName, classObj.assignments);
                     }
                 }
             }

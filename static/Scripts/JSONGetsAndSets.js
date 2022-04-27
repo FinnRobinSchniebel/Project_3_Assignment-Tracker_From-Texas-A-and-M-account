@@ -48,8 +48,12 @@ function getClass(className){
 
 // deletes class from list (WIP)
 function deleteClass(className){
+    var classObj = getClass(className);
     localStorage.removeItem(className);
+    deleteClassDB(JSON.stringify(classObj));
 }
+
+
 
 
 
@@ -69,6 +73,45 @@ function getAssignment(inputClassName, inputAssignmentName){
         }
     });
     return result;
+}
+
+
+function addAssignmentToClassDB(assignmentObj){
+    $.ajax({
+        url:"/bgAddAssignment",
+        type: "POST",
+        contentType: "application/json",
+        data: assignmentObj,
+        dataType: 'json',
+        success: function (response){
+        }
+    });     
+}
+
+function deleteClassDB(classObj){
+    $.ajax({
+        url:"/bgDeleteClass",
+        type: "POST",
+        contentType: "application/json",
+        data: classObj,
+        dataType: 'json',
+        success: function (response){
+        }
+    });  
+}
+
+
+
+function updateExistingAssignment(oldObj, newObj){
+    $.ajax({
+        url:"/bgUpdateAssignment",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({old: oldObj, new: newObj}),
+        dataType: 'json',
+        success: function (response){
+        }
+    });     
 }
 
 
@@ -97,6 +140,8 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
         canvasLocation: canvasClass
     };
 
+    var assignmentJSON = JSON.stringify(newAssignment)
+    addAssignmentToClassDB(assignmentJSON)
 
     var classList = getClassList(); //array of class objects
     
@@ -112,14 +157,15 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
 
 }
 //delete assignment does not work
-function deleteAssignment(className, assignmentName){
-
+function deleteAssignment(className, assignmentID){
+    assignmentName = assignmentID.replaceAll("_", " ");
     console.log(className+ " " + assignmentName);
     //copies of respective class and assignment objs & arrays
     var classObj = getClass(className);
     var assignmentObj = getAssignment(className, assignmentName);
     var assignmentList = classObj.assignments;
 
+    console.log("DELETE: AssignmentOBJ: "+ assignmentName)
     //find index of assignment in array that needs to be removed
     var indexToRemove = assignmentList.findIndex(myAssignment =>{
         return myAssignment.name == assignmentObj.name;
@@ -132,6 +178,7 @@ function deleteAssignment(className, assignmentName){
     //TODO: 
     //Remove class & store it again without assignment
     deleteClass(className);
+    console.log("Removing 1 assignment: "+ assignmentList);
     storeClass(classObj.name, assignmentList, classObj.color);
 
     //console.debug(assignmentList);
@@ -210,11 +257,53 @@ function storeClass(className, arrayAssignments, classColor, classOrder){
     // console.log("IN STORE CLASS FUNCTION");
     // console.log(className);
     var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
-    localStorage.setItem(className, jsonObj); //stores assignment in local storage as item "CLASS:className"
+    localStorage.setItem(className, jsonObj); 
     // console.log("LOCAL STORAGE IN STORE CLASS FUNCTION");
     // console.log(localStorage);
+    storeClassDB(jsonObj);  
 
 }
+
+//this function adds it only to local storage, not DB
+function storeTempClass(className, arrayAssignments, classColor, classOrder){
+   
+    if(arrayAssignments.length == 0){
+        var newClass = {
+            name: className, //text
+            assignments: [], //array of assignment objs
+            color: classColor,
+            order: classOrder
+        };
+    } else{
+        var newClass = {
+            name: className, //text
+            assignments: arrayAssignments, //array of assignment objs
+            color: classColor, 
+            order: classOrder
+
+        };
+    }
+    // console.log("IN STORE CLASS FUNCTION");
+    // console.log(className);
+    var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
+    localStorage.setItem(className, jsonObj); 
+
+}
+
+
+
+function storeClassDB(classObj){
+    $.ajax({
+        url:"/bgAddClass",
+        type: "POST",
+        contentType: "application/json",
+        data: classObj,
+        dataType: 'json',
+        success: function (response){
+        }
+    });    
+}
+
 function completeButton(assignmentName,className){
 
     //getting copies of objects
@@ -235,12 +324,20 @@ function completeButton(assignmentName,className){
         document.getElementById("OutsideForSizeFix"+classID+assignmentID).style.backgroundColor =classObj.color;
         assignmentObj.complete = false;    
     }
+    console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+    var jsonObj = JSON.stringify(assignmentObj);
+    console.log(assignmentObj.complete);
+    $.ajax({
+        url:"/bgUpdateAssignment",
+        type: "POST",
+        contentType: "application/json",
+        data: jsonObj,
+        dataType: 'json',
+        success: function (response){
+        }
+    });
 
-    //TODO
-    //Remove old assignment from classObj's assignments
-    deleteAssignment(className, assignmentName);
-    addAssignmentToClass(assignmentName, className, assignmentObj.priority, assignmentObj.dueDate, assignmentObj.startDate, assignmentObj.Link, assignmentObj.relatedLinks, assignmentObj.notes,assignmentObj.complete, assignmentObj.googleLocation,assignmentObj.canvasLocation);
-    //console.debug(assignmentObj.complete);
+
 }
 
 
@@ -283,6 +380,17 @@ function changeClassColor(className){
         } else {
             document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
             document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+        }
+    });
+
+    var classObj = JSON.stringify(getClass(className));
+    $.ajax({
+        url:"/bgUpdateClass",
+        type: "POST",
+        contentType: "application/json",
+        data: classObj,
+        dataType: 'json',
+        success: function (response){
         }
     });  
 }
