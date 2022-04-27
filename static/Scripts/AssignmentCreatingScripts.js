@@ -30,7 +30,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     var NewHTML = document.querySelector("#NewAssignmentTemp").content;
 
     NewHTML= NewHTML.cloneNode(true); //true makes this recursive (copy all in assignment)    
-    
+    //fixing IDs to be unique
     for(var i=0; i <NewHTML.querySelectorAll('div').length; i++){
         var cur = NewHTML.querySelectorAll('div')[i];
         cur.setAttribute('id', ''+cur.id + NameToAddForID);
@@ -224,7 +224,7 @@ function getTimeLeftLargestNonZero(DueDate){
 
     var curDate = new Date(CurrentDateISOTime());
     var Year = new Date(DueDate).getFullYear() - curDate.getFullYear(); //unlikely to be ever needed but still here
-    
+
 
 
     if(Year > 0){
