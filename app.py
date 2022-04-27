@@ -512,9 +512,11 @@ def addClass():
 def deleteClass():
 
     classObj = json.loads(request.data)
-
+    # print("ClassObj : ")
+    # print(classObj)
     userClassList = getUserClasses(current_user.id)
-
+    # print("userClassList : ")
+    # print(userClassList)
     for i in range(len(userClassList)):
         if(userClassList[i]['name'] == classObj['name']):
             app.logger.info("DELETING: " + userClassList[i]['name'])
@@ -834,6 +836,7 @@ def storeCourseINFO():
     session["courseINFO"] = courseData
     courseStuff = session.get("courseINFO")
     courseName  = courseStuff['name']
+    print("This course has been stored in the session: " + courseName)
     courseID  = courseStuff['id']
     return jsonify(status="success", data=courseData)
 
@@ -848,9 +851,9 @@ def getCanvasAssignments():
     tokenDict = session.get("token")
     # grabs courseINFO that was passed in
     time.sleep(1)
-    courseDict = session.get("courseINFO")
-    courseName = courseDict['name']
-    courseID = courseDict['id']
+    courseINFO = session.get("courseINFO")
+    courseName = courseINFO['name']
+    courseID = courseINFO['id']
 
     # was used before change, may not be needed anymore
     order = 0

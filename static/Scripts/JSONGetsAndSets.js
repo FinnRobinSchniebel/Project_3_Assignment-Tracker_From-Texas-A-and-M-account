@@ -118,7 +118,8 @@ function updateExistingAssignment(oldObj, newObj){
 //adds the assignment to a class Json
 function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes,isComplete, googleClass, canvasClass){
     //if one of the dates is empty asign it todays date
-
+    console.log("AddAssignmentToClass:");
+    console.log(assignmentName);
     if(assignmentStartDate == ""){ 
         assignmentStartDate = CurrentDateISOTime();
     }
@@ -188,7 +189,7 @@ function deleteAssignment(className, assignmentID){
 //edits HTML
 function removeAssignment(className, assignmentName, assignmentDiv){
 
-    // console.debug(inputClassNameDisplay);
+
     //used to remove class
     var removeAssignment = assignmentDiv;
     const element = document.getElementById(removeAssignment);
@@ -202,9 +203,9 @@ function removeAssignment(className, assignmentName, assignmentDiv){
 
 // should work as intended 
 //edits HTML
-function removeClass(inputClassNameDisplay){
+function removeClass(inputClassName){
     // input from user
-    var classDiv = inputClassNameDisplay;
+    var classDiv = inputClassName;
 
     //used to remove class
     const element = document.getElementById(classDiv+ 'Section');
@@ -212,12 +213,12 @@ function removeClass(inputClassNameDisplay){
     //remove the drop down
     const collapse = document.getElementById("Collapse"+classDiv);
     collapse.remove();
-
+    console.log("Deleting : " + inputClassName); 
     // removes class from classList
-    deleteClass(inputClassNameDisplay);
+    deleteClass(inputClassName);
 }
 
-//storeClass: takes in user inputted className and an array of assignments to store in local storage
+//storeClassCanvas: takes in user inputted className and an array of assignments to store in local storage
 function storeCanvasClass(className, classColor, classOrder, classID){
    
         var newClass = {
@@ -258,8 +259,8 @@ function storeClass(className, arrayAssignments, classColor, classOrder){
     // console.log(className);
     var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
     localStorage.setItem(className, jsonObj); 
-    // console.log("LOCAL STORAGE IN STORE CLASS FUNCTION");
-    // console.log(localStorage);
+    console.log("LOCAL STORAGE IN STORE CLASS FUNCTION");
+    console.log(localStorage);
     storeClassDB(jsonObj);  
 
 }
