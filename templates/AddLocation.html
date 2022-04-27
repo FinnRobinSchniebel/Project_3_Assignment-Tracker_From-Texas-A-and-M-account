@@ -12,6 +12,8 @@
         <script src="{{ url_for('static',filename='Scripts/ImportScripts.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/scripts.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+        <link rel="shortcut icon" href="{{ url_for('static', filename='Images/FavCon2.png') }}">
         
     </head>
 
@@ -20,18 +22,19 @@
 
             <!-- Navigation Bar -->
             <div class=Mynavbar>
-                <div class="GroupName" style="float: left;">Assignment Stacker</div> 
-                <button class="button" onclick="location.href='Home.html'">Home </button>
-                <button class="button" onclick="location.href='Quick_View.html'"> Quick View</button>
-                <button class="button pushedButton" onclick="location.href='AddLocation.html'"> Imports and Notifications</button>
-                <label for="SortSelect"><p style="font-size: 36px;">Sort:</p> </label>
-                <select class="priorityButton" aria-label="Priority select table" id="SortSelect" disabled>
-                    <option value="DueDate" selected>Sort Disabled</option>
-                    <option value="Priority">Priority</option>
-                    <option value="StartDate" >Assigned Date</option>
-                    <option value="TimePast" >Time Expired</option>
+                <img src="{{ url_for('static', filename='Images/Logo.png') }}" style="width: 8%; height: 8%; margin-top: -25px;" >
+                <button class="button Font1" onclick="location.href='Home.html'">Home </button>
+                <button class="button Font1" onclick="location.href='Quick_View.html'"> Quick View</button>
+                <button class="button pushedButton Font1" onclick="location.href='AddLocation.html'"> Imports and Notifications</button>
+                <label for="SortSelect"><p style="font-size: 36px;" class="Font1">Sort:</p> </label>
+                <select class="priorityButton Font1" aria-label="Priority select table" id="SortSelect" disabled>
+                    <option value="DueDate Font1" selected>Sort Disabled</option>
+                    <option value="Priority Font1">Priority</option>
+                    <option value="StartDate Font1 ">Assigned Date</option>
+                    <option value="TimePast Font1" >Time Expired</option>
                 </select>
-                <button class="button" onclick="LogoutUser()">Logout</button> 
+                <button class="Logoutbutton Font1" onclick="LogoutUser()">Logout</button> 
+                <button class="button Font1" onclick="toggle()">Readability Support</button>
             </div>
 
         
@@ -41,8 +44,8 @@
 
             <div id="ImportCreater" class="ImportCreater">
                 <div id="SourceGroup" class="TypeOutside"> 
-                    <Label for="Source">Location Type:</Label>
-                    <select class="" aria-label="Priority select table" id="Source" onchange="CT(this.options[this.selectedIndex].value)">
+                    <Label for="Source" class="Font2">Location Type:</Label>
+                    <select class="Font1" aria-label="Priority select table" id="Source" onchange="CT(this.options[this.selectedIndex].value)">
                         <option value="none" selected>Location</option>
                         <option value="Canvas">Canvas</option>
                         <option value="Google">Class Room</option>
@@ -108,10 +111,10 @@
         <input type="text" id="CanvasConnect" id="canvasConnectionInfo">
         <button class="importbutton" onclick="ImportAPICanvas()">Start Import</button>  -->
         <!-- <form> -->
-            <label for="CanvasConnect" class="TextfieldLeftLabel">Enter Canvas Token here: <strong style="font-size: 23px; color: blue;">&#9432;</strong> </label>
-            <input type="text" id="CanvasConnect" name="CanvasConnect" placeholder="Ex. 'User Token'">
+            <label for="CanvasConnect" class="TextfieldLeftLabel Font2">Enter Canvas Token here: <strong style="font-size: 28px; color: blue;">&#9432;</strong> </label>
+            <input type="text" class="Font2" id="CanvasConnect" name="CanvasConnect" style="padding:4px; font-size: 25px;" placeholder="Ex. 'User Token'">
             <!-- <input type="text" id="InputClassName" placeholder="Ex. 'User Token'">  -->
-            <button class="importbutton" onclick="ImportAPICanvas()">Start Import</button>
+            <button class="importbutton Font2" onclick="ImportAPICanvas()">Start Import</button>
         <!-- </form> -->
     </div>
 </template>
@@ -122,19 +125,19 @@
 
 <template id="ClassRoomTemp">
     <div class="CenterElement clearfix" id="CanvasInfo">
-        <label for="importbutton" class="TextfieldLeftLabel">Start Import from Google Classroom </label>
-        <button class="importbutton" onclick="ImportAPIGoogle()">Start Import</button>
+        <label for="importbutton" class="TextfieldLeftLabel Font2">Start Import from Google Classroom </label>
+        <button class="importbutton Font2" onclick="ImportAPIGoogle()">Start Import</button>
     </div>
 </template>
 
 <template id="PlaceLocTemp">
     <div class="OptionAddassignments" id="loc">
-        <label id="locText" for="NewLoc">
-            Place Contents from"" into:
+        <label id="locText" for="NewLoc" class="Font2">
+            Place Contents from "" into:
         </label>
-        <select aria-label="Priority select table" id="NewLoc">
-            <option value="New" selected>Create New Class from name</option>
-            <option value="None" selected>Don't Add</option>
+        <select aria-label="Priority select table" id="NewLoc" class="Font2">
+            <option value="New" class="Font2" selected>Create New Class from name</option>
+            <option value="None" class="Font2" selected>Don't Add</option>
             
         </select>
     </div>
@@ -144,10 +147,10 @@
     <div id="OptionPannel" class="Location"> <!-- Data here is not currently used and can be redefined--> 
         <button class="LocationOverview" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse" aria-expanded="false" aria-controls="CollapseCourse" id="View">
             <!-- Will need unique target in future-->
-            <div class="LocViewType" id="LocationType">
+            <div class="LocViewType Font2" id="LocationType">
                 Location type
             </div>
-            <div class="LocViewInfo" id="info">
+            <div class="LocViewInfo Font2" id="info">
                 Token info
             </div>
 
@@ -155,10 +158,10 @@
         <div class="collapse" id="Collapse">
             <div class="contentImp clearfix" id="container">
                 <div id="LeftCont" class="leftDiv">
-                    <button class="forcePushB" id="RequestB" onclick="ForceRequest('id', 'type')">Force Import</button>
+                    <button class="forcePushB Font2" id="RequestB" onclick="ForceRequest('id', 'type')">Force Import</button>
                 </div>
                 <div id="RightCont" class="rightDiv">
-                    <button class="forceRemove" id="RemoveB" onclick="DeleteRequest('id', 'type')">Delete</button>
+                    <button class="forceRemove Font2" id="RemoveB" onclick="DeleteRequest('id', 'type')">Delete</button>
                 </div>
             </div> 
         </div>

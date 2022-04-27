@@ -151,13 +151,13 @@ function PopulateClass(className, closest, assignmentcount){
     // need to input dynamic info where needed
     newDiv.innerHTML += `
     <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
-        <div class="ClassName">
+        <div class="ClassName Font2">
             `+inputClassNameDisplay+`
         </div>
-        <div class="DueDateSection" id="Class1_DueDateOfClosestAssignment">
+        <div class="DueDateSection Font2" id="Class1_DueDateOfClosestAssignment">
             `+upcoming+`
         </div> 
-        <div class="DueDateSection" id="Class1_TimeLeftOnClosestAssignment">
+        <div class="DueDateSection Font2" id="Class1_TimeLeftOnClosestAssignment">
             Nearest Due Date: `+ closestAssignmentDate +`
         </div> 
     </button>
@@ -167,56 +167,48 @@ function PopulateClass(className, closest, assignmentcount){
         <div class="ClassAssignmentsOutline" id = "`+inputClassName+`AssignmentsOutline">
             <div class="ClassAssignments" id= "`+inputClassName+`ClassAssignments">
                 <div align="right" >
-                    <label for="colorpicker">Color Picker:</label>
+                    <label for="colorpicker" class="Font1">Color Picker:</label>
                     <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#246A81>
                 </div>
 
-                <!-- Class to dynamically add assignments to class -->
-                <div class="demoAssignments" id="`+inputClassName+`Assignments">
-
-
-                
-                </div>
-                
                 <!-- add new assignment -->
                 <button class="AddAssignmentTop" id="`+inputClassName+`AddAssignment" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`NewAssignment" aria-expanded="false" aria-controls="CollapseCourse">
-                    <div class="AddAssignmentText">
+                    <div class="AddAssignmentText Font2">
                         Add new Assignment
                     </div>
                 </button>
-
                 <div class="collapse" id="Collapse`+inputClassName+`NewAssignment">
                     <div class="AddAssignmentcontent" id="`+inputClassName+`AddNewAssignmentOutline">
                         <div class="AssignmentInfo clearfix">
                             <div class="leftside">
                                 <div class="NewAssignmentInfoBox" id="`+inputClassName+`InfoBox">
                                     <p> 
-                                        <div>
+                                        <div class="Font2">
                                             Assignment Name:
                                         </div>
-                                        <input class="genericWrittingBox" contenteditable="true" id="`+inputClassName+`Name" placeholder="Add Name"> 
+                                        <input class="genericWrittingBox Font1" contenteditable="true" id="`+inputClassName+`Name" placeholder="Add Name"> 
                                         
                                     </p>
                                     
                                 </div>
                                 <div class="NewAssignmentInfoBox">
-                                    <p>
+                                    <p class="Font2">
                                         Assignment Link:
                                     </p>
-                                    <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`Link" placeholder="Add link"></textarea>
+                                    <textarea class="TextInfoBox Font1" contenteditable="true" id="`+inputClassName+`Link" placeholder="Add link"></textarea>
                                     
                                 </div>
                                 <div class="NewAssignmentInfoBox">
-                                    <p>
+                                    <p class="Font2">
                                         Related Links:
                                     </p>
-                                    <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`RelatedLinks" style=" min-height: 100px" placeholder="Add links"></textarea>
+                                    <textarea class="TextInfoBox Font1" contenteditable="true" id="`+inputClassName+`RelatedLinks" style=" min-height: 100px" placeholder="Add links"></textarea>
                                     
                                 </div>
                             </div>
                             <div class="rightside">
                                 <div class="NewAssignmentInfoRightSideAreas leftside">
-                                    <p>
+                                    <p class="Font2">
                                         Start date/ time: 
                                         <input class="genericWrittingBox" id="`+inputClassName+`Start" type="datetime-local"> 
                                                             
@@ -224,7 +216,7 @@ function PopulateClass(className, closest, assignmentcount){
                                     </p>
                                 </div>
                                 <div class="NewAssignmentInfoRightSideAreas rightside">
-                                    <p>
+                                    <p class="Font2"> 
                                         End date/ time: 
                                         <input class="genericWrittingBox" id="`+inputClassName+`End" type="datetime-local"> 
                                                             
@@ -232,13 +224,13 @@ function PopulateClass(className, closest, assignmentcount){
                                     </p>
                                 </div>
                                 <div class="NewAssignmentNotes">
-                                    <p>
+                                    <p class="Font2">
                                         Notes: 
                                     </p>
                                     <textarea class="TextInfoBox" contenteditable="true" id="`+inputClassName+`Notes" style="min-height: 100px;" placeholder="Add notes"></textarea>
                                 </div>
                                 <div class="NewAssignmentNotes">
-                                    <Label for="PriorityCreate`+inputClassName+`">Priority:</Label>
+                                    <Label for="PriorityCreate`+inputClassName+`" class="Font2">Priority:</Label>
                                     <select class="PriorityPicker" aria-label="Priority select table" id="PriorityCreate`+inputClassName+`">
                                         <option value="1" selected>1</option>
                                         <option value="2">2</option>
@@ -255,6 +247,14 @@ function PopulateClass(className, closest, assignmentcount){
                         
                     </div>
                 </div>
+                <!-- Class to dynamically add assignments to class -->
+                <div class="demoAssignments Font1" id="`+inputClassName+`Assignments">
+
+
+                
+                </div>
+                
+
                 <div style="float: center;">
                     <button class="forceRemove" type="button" id="`+ inputClassName + `ForceRemove" onclick="removeClass('`+ inputClassName +`')">Delete</button>
                 </div>
@@ -320,3 +320,20 @@ $(window).resize(function(){
         'padding-top' : $('.Mynavbar').height() +50 +'px'
     });
 });
+
+
+//Inspired by system from: https://stackoverflow.com/questions/18368319/toggle-css-sheets-on-click-with-javascript
+function toggle(){
+    var s1 = document.getElementById("DefaultFonts");
+    var s2 = document.getElementById("ReadabilityFonts");
+    if(s1.disabled){
+        document.body.style.zoom = "100%";
+        s1.disabled = undefined;
+        s2.disabled = "disabled";
+    }
+    else{
+        document.body.style.zoom = "125%";
+        s1.disabled = "disabled";
+        s2.disabled = undefined;
+    }
+}
