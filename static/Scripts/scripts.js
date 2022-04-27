@@ -109,10 +109,10 @@ function PopulateAssignments(AssignmentInfoOBJ, Location){
     //console.log(AssignmentInfoOBJ.link);
     var priority = AssignmentInfoOBJ.priority; //test, still needs to be implemented
     var isComplete = AssignmentInfoOBJ.complete;
-    console.log("ASSIGNMENT NAME IN POP ASSIGN");
-    console.log(newAssignmentName);
-    console.log("ASSIGNMENT NOTES IN POP ASSIGN");
-    console.log(noteDetails);
+    // console.log("ASSIGNMENT NAME IN POP ASSIGN");
+    // console.log(newAssignmentName);
+    // console.log("ASSIGNMENT NOTES IN POP ASSIGN");
+    // console.log(noteDetails);
     AssignmentAddHTML(ClassName, newAssignmentName, priority, startTime, endTime, link, relatedLinks, noteDetails, isComplete, Location);
 
 
