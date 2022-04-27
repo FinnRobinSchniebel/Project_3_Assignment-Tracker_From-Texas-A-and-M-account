@@ -89,6 +89,7 @@ function addAssignmentToClassDB(assignmentObj){
 }
 
 function deleteClassDB(classObj){
+    alert(classObj);
     $.ajax({
         url:"/bgDeleteClass",
         type: "POST",
@@ -346,25 +347,25 @@ function completeButton(assignmentName,className){
 //this function is called when the color picker changes
 //this function stores the new color into local storage
 function changeClassColor(className){
-    let color = document.getElementById(className+'ColorPicker').value;
+    let color = document.getElementById(classID+'ColorPicker').value;
     var RGB = parseColor(color);
-    var classID = className.replaceAll(" ","_");
 
     //setting color update into localstorage
     var classObj = getClass(className);
+    console.log(className);
     classObj.color = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
     var jsonObj = JSON.stringify(classObj);
     localStorage.setItem(className, jsonObj);
 
 
     var lighter = lightColor(RGB);
-    document.getElementById(className+'Section').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
-    document.getElementById(className+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
-    document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(classID+'Section').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+    document.getElementById(classID+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(classID+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
 
     var darker = darkColor(RGB);
-    document.getElementById(className+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-    document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+    document.getElementById(classID+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+    document.getElementById(classID+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
 
     document.getElementById(classID+'ForceRemove').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
 
