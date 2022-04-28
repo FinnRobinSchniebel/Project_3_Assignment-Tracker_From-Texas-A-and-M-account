@@ -45,9 +45,9 @@ function AddClass(){
 //edits HTML
 function removeAssignment(className, assignmentName, assignmentDiv){
 
-    console.log("Class name: " + className);
-    console.log("Assignment name: " + assignmentName);
-    console.log("Div name: " + assignmentDiv);
+    // console.log("Class name: " + className);
+    // console.log("Assignment name: " + assignmentName);
+    // console.log("Div name: " + assignmentDiv);
     //used to remove class
     var removeAssignment = assignmentName.replaceAll(" ", "_");
     var removeClass = className.replaceAll(" ", "_");

@@ -917,7 +917,9 @@ def getCanvasAssignments():
                 # issues with due date being null
                 if (assignment['due_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['dueDate'] = ''
+                    dueDateNone = str(date.today())
+                    dueDateNone += "T23:59"
+                    assignmentObj['dueDate'] = dueDateNone
                     dueDate = None
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
@@ -960,7 +962,9 @@ def getCanvasAssignments():
                 # [:-4] gets rid of milliseconds which cause issues with dates
                 if (assignment['unlock_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['startDate'] = ''
+                    startDateNone = str(date.today())
+                    startDateNone += "T23:59"
+                    assignmentObj['startDate'] = startDateNone
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
                     # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
@@ -1043,19 +1047,19 @@ def getCanvasAssignments():
                 # TODO: Noticed some dates are null for assignments need to check
                 # assignmentList = []
                 #create a new assignmentObj to make JSON
-                # print(assignment)
-                # print(assignment)
+             
                 assignmentObj = {}
                 assignmentNameCheck = checkInvalidChar(assignment['assignment']['name'])
-                # print(assignmentNameCheck)
-                # print(assignmentNameCheck)
+               
                 assignmentObj['name'] = "Canvas " + assignmentNameCheck
                 assignmentObj['class'] = courseName
                 assignmentObj['priority'] = 3
                 # issues with due date being null
                 if (assignment['assignment']['due_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['dueDate'] = ''
+                    dueDateNone = str(date.today())
+                    dueDateNone += "T23:59"
+                    assignmentObj['dueDate'] = dueDateNone
                     dueDate = None
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
@@ -1095,7 +1099,9 @@ def getCanvasAssignments():
                 
                 if (assignment['assignment']['unlock_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['startDate'] = ''
+                    startDateNone = str(date.today())
+                    startDateNone += "T23:59"
+                    assignmentObj['startDate'] = startDateNone
                 else:
                     # [:-1] gets rid of Z which cause issues with dates
 
@@ -1133,8 +1139,7 @@ def getCanvasAssignments():
                     desc = replaceQuote(assignment['assignment']['description'])
                 # print("DESC: " + desc)
                     assignmentObj['notes'] = desc
-                # assignmentObj['notes'] = '<p><strong>Consider 1</strong> of the 7 principles to universal design from the video.&nbsp;</p>'
-                #assignment['assignment']['description']
+               
            
                 #check if the assignment has a submission
                 # submission = assignment['has_submitted_submissions']
@@ -1145,20 +1150,16 @@ def getCanvasAssignments():
 
                 if (dueDate != None):
                     delta = dueDate - date.today()
-                    # print("Delta is " + delta)
                     ##checks if assignment is less than one day overdue, if not then displays
                     isNotPastAssignment = delta > timedelta(days = 1)
                     if(isNotPastAssignment):
                         assignmentList.append(assignmentObj)
                     else:
-                        #print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
                         pass
                 else:
                     assignmentList.append(assignmentObj)
 
-                # assignmentList.append(assignmentObj)
             elif (assignmentType == 'Assignment'):
-                #assignmentNameCheck = checkInvalidChar(assignment['title'])
                 # need to make another call to get assignment info
                 content_id = str(assignmentCheck['content_id'])
 
@@ -1183,7 +1184,9 @@ def getCanvasAssignments():
                 assignmentObj['priority'] = 3
                 # issues with due date being null
                 if (assignment['due_at'] == None):
-                    assignmentObj['dueDate'] = ''
+                    dueDateNone = str(date.today())
+                    dueDateNone += "T23:59"
+                    assignmentObj['dueDate'] = dueDateNone
                     dueDate = None
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
@@ -1224,7 +1227,9 @@ def getCanvasAssignments():
                 # [:-1] gets rid of Z which cause issues with dates
                 if (assignment['unlock_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['startDate'] = ''
+                    startDateNone = str(date.today())
+                    startDateNone += "T23:59"
+                    assignmentObj['startDate'] = startDateNone
                 else:
                     # [:-1] gets rid of Z which cause issues with dates
                 
