@@ -339,14 +339,14 @@ def refreshGoogleJSONs():
 
 ##create signup form
 class CreateAccountForm(FlaskForm):
-    email = StringField("Enter valid email address", validators=[DataRequired()])
+    email = StringField("Enter valid Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     confirm = PasswordField("Confrim Password", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 #login form
 class LoginForm(FlaskForm):
-    email = StringField("Enter valid email address", validators=[DataRequired()])
+    email = StringField("Enter valid Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
