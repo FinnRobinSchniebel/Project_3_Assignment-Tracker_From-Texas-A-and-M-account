@@ -455,8 +455,8 @@ def updateAssignment():
                 #find assignment
                 if(assignments[j]['name'] == assignmentObj['name']):
                     #replace assignment
-                    app.logger.info("REPLACING: " + str(assignments[j]))
-                    app.logger.info("WITH: " + str(assignmentObj))
+                    #app.logger.info("REPLACING: " + str(assignments[j]))
+                    #app.logger.info("WITH: " + str(assignmentObj))
                     assignments[j] = assignmentObj
             #replace assignmentlist in class
             userClasslist[i]['assignments'] = assignments
@@ -512,17 +512,20 @@ def addClass():
 def deleteClass():
 
     classObj = json.loads(request.data)
-
+    #print("Deleting ClassObj : " + str(classObj))
+    # print(classObj)
     userClassList = getUserClasses(current_user.id)
-
+    # print("userClassList : ")
+    # print(userClassList)
     for i in range(len(userClassList)):
         if(userClassList[i]['name'] == classObj['name']):
-            app.logger.info("DELETING: " + userClassList[i]['name'])
+            #app.logger.info("DELETING: " + userClassList[i]['name'])
             userClassList.remove(userClassList[i])
             break
 
 
     Users.query.filter_by(id = current_user.id).first().classes = json.dumps(userClassList)
+    #print("UserClassList After Deletion: " + str(userClassList))
     db.session.commit()
 
     return str(classObj)
@@ -599,7 +602,7 @@ def loadGoogleToken(userID):
     if(tokenText != '{}'):
         with open('token.json', 'w') as tokenfile:
             tokenfile.write(tokenText)
-    return print(tokenJSON)
+    return tokenJSON
 
 
 #background process happening without any refreshing
@@ -834,6 +837,7 @@ def storeCourseINFO():
     session["courseINFO"] = courseData
     courseStuff = session.get("courseINFO")
     courseName  = courseStuff['name']
+    #print("This course has been stored in the session: " + courseName)
     courseID  = courseStuff['id']
     return jsonify(status="success", data=courseData)
 
@@ -848,9 +852,9 @@ def getCanvasAssignments():
     tokenDict = session.get("token")
     # grabs courseINFO that was passed in
     time.sleep(1)
-    courseDict = session.get("courseINFO")
-    courseName = courseDict['name']
-    courseID = courseDict['id']
+    courseINFO = session.get("courseINFO")
+    courseName = courseINFO['name']
+    courseID = courseINFO['id']
 
     # was used before change, may not be needed anymore
     order = 0
@@ -861,7 +865,7 @@ def getCanvasAssignments():
     # TODO: what should the courseName be? Spaces? underscores? 
     courseName = courseName.replace(':','')
     courseName = courseName.replace(' ','_')
-    print(courseName)
+    #print(courseName)
     # module search section
     url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/modules?include=items&per_page=1000/"
 
@@ -913,7 +917,9 @@ def getCanvasAssignments():
                 # issues with due date being null
                 if (assignment['due_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['dueDate'] = ''
+                    dueDateNone = str(date.today())
+                    dueDateNone += "T23:59"
+                    assignmentObj['dueDate'] = dueDateNone
                     dueDate = None
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
@@ -942,7 +948,7 @@ def getCanvasAssignments():
                    
                     # creates new final due Date for assignment
                     dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
-                    print(assignmentNameCheck + " due time is " + dueDateFinal)
+                    #print(assignmentNameCheck + " due time is " + dueDateFinal)
                     assignmentObj['dueDate'] = dueDateFinal
                    
                     # parses info from date to use in checking if overdue
@@ -956,7 +962,9 @@ def getCanvasAssignments():
                 # [:-4] gets rid of milliseconds which cause issues with dates
                 if (assignment['unlock_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['startDate'] = ''
+                    startDateNone = str(date.today())
+                    startDateNone += "T23:59"
+                    assignmentObj['startDate'] = startDateNone
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
                     # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
@@ -984,7 +992,7 @@ def getCanvasAssignments():
                     
                      # splits unlock time so I can append them to the correct format 
                     unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
-                    print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+                    #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
                     assignmentObj['startDate'] = unlockDateFinal
                 
                 assignmentObj['link'] = assignment['html_url']
@@ -1015,7 +1023,8 @@ def getCanvasAssignments():
                     if(isNotPastAssignment):
                         assignmentList.append(assignmentObj)
                     else:
-                        print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+                        pass
+                        #print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
                 else:
                     assignmentList.append(assignmentObj)
 
@@ -1038,19 +1047,19 @@ def getCanvasAssignments():
                 # TODO: Noticed some dates are null for assignments need to check
                 # assignmentList = []
                 #create a new assignmentObj to make JSON
-                # print(assignment)
-                # print(assignment)
+             
                 assignmentObj = {}
                 assignmentNameCheck = checkInvalidChar(assignment['assignment']['name'])
-                # print(assignmentNameCheck)
-                # print(assignmentNameCheck)
+               
                 assignmentObj['name'] = "Canvas " + assignmentNameCheck
                 assignmentObj['class'] = courseName
                 assignmentObj['priority'] = 3
                 # issues with due date being null
                 if (assignment['assignment']['due_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['dueDate'] = ''
+                    dueDateNone = str(date.today())
+                    dueDateNone += "T23:59"
+                    assignmentObj['dueDate'] = dueDateNone
                     dueDate = None
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
@@ -1077,7 +1086,7 @@ def getCanvasAssignments():
         
                     # parses info from date to use in final date
                     dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
-                    print(assignmentNameCheck + " due time is " + dueDateFinal)
+                    #print(assignmentNameCheck + " due time is " + dueDateFinal)
                     assignmentObj['dueDate'] = dueDateFinal
 
                     # parses info from date to use in checking if overdue
@@ -1090,7 +1099,9 @@ def getCanvasAssignments():
                 
                 if (assignment['assignment']['unlock_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['startDate'] = ''
+                    startDateNone = str(date.today())
+                    startDateNone += "T23:59"
+                    assignmentObj['startDate'] = startDateNone
                 else:
                     # [:-1] gets rid of Z which cause issues with dates
 
@@ -1117,7 +1128,7 @@ def getCanvasAssignments():
                     
                     # splits unlock time so I can append them to the correct format 
                     unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
-                    print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+                    #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
                     assignmentObj['startDate'] = unlockDateFinal
                     
                 assignmentObj['link'] = assignment['html_url']
@@ -1128,8 +1139,7 @@ def getCanvasAssignments():
                     desc = replaceQuote(assignment['assignment']['description'])
                 # print("DESC: " + desc)
                     assignmentObj['notes'] = desc
-                # assignmentObj['notes'] = '<p><strong>Consider 1</strong> of the 7 principles to universal design from the video.&nbsp;</p>'
-                #assignment['assignment']['description']
+               
            
                 #check if the assignment has a submission
                 # submission = assignment['has_submitted_submissions']
@@ -1140,19 +1150,16 @@ def getCanvasAssignments():
 
                 if (dueDate != None):
                     delta = dueDate - date.today()
-                    # print("Delta is " + delta)
                     ##checks if assignment is less than one day overdue, if not then displays
                     isNotPastAssignment = delta > timedelta(days = 1)
                     if(isNotPastAssignment):
                         assignmentList.append(assignmentObj)
                     else:
-                        print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+                        pass
                 else:
                     assignmentList.append(assignmentObj)
 
-                # assignmentList.append(assignmentObj)
             elif (assignmentType == 'Assignment'):
-                #assignmentNameCheck = checkInvalidChar(assignment['title'])
                 # need to make another call to get assignment info
                 content_id = str(assignmentCheck['content_id'])
 
@@ -1177,7 +1184,9 @@ def getCanvasAssignments():
                 assignmentObj['priority'] = 3
                 # issues with due date being null
                 if (assignment['due_at'] == None):
-                    assignmentObj['dueDate'] = ''
+                    dueDateNone = str(date.today())
+                    dueDateNone += "T23:59"
+                    assignmentObj['dueDate'] = dueDateNone
                     dueDate = None
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
@@ -1218,7 +1227,9 @@ def getCanvasAssignments():
                 # [:-1] gets rid of Z which cause issues with dates
                 if (assignment['unlock_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['startDate'] = ''
+                    startDateNone = str(date.today())
+                    startDateNone += "T23:59"
+                    assignmentObj['startDate'] = startDateNone
                 else:
                     # [:-1] gets rid of Z which cause issues with dates
                 
@@ -1245,7 +1256,7 @@ def getCanvasAssignments():
 
                     # splits unlock time so I can append them to the correct format 
                     unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
-                    print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+                    #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
                     assignmentObj['startDate'] = unlockDateFinal
                 
                 assignmentObj['link'] = assignment['html_url']
@@ -1277,7 +1288,8 @@ def getCanvasAssignments():
                     if(isNotPastAssignment):
                         assignmentList.append(assignmentObj)
                     else:
-                        print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+                        #print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+                        pass
                 else:
                     assignmentList.append(assignmentObj)
 

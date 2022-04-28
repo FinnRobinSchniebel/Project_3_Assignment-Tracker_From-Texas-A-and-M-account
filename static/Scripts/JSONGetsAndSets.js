@@ -89,6 +89,7 @@ function addAssignmentToClassDB(assignmentObj){
 }
 
 function deleteClassDB(classObj){
+    alert(classObj);
     $.ajax({
         url:"/bgDeleteClass",
         type: "POST",
@@ -118,7 +119,8 @@ function updateExistingAssignment(oldObj, newObj){
 //adds the assignment to a class Json
 function addAssignmentToClass(assignmentName, className, assignmentPriority, assignmentDueDate, assignmentStartDate, assignmentLink, assignmentRelatedLinks, assignmentNotes,isComplete, googleClass, canvasClass){
     //if one of the dates is empty asign it todays date
-
+    console.log("AddAssignmentToClass:");
+    console.log(assignmentName);
     if(assignmentStartDate == ""){ 
         assignmentStartDate = CurrentDateISOTime();
     }
@@ -178,7 +180,7 @@ function deleteAssignment(className, assignmentID){
     //TODO: 
     //Remove class & store it again without assignment
     deleteClass(className);
-    console.log("Removing 1 assignment: "+ assignmentList);
+    console.log("Removing 1 assignment: "+ JSON.stringify(assignmentList));
     storeClass(classObj.name, assignmentList, classObj.color);
 
     //console.debug(assignmentList);
@@ -188,7 +190,7 @@ function deleteAssignment(className, assignmentID){
 //edits HTML
 function removeAssignment(className, assignmentName, assignmentDiv){
 
-    // console.debug(inputClassNameDisplay);
+
     //used to remove class
     var removeAssignment = assignmentDiv;
     const element = document.getElementById(removeAssignment);
@@ -202,9 +204,9 @@ function removeAssignment(className, assignmentName, assignmentDiv){
 
 // should work as intended 
 //edits HTML
-function removeClass(inputClassNameDisplay){
+function removeClass(inputClassName){
     // input from user
-    var classDiv = inputClassNameDisplay;
+    var classDiv = inputClassName;
 
     //used to remove class
     const element = document.getElementById(classDiv+ 'Section');
@@ -212,12 +214,12 @@ function removeClass(inputClassNameDisplay){
     //remove the drop down
     const collapse = document.getElementById("Collapse"+classDiv);
     collapse.remove();
-
+    console.log("Deleting : " + inputClassName); 
     // removes class from classList
-    deleteClass(inputClassNameDisplay);
+    deleteClass(inputClassName);
 }
 
-//storeClass: takes in user inputted className and an array of assignments to store in local storage
+//storeClassCanvas: takes in user inputted className and an array of assignments to store in local storage
 function storeCanvasClass(className, classColor, classOrder, classID){
    
         var newClass = {
@@ -258,8 +260,8 @@ function storeClass(className, arrayAssignments, classColor, classOrder){
     // console.log(className);
     var jsonObj = JSON.stringify(newClass); //creates JSON for assignment
     localStorage.setItem(className, jsonObj); 
-    // console.log("LOCAL STORAGE IN STORE CLASS FUNCTION");
-    // console.log(localStorage);
+    //console.log("LOCAL STORAGE IN STORE CLASS FUNCTION");
+    console.log("JSON given to storeClassDB: " + jsonObj);
     storeClassDB(jsonObj);  
 
 }
@@ -348,10 +350,10 @@ function completeButton(assignmentName,className){
 function changeClassColor(className){
     let color = document.getElementById(className+'ColorPicker').value;
     var RGB = parseColor(color);
-    var classID = className.replaceAll(" ","_");
 
     //setting color update into localstorage
     var classObj = getClass(className);
+    console.log(className);
     classObj.color = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
     var jsonObj = JSON.stringify(classObj);
     localStorage.setItem(className, jsonObj);
@@ -366,7 +368,7 @@ function changeClassColor(className){
     document.getElementById(className+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
     document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
 
-    document.getElementById(classID+'ForceRemove').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+    document.getElementById(className+'ForceRemove').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
 
     //to added assignments
     var assignmentList = [];
@@ -375,11 +377,11 @@ function changeClassColor(className){
         var assignmentID = assignmentObj.name;
         assignmentID = assignmentID.replaceAll(" ", "_");
         if(assignmentObj.complete == false){
-            document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-            document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+            document.getElementById('Overview'+className+assignmentID).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+            document.getElementById('OutsideForSizeFix'+className+assignmentID).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
         } else {
-            document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
-            document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('Overview'+className+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('OutsideForSizeFix'+className+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
         }
     });
 
@@ -410,9 +412,13 @@ function printClassList(){
 
 //clears everything including the storage
 function clearPage(){
+    
     printClassList();
+    var classList = getClassList();
+    classList.forEach((classObj) => {
+        deleteClass(classObj.name);
+    });
     localStorage.clear();
-
     // reset to original html
     document.getElementById('classList').innerHTML = ""
 }
