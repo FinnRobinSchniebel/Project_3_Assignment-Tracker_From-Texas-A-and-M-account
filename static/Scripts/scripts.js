@@ -253,7 +253,7 @@ function PopulateClass(className, closest, assignmentcount){
                 
 
                 <div style="float: center;">
-                    <button class="forceRemove" type="button" id="`+ inputClassName + `ForceRemove" onclick="removeClass('`+ inputClassName +`')">Delete</button>
+                    <button class="forceRemove" type="button" id="`+ inputClassName + `ForceRemove" onclick="removeClass('`+ className +`')">Delete</button>
                 </div>
             </div>
         </div>
