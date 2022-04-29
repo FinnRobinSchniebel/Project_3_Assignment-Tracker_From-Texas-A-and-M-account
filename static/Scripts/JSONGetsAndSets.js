@@ -348,7 +348,9 @@ function completeButton(assignmentName,className){
 //this function is called when the color picker changes
 //this function stores the new color into local storage
 function changeClassColor(className){
-    let color = document.getElementById(className+'ColorPicker').value;
+    var classID = classname.replaceAll(" ", "_");
+
+    let color = document.getElementById(classID+'ColorPicker').value;
     var RGB = parseColor(color);
 
     //setting color update into localstorage
@@ -360,15 +362,15 @@ function changeClassColor(className){
 
 
     var lighter = lightColor(RGB);
-    document.getElementById(className+'Section').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
-    document.getElementById(className+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
-    document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(classID+'Section').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+    document.getElementById(classID+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(classID+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
 
     var darker = darkColor(RGB);
-    document.getElementById(className+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-    document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+    document.getElementById(classID+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+    document.getElementById(classID+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
 
-    document.getElementById(className+'ForceRemove').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+    document.getElementById(classID+'ForceRemove').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
 
     //to added assignments
     var assignmentList = [];
@@ -377,11 +379,11 @@ function changeClassColor(className){
         var assignmentID = assignmentObj.name;
         assignmentID = assignmentID.replaceAll(" ", "_");
         if(assignmentObj.complete == false){
-            document.getElementById('Overview'+className+assignmentID).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-            document.getElementById('OutsideForSizeFix'+className+assignmentID).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+            document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+            document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
         } else {
-            document.getElementById('Overview'+className+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
-            document.getElementById('OutsideForSizeFix'+className+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
         }
     });
 
