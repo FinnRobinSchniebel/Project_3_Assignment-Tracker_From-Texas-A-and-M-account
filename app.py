@@ -26,6 +26,9 @@ from flask import request
 from flask import jsonify 
 from flask import session
 
+#SMS notif
+# import vonage
+
 from flask import Flask
 from flask import flash
 from flask_wtf import FlaskForm
@@ -1011,6 +1014,8 @@ def getCanvasAssignments():
                 # else:    
                 #     assignmentObj['complete'] = True
                 # dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+
+                assignmentObj['complete'] = False
                 if (dueDate != None):
                     delta = dueDate - date.today()
                     # print("Delta is " + delta)
@@ -1142,6 +1147,8 @@ def getCanvasAssignments():
                 # else:    
                 #     assignmentObj['complete'] = True
 
+                assignmentObj['complete'] = False
+
                 if (dueDate != None):
                     delta = dueDate - date.today()
                     # print("Delta is " + delta)
@@ -1272,6 +1279,7 @@ def getCanvasAssignments():
                 # else:    
                 #     assignmentObj['complete'] = True
                 
+                assignmentObj['complete'] = False
 
                 if (dueDate != None):
                     delta = dueDate - date.today()
@@ -1335,6 +1343,29 @@ def replaceQuote(description):
   
      
     return description
+
+@app.route("/bgSendSMS", methods = ['GET', 'POST'])
+def sendSMS():
+    client = vonage.Client(key="5044506d", secret="mBJC1FV1dl8HxgMA")
+    sms = vonage.Sms(client)
+
+    responseData = sms.send_message(
+        {
+            "from": "18889095613",
+            "to": "18327953595",
+            "text": "Test Text from Python.",
+        }
+    )
+    print("responseData is : ")
+    print(responseData)
+    if responseData["messages"][0]["status"] == "0":
+        print("Message sent successfully.")
+        return True
+    else:
+        print(f"Message failed with error: {responseData['messages'][0]['error-text']}")
+        return False
+
+    return False
 
 # def removeEndTime(date):
 

@@ -43,6 +43,19 @@ function  ImportAPICanvas(){
     
 }
 
+function sendSMS(){
+    $.ajax({
+        url:"/bgSendSMS",
+        type: "POST",
+        contentType: "application/json",
+        success: function (){
+            // classList = JSON.parse(response);
+            // assignmentGooglePop(classList);
+            // storeGoogleImports(classList);
+            console.log("SMS Sent Successfully");
+        }
+    });
+}
 function assignmentGooglePop(ClassList){
     var listlen = ClassList.length;
     document.getElementById('SelectLocation').innerHTML = ``;
