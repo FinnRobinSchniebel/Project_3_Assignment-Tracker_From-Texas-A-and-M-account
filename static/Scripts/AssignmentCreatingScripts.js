@@ -18,7 +18,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var isCanvasAssignment = false;
     var isCanvasCheck = newAssignment.substring(0, 6);
-    console.log("Assignmetn NAMNE E E: " + assignmentName);
+    // console.log("Assignmetn NAMNE E E: " + assignmentName);
     // console.log("isCanvasCheck: " + isCanvasCheck);
     // console.log("Assignment Notes: " + assignmentNotes);
     if (isCanvasCheck == "Canvas"){
@@ -83,7 +83,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     //remove button
     document.getElementById('removeButton'+ NameToAddForID).setAttribute('onclick', "removeAssignment('" + className + "','" + assignmentName +"','Assignment" + NameToAddForID +"')");
     //document.getElementById('removeButton'+ NameToAddForID).onclick = function(){removeAssignment(className, assignmentName, 'Assignment'+NameToAddForID)};
-    console.log('Assignment'+NameToAddForID);
+    // console.log('Assignment'+NameToAddForID);
 
 
     //link change
@@ -182,25 +182,25 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
 
     // WIP FOR INCLUDING HTML DESCRIPTIONS FOR CANVAS
-    // if (isCanvasAssignment == true){
-    //     document.getElementById('AssigmentDetailWrapper'+ NameToAddForID).innerHTML = 
-    //     `<p>
-    //     Details: <br>
-    //     `+assignmentNotes+`
+    if (isCanvasAssignment == true){
+        document.getElementById('AssigmentDetailWrapper'+ NameToAddForID).innerHTML = 
+        `<p>
+        Details: <br>
+        `+assignmentNotes+`
 
-    //     <div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
-    //         <!-- Will need unique id in future-->
+        <div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
+            <!-- Will need unique id in future-->
             
-    //     </div>
-    //     </p>`
+        </div>
+        </p>`
         
-    //     // document.getElementById('Details'+ NameToAddForID).innerText = '';
-    // }
-    // else{
-    //     document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
+        // document.getElementById('Details'+ NameToAddForID).innerText = '';
+    }
+    else{
+        document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
 
-    // }
-    document.getElementById('Details'+ NameToAddForID).innerText = "";
+    }
+    // document.getElementById('Details'+ NameToAddForID).innerText = "";
 
 
 }

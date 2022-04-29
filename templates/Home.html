@@ -62,7 +62,7 @@
 			<button class="AddClassSection" type="button" data-bs-toggle="collapse" data-bs-target="#CollapseAddClass"
 				aria-expanded="false" aria-controls="CollapseCourse">
 				<div class="Font2 AddClass">
-					Add Class
+					Add a new Class Section
 				</div>
 			</button>
 
@@ -70,7 +70,7 @@
 				<div class="ClassAssignmentsOutline">
 					<div class="NewClassName">
 						<form class="Font2">
-							Enter Class Name: <input type="text" id="InputClassName" placeholder="Ex. 'CSCE 315'">
+							Enter the Class Name: <input type="text" id="InputClassName" placeholder="Ex. 'CSCE 315'">
 							<button class="SubmitButton Font1" type="button" value="" onclick="AddClass()">Submit</button>
 						</form>
 					</div>
@@ -185,9 +185,9 @@
 							<div class="rightside" id="RightDivs">
 								<div class="AssignmentDetails" id="AssigmentDetailWrapper">
 									<p class="Font2">
-										Details:
+										Details/Notes:
 									<div class="genericWrittingBox Font1" contenteditable="true" id="Details" onblur="updateDiscription()">
-										<!-- Will need unique id in future-->
+										
 										
 									</div>
 									</p>
@@ -195,7 +195,7 @@
 								<div class="AssignmentStatus" id="CheckBoxWrapper">
 									<input type="checkbox" class="btn-check" id="CheckBoxComplete" autocomplete="off"
 										onclick="completeButton('Overview', 'CheckBoxComplete')">
-									<!-- Will need unique ids in future-->
+									
 									<label class="btn btn-outline-success Font1" for="CheckBoxComplete">Complete</label><br>
 								</div>
 								<div class="AssignmentDetails" id="priorWrapper">
@@ -204,7 +204,7 @@
 									</p>
 									<div id="SpacerRename" class="editingSpacers">
 										<label for="Rename" class="labelspace Font2">
-											Rename Name:
+											Rename:
 										</label>
 										<input class="genericWrittingBox Font1" contenteditable="true" id="Rename" value="">
 									</div>

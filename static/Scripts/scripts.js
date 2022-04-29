@@ -45,9 +45,9 @@ function AddClass(){
 //edits HTML
 function removeAssignment(className, assignmentName, assignmentDiv){
 
-    console.log("Class name: " + className);
-    console.log("Assignment name: " + assignmentName);
-    console.log("Div name: " + assignmentDiv);
+    // console.log("Class name: " + className);
+    // console.log("Assignment name: " + assignmentName);
+    // console.log("Div name: " + assignmentDiv);
     //used to remove class
     var removeAssignment = assignmentName.replaceAll(" ", "_");
     var removeClass = className.replaceAll(" ", "_");
@@ -172,7 +172,7 @@ function PopulateClass(className, closest, assignmentcount){
                 <!-- add new assignment -->
                 <button class="AddAssignmentTop" id="`+inputClassName+`AddAssignment" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`NewAssignment" aria-expanded="false" aria-controls="CollapseCourse">
                     <div class="AddAssignmentText Font2">
-                        Add new Assignment
+                        Add a new Custom Assignment
                     </div>
                 </button>
                 <div class="collapse" id="Collapse`+inputClassName+`NewAssignment">
