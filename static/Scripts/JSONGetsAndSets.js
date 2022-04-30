@@ -142,8 +142,8 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
         canvasLocation: canvasClass
     };
 
-    var assignmentJSON = JSON.stringify(newAssignment)
-    addAssignmentToClassDB(assignmentJSON)
+    var assignmentJSON = JSON.stringify(newAssignment);
+    addAssignmentToClassDB(assignmentJSON);
 
     var classList = getClassList(); //array of class objects
     
@@ -158,7 +158,15 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
     });
 
 }
-//delete assignment does not work
+
+
+
+/**
+ * deletes existing class of an assignment and replaces
+ * it with a class without the inputted assignment
+ * @param {*} className Name of inputted class name WITH spaces
+ * @param {*} assignmentID Name of assignment WITH underscores
+ */
 function deleteAssignment(className, assignmentID){
     assignmentName = assignmentID.replaceAll("_", " ");
     console.log(className+ " " + assignmentName);
@@ -167,7 +175,7 @@ function deleteAssignment(className, assignmentID){
     var assignmentObj = getAssignment(className, assignmentName);
     var assignmentList = classObj.assignments;
 
-    console.log("DELETE: AssignmentOBJ: "+ assignmentName)
+    console.log("DELETE: AssignmentOBJ: "+ assignmentName);
     //find index of assignment in array that needs to be removed
     var indexToRemove = assignmentList.findIndex(myAssignment =>{
         return myAssignment.name == assignmentObj.name;
@@ -202,11 +210,15 @@ function removeAssignment(className, assignmentName, assignmentDiv){
    
 }
 
-// should work as intended 
-//edits HTML
+
+/**
+ * 
+ * Removes HTML code of a User's class and calls deleteClass()
+ * @param {} inputClassName 
+ */
 function removeClass(inputClassName){
     // input from user
-    var classDiv = inputClassName;
+    var classDiv = inputClassName.replaceAll(" ", "_");
 
     //used to remove class
     const element = document.getElementById(classDiv+ 'Section');
@@ -348,7 +360,8 @@ function completeButton(assignmentName,className){
 //this function is called when the color picker changes
 //this function stores the new color into local storage
 function changeClassColor(className){
-    let color = document.getElementById(className+'ColorPicker').value;
+    var classID = className.replaceAll(" ", "_");
+    let color = document.getElementById(classID+'ColorPicker').value;
     var RGB = parseColor(color);
 
     //setting color update into localstorage
@@ -360,15 +373,15 @@ function changeClassColor(className){
 
 
     var lighter = lightColor(RGB);
-    document.getElementById(className+'Section').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
-    document.getElementById(className+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
-    document.getElementById(className+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(classID+'Section').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+    document.getElementById(classID+'ClassAssignments').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
+    document.getElementById(classID+'AssignmentsOutline').style.backgroundColor = "rgb("+lighter[0]+","+lighter[1]+","+lighter[2]+")";
 
     var darker = darkColor(RGB);
-    document.getElementById(className+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-    document.getElementById(className+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+    document.getElementById(classID+'AddAssignment').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+    document.getElementById(classID+'AddNewAssignmentOutline').style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
 
-    document.getElementById(className+'ForceRemove').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+    document.getElementById(classID+'ForceRemove').style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
 
     //to added assignments
     var assignmentList = [];
@@ -377,15 +390,16 @@ function changeClassColor(className){
         var assignmentID = assignmentObj.name;
         assignmentID = assignmentID.replaceAll(" ", "_");
         if(assignmentObj.complete == false){
-            document.getElementById('Overview'+className+assignmentID).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
-            document.getElementById('OutsideForSizeFix'+className+assignmentID).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
+            document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb("+darker[0]+","+darker[1]+","+darker[2]+")";
+            document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb("+RGB[0]+","+RGB[1]+","+RGB[2]+")";
         } else {
-            document.getElementById('Overview'+className+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
-            document.getElementById('OutsideForSizeFix'+className+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('Overview'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
+            document.getElementById('OutsideForSizeFix'+classID+assignmentID).style.backgroundColor = "rgb(110, 108, 117)";
         }
     });
 
     var classObj = JSON.stringify(getClass(className));
+    console.log(classObj);
     $.ajax({
         url:"/bgUpdateClass",
         type: "POST",

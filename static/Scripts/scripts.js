@@ -1,20 +1,20 @@
-function addAssignment(className){
+function addAssignment(className, classID){
     // inputs taken from user 
     // to make it dynamic, takes className from Parameter and is used to find the -
     // associated ID for variables
-    var newAssignmentDisplay = document.getElementById(''+className+'Name').value;
+    var newAssignmentDisplay = document.getElementById(''+classID+'Name').value;
     // takes the space away to ensure variables are properly named
-    var startTime = document.getElementById(''+className+'Start').value; //"`+inputClassName+`Start"
-    var endTime = document.getElementById(''+className+'End').value;
+    var startTime = document.getElementById(''+classID+'Start').value; //"`+inputClassName+`Start"
+    var endTime = document.getElementById(''+classID+'End').value;
     //console.log(endTime);
-    var noteDetails = document.getElementById(''+className+'Notes').value;
-    var priority = document.getElementById("PriorityCreate" + className).value;
+    var noteDetails = document.getElementById(''+classID+'Notes').value;
+    var priority = document.getElementById("PriorityCreate" + classID).value;
 
     //when these two variables are included in the html code below
     //assignment causes whole class to close
     //************************************** */
-    var relatedLinks = document.getElementById(''+className+'RelatedLinks').value;
-    var link = document.getElementById(''+className+'Link').value;
+    var relatedLinks = document.getElementById(''+classID+'RelatedLinks').value;
+    var link = document.getElementById(''+classID+'Link').value;
     
     
     //adds assignment to class in localstorage
@@ -29,13 +29,12 @@ function AddClass(){
     // input from user
     var inputClassNameDisplay =  document.getElementById("InputClassName").value;
     // takes the space away to ensure variables are properly named
-    var inputClassName = inputClassNameDisplay.replaceAll(" ", "_");
-    inputClassName = inputClassName.trim();
+    inputClassNameDisplay = inputClassNameDisplay.trim();
 
     //Add assignment will also call storeClass into local storage
     let emptyClass = [];
     var defaultColor = "rgb(138, 138, 138);" //default color of a new class
-    storeClass(inputClassName,emptyClass,defaultColor);
+    storeClass(inputClassNameDisplay,emptyClass,defaultColor);
 
     populatePage();
 } 
@@ -43,21 +42,21 @@ function AddClass(){
 
 //WIP: removeAssignment
 //edits HTML
-function removeAssignment(className, assignmentName, assignmentDiv){
+// function removeAssignment(className, assignmentName, assignmentDiv){
 
-    console.log("Class name: " + className);
-    console.log("Assignment name: " + assignmentName);
-    console.log("Div name: " + assignmentDiv);
-    //used to remove class
-    var removeAssignment = assignmentName.replaceAll(" ", "_");
-    var removeClass = className.replaceAll(" ", "_");
-    // console.log("Assign Div: " + assignmentDiv);
-    const element = document.getElementById(assignmentDiv);
-    element.remove();
+//     console.log("Class name: " + className);
+//     console.log("Assignment name: " + assignmentName);
+//     console.log("Div name: " + assignmentDiv);
+//     //used to remove class
+//     var removeAssignment = assignmentName.replaceAll(" ", "_");
+//     var removeClass = className.replaceAll(" ", "_");
+//     // console.log("Assign Div: " + assignmentDiv);
+//     const element = document.getElementById(assignmentDiv);
+//     element.remove();
 
-    // removes class from classList
-    deleteAssignment(removeClass, removeAssignment);
-}
+//     // removes class from classList
+//     deleteAssignment(removeClass, removeAssignment);
+// }
 
 function populatePage(){
     // empties classList div, doesn't delete
@@ -166,7 +165,7 @@ function PopulateClass(className, closest, assignmentcount){
             <div class="ClassAssignments" id= "`+inputClassName+`ClassAssignments">
                 <div align="right" >
                     <label for="colorpicker" class="Font1">Color Picker:</label>
-                    <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassName+`')" value=#246A81>
+                    <input type="color" id="`+inputClassName+`ColorPicker" onchange="changeClassColor('`+inputClassNameDisplay+`')" value=#246A81>
                 </div>
 
                 <!-- add new assignment -->
@@ -237,7 +236,7 @@ function PopulateClass(className, closest, assignmentcount){
                                         <option value="5">5</option>
                                     </select>
                                 </div>
-                                <button class="btn btn-primary" onclick="addAssignment('`+inputClassName+`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-primary" onclick="addAssignment('`+inputClassNameDisplay+`', '`+inputClassName+`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     submit
                                 </button>
                             </div>
@@ -254,7 +253,7 @@ function PopulateClass(className, closest, assignmentcount){
                 
 
                 <div style="float: center;">
-                    <button class="forceRemove" type="button" id="`+ inputClassName + `ForceRemove" onclick="removeClass('`+ inputClassName +`')">Delete</button>
+                    <button class="forceRemove" type="button" id="`+ inputClassName + `ForceRemove" onclick="removeClass('`+ inputClassNameDisplay +`')">Delete</button>
                 </div>
             </div>
         </div>
