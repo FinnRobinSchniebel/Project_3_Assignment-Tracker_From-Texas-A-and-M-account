@@ -202,11 +202,13 @@ function removeAssignment(className, assignmentName, assignmentDiv){
    
 }
 
-// should work as intended 
-//edits HTML
+/**
+ * Removes classes 
+ * @param {*} inputClassName 
+ */
 function removeClass(inputClassName){
     // input from user
-    var classDiv = inputClassName;
+    var classDiv = inputClassName.replaceAll(' ', "_");
 
     //used to remove class
     const element = document.getElementById(classDiv+ 'Section');

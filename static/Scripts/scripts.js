@@ -236,7 +236,7 @@ function PopulateClass(className, closest, assignmentcount){
                                         <option value="5">5</option>
                                     </select>
                                 </div>
-                                <button class="btn btn-primary" onclick="addAssignment('`+inputClassName+`', '` + importClassName +`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-primary" onclick="addAssignment('`+inputClassNameDisplay+`', '` + inportClassName +`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     submit
                                 </button>
                             </div>
@@ -253,7 +253,7 @@ function PopulateClass(className, closest, assignmentcount){
                 
 
                 <div style="float: center;">
-                    <button class="forceRemove" type="button" id="`+ inputClassName + `ForceRemove" onclick="removeClass('`+ className +`')">Delete</button>
+                    <button class="forceRemove" type="button" id="`+ inputClassName + `ForceRemove" onclick="removeClass('`+ inputClassNameDisplay +`')">Delete</button>
                 </div>
             </div>
         </div>
