@@ -867,457 +867,603 @@ def getCanvasAssignments():
     # takes course name and replaces : since it creates error later 
     # TODO: what should the courseName be? Spaces? underscores? 
     courseName = courseName.replace(':','')
-    courseName = courseName.replace(' ','_')
+    # courseName = courseName.replace(' ','_')
     #print(courseName)
-    # module search section
-    url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/modules?include=items&per_page=1000/"
 
-    #eventually will take bearer token as an argument
+    # NOTE: currently call for assignments, takes less time, no timeout in heroku 
+    url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments?include=items&per_page=1000/"
+
+    # eventually will take bearer token as an argument
     token = tokenDict['token']
     # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
     headers = {'Authorization' : 'Bearer '+ token}
 
     resp = requests.get(url, headers=headers)
-
-    # Takes every moduleID and puts it into a dict 
-    moduleDict = {}
-    for module in resp.json():
-        moduleID = module["id"]
-        moduleDict[moduleID] = module["name"]  
-
-    # may need to change localtion of this   
     assignmentList = []
+    for assignment in resp.json():
+        # moduleID = module["id"]
+        # moduleDict[moduleID] = module["name"]  
+        # TODO: Noticed some dates are null for assignments need to check
+        assignmentObj = {}
+        assignmentNameCheck = checkInvalidChar(assignment['name'])
+        assignmentObj['name'] = "Canvas " + assignmentNameCheck
+        assignmentObj['class'] = courseName
+        assignmentObj['priority'] = 3
+        # issues with due date being null
+        if (assignment['due_at'] == None):
+            # print(assignmentNameCheck + " is null")
+            dueDateNone = str(date.today())
+            dueDateNone += "T23:59"
+            assignmentObj['dueDate'] = dueDateNone
+            dueDate = None
+        else:
+            # [:-4] gets rid of milliseconds which cause issues with dates
 
-    for moduleCheck in resp.json():
-        # print(assignmentCHECK)
-        # print(assignmentCHECK['name'])
-        assignmentItems =  moduleCheck['items']
-        for assignmentCheck in assignmentItems:
-            # checking for assignments in the module
-            # print(assignmentCheck['type'])
-            assignmentType = assignmentCheck['type']
-            if (assignmentType == 'Quiz'):
-                #assignmentNameCheck = checkInvalidChar(assignment['title'])
-                # need to make another call to get assignment info
-                content_id = str(assignmentCheck['content_id'])
-
-                url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/quizzes/"+content_id+"/"
-
-                #eventually will take bearer token as an argument
-                token = tokenDict['token']
-                # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
-                headers = {'Authorization' : 'Bearer '+ token}
-
-                resp = requests.get(url, headers=headers)
-                assignment = resp.json()
-        
-                # TODO: Noticed some dates are null for assignments need to check
-                assignmentObj = {}
-                assignmentNameCheck = checkInvalidChar(assignment['title'])
-                assignmentObj['name'] = "Canvas " + assignmentNameCheck
-                assignmentObj['class'] = courseName
-                assignmentObj['priority'] = 3
-                # issues with due date being null
-                if (assignment['due_at'] == None):
-                    # print(assignmentNameCheck + " is null")
-                    dueDateNone = str(date.today())
-                    dueDateNone += "T23:59"
-                    assignmentObj['dueDate'] = dueDateNone
-                    dueDate = None
-                else:
-                    # [:-4] gets rid of milliseconds which cause issues with dates
-
-                    assignDate = assignment['due_at'][:-1]
-                    assignDate = assignDate.replace('T', " ")
-                   
-                    # taken from https://stackoverflow.com/questions/4770297/convert-utc-datetime-string-to-local-datetime#comment7256053_4771733
-                    # METHOD 2: Auto-detect zones:
-                    from_zone = tz.tzutc()
-                    to_zone = tz.tzlocal()
-                    # utc = datetime.utcnow()
-                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
-                  
-                    # Tell the datetime object that it's in UTC time zone since 
-                    # datetime objects are 'naive' by default
-                    utc = utc.replace(tzinfo=from_zone)
-                  
-                    # Convert time zone
-                    dueTimeFinal = str(utc.astimezone(to_zone))
-                   
-                    # parses info from date to use in final date
-                    dueDateNew = dueTimeFinal[0:10]
-                    dueTimeEnd = dueTimeFinal[13:16]
-                    dueTimeChange = dueTimeFinal[11:13]
-                   
-                    # creates new final due Date for assignment
-                    dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
-                    #print(assignmentNameCheck + " due time is " + dueDateFinal)
-                    assignmentObj['dueDate'] = dueDateFinal
-                   
-                    # parses info from date to use in checking if overdue
-                    dueDateYear = int(assignment['due_at'][0:4])
-                    dueDateMonth = int(assignment['due_at'][5:7])
-                    dueDateDay = int(assignment['due_at'][8:10])
-
-                    dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
-                   
-                # startDate should be unlock or created at? 
-                # [:-4] gets rid of milliseconds which cause issues with dates
-                if (assignment['unlock_at'] == None):
-                    # print(assignmentNameCheck + " is null")
-                    startDateNone = str(date.today())
-                    startDateNone += "T23:59"
-                    assignmentObj['startDate'] = startDateNone
-                else:
-                    # [:-4] gets rid of milliseconds which cause issues with dates
-                    # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
-                    # assignmentObj['startDate'] = assignment['unlock_at'][:-4]
-                    assignDate = assignment['unlock_at'][:-1]
-                    assignDate = assignDate.replace('T', " ")
-                  
-                    # METHOD 2: Auto-detect zones:
-                    from_zone = tz.tzutc()
-                    to_zone = tz.tzlocal()
-                
-                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
-                
-                    # Tell the datetime object that it's in UTC time zone since 
-                    # datetime objects are 'naive' by default
-                    utc = utc.replace(tzinfo=from_zone)
-             
-                    # Convert time zone
-                    unlockTimeFinal = str(utc.astimezone(to_zone))
-
-                    # splits unlock time so I can append them to the correct format 
-                    unlockDateNew = unlockTimeFinal[0:10]
-                    unlockTimeEnd = unlockTimeFinal[13:16]
-                    unlockTimeChange = unlockTimeFinal[11:13]
-                    
-                     # splits unlock time so I can append them to the correct format 
-                    unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
-                    #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
-                    assignmentObj['startDate'] = unlockDateFinal
-                
-                assignmentObj['link'] = assignment['html_url']
-                assignmentObj['relatedLinks'] = ''
-                # descrip = "<h2><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534984/download?verifier=1lviDEMOpbDLX3Z9OkQQtnVxqNSJoga5lGamNUvT\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534984\" data-api-returntype=\"File\">Week 1 Discussion</strong></h2><p>This discussion is meant to introduce you to the discussion process and to your peers. It is set up similar to the weekly discussion, but mostly you will get points just for participating. You will be split into groups of 10–15 other students in the class, this selection is random, and you will be kept with your same group members from week to week, so get to know your new friends/colleagues.&nbsp;</p><p>&nbsp;</p><h3><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534966/download?verifier=luLPvdhYbR8Z4pJaQh5nL2y0gWM2jdoJKU1tdANk\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534966\" data-api-returntype=\"File\">Guidelines</strong></h3><p><span style=\"font-size: 14pt;\">To receive credit for the week:</span></p><ul><li><strong><span style=\"font-size: 14pt;\">note, the following dates are adjusted for this first week, initial responses will normally be due </span><span style=\"font-size: 18.6667px;\">Wednesdays</span><span style=\"font-size: 14pt;\"> and </span><span style=\"font-size: 18.6667px;\">replies</span><span style=\"font-size: 14pt;\"> on Fridays<br></span></strong></li><li><span style=\"background-color: #f1c40f;\"><strong><span style=\"font-size: large;\">Also note, in all future discussions you will be required to copy and paste your initial post into a&nbsp;separate assignment in the modules to check it with TurnItIn. I do not require that for this discussion.</span></strong></span></li><li><span style=\"font-size: 14pt;\"><span style=\"text-decoration: underline;\"><strong>by Friday Jan. 21 11:59pm</strong></span> respond to the prompt below in at least 150 words<br></span></li><li><span style=\"font-size: 14pt;\"><span style=\"text-decoration: underline;\"><strong>by Monday Jan. 24 11:59pm</strong></span> reply to at least two (2) other students' response (no word min.) with a thoughtful response to their reply</span><ul><li><span style=\"font-size: 14pt;\">Perhaps, a classmate asks a question, and you know the answer, you can respond. </span></li><li><span style=\"font-size: 14pt;\">Perhaps you classmate makes a good or interesting point, expand on that.&nbsp;</span></li><li><span style=\"font-size: 14pt;\">Try to respond to to someone that does not have a reply yet.</span></li></ul></li></ul><p>I will also monitor these discussions, and answer questions where I see a need. There are 300 of you in this course though, so I will not be able to respond to everyone each week. If you have a specific question about a topic, feel free to email me or come to my virtual office hours! I am always happy to talk more geology :)</p><p><br>BE RESPECTFUL of everyone. I will have no tolerance for rude, discriminatory, or <span>condescension</span>. If I see this behavior at all, that student will receive a zero credit for this discussion. See full statement in the syllabus.</p><p><strong><span style=\"font-size: 18pt;\">Rubric</span></strong></p><p>To see the Rubric for grading click the radio button in the upper right and \"Show Rubric.\" This will be the same rubric from week to week, but since this is \"about you\" this week, you will earn full points as long as you say something about yourself in at least 150 words and respond to two peers.&nbsp;</p><p><img src=\"https://canvas.tamu.edu/courses/133720/files/36909942/preview?verifier=t7neDCfzXxtdhtwQSBmBmzEnR1ZqZu4athYQwXX7\" alt=\"Select rubric using radio button in upper right corner of discussion page\" width=\"1309\" height=\"361\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36909942\" data-api-returntype=\"File\"></p><p>&nbsp;</p><p><img id=\"716858\" src=\"https://canvas.tamu.edu/courses/133720/files/36534950/preview?verifier=O8bwdnTElOhtFG6p1PZXcgSB1RzZLU5Z8dG0JsAu\" alt=\"magnifying-glass.png\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534950\" data-api-returntype=\"File\"><strong><span style=\"font-size: 18pt;\">The Prompt</span></strong></p><p><span style=\"font-size: 14pt;\">I want to treat this week as a \"get to know each other\" week. This class may be asynchronous, but you still have a community that you belong to, discussions help us remember that. Since you will be working with this group of peers for the next few weeks (I might change up groups half-way through the semester if needed) you should get to know one another. So in 150 or more words, tell us about yourself in as much or as little detail as you wish to provide. Some things you could to talk about:</span></p><ul><li><span style=\"font-size: 14pt;\">your major</span></li><li><span style=\"font-size: 14pt;\">hobbies</span></li><li><span style=\"font-size: 14pt;\">pets</span></li><li><span style=\"font-size: 14pt;\">do you have a favorite rock/mineral?</span></li><li><span style=\"font-size: 14pt;\">what are you looking forward to most in this class?<br></span></li><li><span style=\"font-size: 14pt;\">is this your first asynchronous class? </span><ul><li><span style=\"font-size: 14pt;\">If not, do you have tips for staying on track?</span></li></ul></li><li><span style=\"font-size: 14pt;\">something else?</span></li><li><span style=\"font-size: 14pt;\">Please include a picture, of yourself, your pet, your favorite meme (keep it clean), something that helps us get to know YOU!</span><ul><li><span style=\"font-size: 14pt;\"><span>at the top of the text box will be a little icon of mountains and a sun that says \"images\" when you mouse over</span></span></li><li><span style=\"font-size: 14pt;\"><span>this is used to show you how to upload an image for future discussions</span></span></li><li><a class=\"inline_disabled\" href=\"https://community.canvaslms.com/t5/Student-Guide/How-do-I-embed-an-image-in-a-discussion-reply-as-a-student/ta-p/313\" target=\"_blank\"><span style=\"font-size: 14pt;\"><span>Canvas Guide on How to Embed an image in a post/reply</span></span></a></li></ul></li><li><span style=\"font-size: 14pt;\">ASK a question! What do you want to know about your peers? Do you want advice for studying? Do you want advice for a good coffee place in town?&nbsp;</span></li></ul><p>&nbsp;</p><h3><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534892/download?verifier=i47lB0P1Vf0QQvhJTig99hRn5Ct3p1ywJNA06P8F\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534892\" data-api-returntype=\"File\">Technical Support</strong></h3><p>Need help using Canvas Discussions? If so, please review the following guide:</p><ul><li><a class=\"external\" title=\"\" href=\"https://community.canvaslms.com/docs/DOC-10701#jive_content_id_Discussions\" target=\"_blank\"><span>Canvas Student Guide - Discussions</span></a></li></ul>"
-                # descrip = "<p><strong>Consider 1</strong> of the 7 principles to universal design from the video.&nbsp;</p><p><iframe title="YouTube video player" src="https://www.youtube.com/embed/G-tHuD7R8cs/" width="560" height="315" allowfullscreen="allowfullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></p><p><span style="text-decoration: underline;">7 Principles of Universal Design:</span></p><ol><li>Equitable use</li><li>Flexibility in use</li><li>Simple and intuitive use</li><li>Perceptible information</li><li>Tolerance for error</li><li>Low physical effort</li><li>Size and space for approach and use</li></ol><p><strong>Discuss</strong> how this principle applies to software.&nbsp; You can support your discussion with a specific example.</p>"
-                if (assignment['description'] == None):
-                    assignmentObj['notes'] = ""
-                else:
-                    desc = replaceQuote(assignment['description'])
-                # print("DESC: " + desc)
-                    assignmentObj['notes'] = desc
-                #assignment['description']
-               
-
-                #check if the assignment has a submission
-                # submission = assignment['has_submitted_submissions']
-                # if(submission == False):
-                #     assignmentObj['complete'] = False
-                # else:    
-                #     assignmentObj['complete'] = True
-                # dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
-
-                assignmentObj['complete'] = False
-                if (dueDate != None):
-                    delta = dueDate - date.today()
-                    # print("Delta is " + delta)
-                    ##checks if assignment is less than one day overdue, if not then displays
-                    isNotPastAssignment = delta > timedelta(days = 1)
-                    if(isNotPastAssignment):
-                        assignmentList.append(assignmentObj)
-                    else:
-                        pass
-                        #print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
-                else:
-                    assignmentList.append(assignmentObj)
-
-                # assignmentList.append(assignmentObj)
-            elif (assignmentType == 'Discussion'):
-                #assignmentNameCheck = checkInvalidChar(assignment['title'])
-                # need to make another call to get assignment info
-                content_id = str(assignmentCheck['content_id'])
-
-                url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/discussion_topics/"+content_id+"/"
-
-                #eventually will take bearer token as an argument
-                token = tokenDict['token']
-                # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
-                headers = {'Authorization' : 'Bearer '+ token}
-
-                resp = requests.get(url, headers=headers)
-       
-                assignment = resp.json()
-                # TODO: Noticed some dates are null for assignments need to check
-                # assignmentList = []
-                #create a new assignmentObj to make JSON
-             
-                assignmentObj = {}
-                assignmentNameCheck = checkInvalidChar(assignment['assignment']['name'])
-               
-                assignmentObj['name'] = "Canvas " + assignmentNameCheck
-                assignmentObj['class'] = courseName
-                assignmentObj['priority'] = 3
-                # issues with due date being null
-                if (assignment['assignment']['due_at'] == None):
-                    # print(assignmentNameCheck + " is null")
-                    dueDateNone = str(date.today())
-                    dueDateNone += "T23:59"
-                    assignmentObj['dueDate'] = dueDateNone
-                    dueDate = None
-                else:
-                    # [:-4] gets rid of milliseconds which cause issues with dates
-                    assignDate = assignment['assignment']['due_at'][:-1]
-                    assignDate = assignDate.replace('T', " ")
-                 
-                    # METHOD 2: Auto-detect zones:
-                    from_zone = tz.tzutc()
-                    to_zone = tz.tzlocal()
-                    # utc = datetime.utcnow()
-                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
-                
-                    # Tell the datetime object that it's in UTC time zone since 
-                    # datetime objects are 'naive' by default
-                    utc = utc.replace(tzinfo=from_zone)
-                  
-                    # Convert time zone
-                    dueTimeFinal = str(utc.astimezone(to_zone))
-
-                    # parses info from date to use in final date
-                    dueDateNew = dueTimeFinal[0:10]
-                    dueTimeEnd = dueTimeFinal[13:16]
-                    dueTimeChange = dueTimeFinal[11:13]
-        
-                    # parses info from date to use in final date
-                    dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
-                    #print(assignmentNameCheck + " due time is " + dueDateFinal)
-                    assignmentObj['dueDate'] = dueDateFinal
-
-                    # parses info from date to use in checking if overdue
-                    dueDateYear = int(assignment['assignment']['due_at'][0:4])
-                    dueDateMonth = int(assignment['assignment']['due_at'][5:7])
-                    dueDateDay = int(assignment['assignment']['due_at'][8:10])
-                    dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
-                  
-
-                
-                if (assignment['assignment']['unlock_at'] == None):
-                    # print(assignmentNameCheck + " is null")
-                    startDateNone = str(date.today())
-                    startDateNone += "T23:59"
-                    assignmentObj['startDate'] = startDateNone
-                else:
-                    # [:-1] gets rid of Z which cause issues with dates
-
-                    assignDate = assignment['assignment']['unlock_at'][:-1]
-                    assignDate = assignDate.replace('T', " ")
-                  
-                    # METHOD 2: Auto-detect zones:
-                    from_zone = tz.tzutc()
-                    to_zone = tz.tzlocal()
-                
-                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
-                
-                    # Tell the datetime object that it's in UTC time zone since 
-                    # datetime objects are 'naive' by default
-                    utc = utc.replace(tzinfo=from_zone)
-             
-                    # Convert time zone
-                    unlockTimeFinal = str(utc.astimezone(to_zone))
-
-                    # parses info from date to use in final date
-                    unlockDateNew = unlockTimeFinal[0:10]
-                    unlockTimeEnd = unlockTimeFinal[13:16]
-                    unlockTimeChange = unlockTimeFinal[11:13]
-                    
-                    # splits unlock time so I can append them to the correct format 
-                    unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
-                    #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
-                    assignmentObj['startDate'] = unlockDateFinal
-                    
-                assignmentObj['link'] = assignment['html_url']
-                assignmentObj['relatedLinks'] = ''
-                if (assignment['assignment']['description'] == None):
-                    assignmentObj['notes'] = ""
-                else:
-                    desc = replaceQuote(assignment['assignment']['description'])
-                # print("DESC: " + desc)
-                    assignmentObj['notes'] = desc
-               
-           
-                #check if the assignment has a submission
-                # submission = assignment['has_submitted_submissions']
-                # if(submission == False):
-                #     assignmentObj['complete'] = False
-                # else:    
-                #     assignmentObj['complete'] = True
-
-                assignmentObj['complete'] = False
-
-                if (dueDate != None):
-                    delta = dueDate - date.today()
-                    ##checks if assignment is less than one day overdue, if not then displays
-                    isNotPastAssignment = delta > timedelta(days = 1)
-                    if(isNotPastAssignment):
-                        assignmentList.append(assignmentObj)
-                    else:
-                        pass
-                else:
-                    assignmentList.append(assignmentObj)
-
-            elif (assignmentType == 'Assignment'):
-                # need to make another call to get assignment info
-                content_id = str(assignmentCheck['content_id'])
-
-                url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments/"+content_id+"/"
-
-                #eventually will take bearer token as an argument
-                token = tokenDict['token']
-                # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
-                headers = {'Authorization' : 'Bearer '+ token}
-
-                resp = requests.get(url, headers=headers)
+            assignDate = assignment['due_at'][:-1]
+            assignDate = assignDate.replace('T', " ")
             
-                assignment = resp.json()
+            # taken from https://stackoverflow.com/questions/4770297/convert-utc-datetime-string-to-local-datetime#comment7256053_4771733
+            # METHOD 2: Auto-detect zones:
+            from_zone = tz.tzutc()
+            to_zone = tz.tzlocal()
+            # utc = datetime.utcnow()
+            utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+            
+            # Tell the datetime object that it's in UTC time zone since 
+            # datetime objects are 'naive' by default
+            utc = utc.replace(tzinfo=from_zone)
+            
+            # Convert time zone
+            dueTimeFinal = str(utc.astimezone(to_zone))
+            
+            # parses info from date to use in final date
+            dueDateNew = dueTimeFinal[0:10]
+            dueTimeEnd = dueTimeFinal[13:16]
+            dueTimeChange = dueTimeFinal[11:13]
+            
+            # creates new final due Date for assignment
+            dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
+            #print(assignmentNameCheck + " due time is " + dueDateFinal)
+            assignmentObj['dueDate'] = dueDateFinal
+            
+            # parses info from date to use in checking if overdue
+            dueDateYear = int(assignment['due_at'][0:4])
+            dueDateMonth = int(assignment['due_at'][5:7])
+            dueDateDay = int(assignment['due_at'][8:10])
+
+            dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+            
+        # startDate should be unlock or created at? 
+        # [:-4] gets rid of milliseconds which cause issues with dates
+        if (assignment['unlock_at'] == None):
+            # print(assignmentNameCheck + " is null")
+            startDateNone = str(date.today())
+            startDateNone += "T23:59"
+            assignmentObj['startDate'] = startDateNone
+        else:
+            # [:-4] gets rid of milliseconds which cause issues with dates
+            # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
+            # assignmentObj['startDate'] = assignment['unlock_at'][:-4]
+            assignDate = assignment['unlock_at'][:-1]
+            assignDate = assignDate.replace('T', " ")
+            
+            # METHOD 2: Auto-detect zones:
+            from_zone = tz.tzutc()
+            to_zone = tz.tzlocal()
         
-                # loops through current class assignmnent
-                # puts everything required into assignmentObj
-                # TODO: Noticed some dates are null for assignments need to check
-                assignmentObj = {}
-                assignmentNameCheck = checkInvalidChar(assignment['name'])
-                assignmentObj['name'] = "Canvas " + assignmentNameCheck
-                assignmentObj['class'] = courseName
-                assignmentObj['priority'] = 3
-                # issues with due date being null
-                if (assignment['due_at'] == None):
-                    dueDateNone = str(date.today())
-                    dueDateNone += "T23:59"
-                    assignmentObj['dueDate'] = dueDateNone
-                    dueDate = None
-                else:
-                    # [:-4] gets rid of milliseconds which cause issues with dates
+            utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+        
+            # Tell the datetime object that it's in UTC time zone since 
+            # datetime objects are 'naive' by default
+            utc = utc.replace(tzinfo=from_zone)
+        
+            # Convert time zone
+            unlockTimeFinal = str(utc.astimezone(to_zone))
 
-                    assignDate = assignment['due_at'][:-1]
-                    assignDate = assignDate.replace('T', " ")
-                  
-                    # METHOD 2: Auto-detect zones:
-                    from_zone = tz.tzutc()
-                    to_zone = tz.tzlocal()
-                
-                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
-                
-                    # Tell the datetime object that it's in UTC time zone since 
-                    # datetime objects are 'naive' by default
-                    utc = utc.replace(tzinfo=from_zone)
-             
-                    # Convert time zone
-                    dueTimeFinal = str(utc.astimezone(to_zone))
+            # splits unlock time so I can append them to the correct format 
+            unlockDateNew = unlockTimeFinal[0:10]
+            unlockTimeEnd = unlockTimeFinal[13:16]
+            unlockTimeChange = unlockTimeFinal[11:13]
+            
+                # splits unlock time so I can append them to the correct format 
+            unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
+            #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+            assignmentObj['startDate'] = unlockDateFinal
+        
+        assignmentObj['link'] = assignment['html_url']
+        assignmentObj['relatedLinks'] = ''
+        assignmentObj['googleLocation'] = ''
+        assignmentObj['canvasLocation'] = courseName
+        # assignmentObj['notes'] = ''
+        # descrip = "<h2><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534984/download?verifier=1lviDEMOpbDLX3Z9OkQQtnVxqNSJoga5lGamNUvT\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534984\" data-api-returntype=\"File\">Week 1 Discussion</strong></h2><p>This discussion is meant to introduce you to the discussion process and to your peers. It is set up similar to the weekly discussion, but mostly you will get points just for participating. You will be split into groups of 10–15 other students in the class, this selection is random, and you will be kept with your same group members from week to week, so get to know your new friends/colleagues.&nbsp;</p><p>&nbsp;</p><h3><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534966/download?verifier=luLPvdhYbR8Z4pJaQh5nL2y0gWM2jdoJKU1tdANk\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534966\" data-api-returntype=\"File\">Guidelines</strong></h3><p><span style=\"font-size: 14pt;\">To receive credit for the week:</span></p><ul><li><strong><span style=\"font-size: 14pt;\">note, the following dates are adjusted for this first week, initial responses will normally be due </span><span style=\"font-size: 18.6667px;\">Wednesdays</span><span style=\"font-size: 14pt;\"> and </span><span style=\"font-size: 18.6667px;\">replies</span><span style=\"font-size: 14pt;\"> on Fridays<br></span></strong></li><li><span style=\"background-color: #f1c40f;\"><strong><span style=\"font-size: large;\">Also note, in all future discussions you will be required to copy and paste your initial post into a&nbsp;separate assignment in the modules to check it with TurnItIn. I do not require that for this discussion.</span></strong></span></li><li><span style=\"font-size: 14pt;\"><span style=\"text-decoration: underline;\"><strong>by Friday Jan. 21 11:59pm</strong></span> respond to the prompt below in at least 150 words<br></span></li><li><span style=\"font-size: 14pt;\"><span style=\"text-decoration: underline;\"><strong>by Monday Jan. 24 11:59pm</strong></span> reply to at least two (2) other students' response (no word min.) with a thoughtful response to their reply</span><ul><li><span style=\"font-size: 14pt;\">Perhaps, a classmate asks a question, and you know the answer, you can respond. </span></li><li><span style=\"font-size: 14pt;\">Perhaps you classmate makes a good or interesting point, expand on that.&nbsp;</span></li><li><span style=\"font-size: 14pt;\">Try to respond to to someone that does not have a reply yet.</span></li></ul></li></ul><p>I will also monitor these discussions, and answer questions where I see a need. There are 300 of you in this course though, so I will not be able to respond to everyone each week. If you have a specific question about a topic, feel free to email me or come to my virtual office hours! I am always happy to talk more geology :)</p><p><br>BE RESPECTFUL of everyone. I will have no tolerance for rude, discriminatory, or <span>condescension</span>. If I see this behavior at all, that student will receive a zero credit for this discussion. See full statement in the syllabus.</p><p><strong><span style=\"font-size: 18pt;\">Rubric</span></strong></p><p>To see the Rubric for grading click the radio button in the upper right and \"Show Rubric.\" This will be the same rubric from week to week, but since this is \"about you\" this week, you will earn full points as long as you say something about yourself in at least 150 words and respond to two peers.&nbsp;</p><p><img src=\"https://canvas.tamu.edu/courses/133720/files/36909942/preview?verifier=t7neDCfzXxtdhtwQSBmBmzEnR1ZqZu4athYQwXX7\" alt=\"Select rubric using radio button in upper right corner of discussion page\" width=\"1309\" height=\"361\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36909942\" data-api-returntype=\"File\"></p><p>&nbsp;</p><p><img id=\"716858\" src=\"https://canvas.tamu.edu/courses/133720/files/36534950/preview?verifier=O8bwdnTElOhtFG6p1PZXcgSB1RzZLU5Z8dG0JsAu\" alt=\"magnifying-glass.png\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534950\" data-api-returntype=\"File\"><strong><span style=\"font-size: 18pt;\">The Prompt</span></strong></p><p><span style=\"font-size: 14pt;\">I want to treat this week as a \"get to know each other\" week. This class may be asynchronous, but you still have a community that you belong to, discussions help us remember that. Since you will be working with this group of peers for the next few weeks (I might change up groups half-way through the semester if needed) you should get to know one another. So in 150 or more words, tell us about yourself in as much or as little detail as you wish to provide. Some things you could to talk about:</span></p><ul><li><span style=\"font-size: 14pt;\">your major</span></li><li><span style=\"font-size: 14pt;\">hobbies</span></li><li><span style=\"font-size: 14pt;\">pets</span></li><li><span style=\"font-size: 14pt;\">do you have a favorite rock/mineral?</span></li><li><span style=\"font-size: 14pt;\">what are you looking forward to most in this class?<br></span></li><li><span style=\"font-size: 14pt;\">is this your first asynchronous class? </span><ul><li><span style=\"font-size: 14pt;\">If not, do you have tips for staying on track?</span></li></ul></li><li><span style=\"font-size: 14pt;\">something else?</span></li><li><span style=\"font-size: 14pt;\">Please include a picture, of yourself, your pet, your favorite meme (keep it clean), something that helps us get to know YOU!</span><ul><li><span style=\"font-size: 14pt;\"><span>at the top of the text box will be a little icon of mountains and a sun that says \"images\" when you mouse over</span></span></li><li><span style=\"font-size: 14pt;\"><span>this is used to show you how to upload an image for future discussions</span></span></li><li><a class=\"inline_disabled\" href=\"https://community.canvaslms.com/t5/Student-Guide/How-do-I-embed-an-image-in-a-discussion-reply-as-a-student/ta-p/313\" target=\"_blank\"><span style=\"font-size: 14pt;\"><span>Canvas Guide on How to Embed an image in a post/reply</span></span></a></li></ul></li><li><span style=\"font-size: 14pt;\">ASK a question! What do you want to know about your peers? Do you want advice for studying? Do you want advice for a good coffee place in town?&nbsp;</span></li></ul><p>&nbsp;</p><h3><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534892/download?verifier=i47lB0P1Vf0QQvhJTig99hRn5Ct3p1ywJNA06P8F\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534892\" data-api-returntype=\"File\">Technical Support</strong></h3><p>Need help using Canvas Discussions? If so, please review the following guide:</p><ul><li><a class=\"external\" title=\"\" href=\"https://community.canvaslms.com/docs/DOC-10701#jive_content_id_Discussions\" target=\"_blank\"><span>Canvas Student Guide - Discussions</span></a></li></ul>"
+        # descrip = "<p><strong>Consider 1</strong> of the 7 principles to universal design from the video.&nbsp;</p><p><iframe title="YouTube video player" src="https://www.youtube.com/embed/G-tHuD7R8cs/" width="560" height="315" allowfullscreen="allowfullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></p><p><span style="text-decoration: underline;">7 Principles of Universal Design:</span></p><ol><li>Equitable use</li><li>Flexibility in use</li><li>Simple and intuitive use</li><li>Perceptible information</li><li>Tolerance for error</li><li>Low physical effort</li><li>Size and space for approach and use</li></ol><p><strong>Discuss</strong> how this principle applies to software.&nbsp; You can support your discussion with a specific example.</p>"
+        if (assignment['description'] == None):
+            assignmentObj['notes'] = ""
+        else:
+            desc = replaceQuote(assignment['description'])
+        # print("DESC: " + desc)
+            assignmentObj['notes'] = desc
+        #assignment['description']
+        
 
-                    # parses info from date to use in final date
-                    dueDateNew = dueTimeFinal[0:10]
-                    dueTimeEnd = dueTimeFinal[13:16]
-                    dueTimeChange = dueTimeFinal[11:13]
-                    
-                    # splits due time so I can append them to the correct format 
-                    dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
-                    assignmentObj['dueDate'] = dueDateFinal
+        #check if the assignment has a submission
+        # submission = assignment['has_submitted_submissions']
+        # if(submission == False):
+        #     assignmentObj['complete'] = False
+        # else:    
+        #     assignmentObj['complete'] = True
+        # dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
 
-                    # parses info from date to use in checking if overdue
-                    dueDateYear = int(assignment['due_at'][0:4])
-                    dueDateMonth = int(assignment['due_at'][5:7])
-                    dueDateDay = int(assignment['due_at'][8:10])
-
-                    dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
-               
-                # startDate should be unlock or created at? 
-                # [:-1] gets rid of Z which cause issues with dates
-                if (assignment['unlock_at'] == None):
-                    # print(assignmentNameCheck + " is null")
-                    startDateNone = str(date.today())
-                    startDateNone += "T23:59"
-                    assignmentObj['startDate'] = startDateNone
-                else:
-                    # [:-1] gets rid of Z which cause issues with dates
-                
-                    assignDate = assignment['unlock_at'][:-1]
-                    assignDate = assignDate.replace('T', " ")
-                  
-                    # METHOD 2: Auto-detect zones:
-                    from_zone = tz.tzutc()
-                    to_zone = tz.tzlocal()
-                
-                    utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
-                
-                    # Tell the datetime object that it's in UTC time zone since 
-                    # datetime objects are 'naive' by default
-                    utc = utc.replace(tzinfo=from_zone)
-             
-                    # Convert time zone
-                    unlockTimeFinal = str(utc.astimezone(to_zone))
-
-                    # parses info from date to use in final date
-                    unlockDateNew = unlockTimeFinal[0:10]
-                    unlockTimeEnd = unlockTimeFinal[13:16]
-                    unlockTimeChange = unlockTimeFinal[11:13]
-
-                    # splits unlock time so I can append them to the correct format 
-                    unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
-                    #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
-                    assignmentObj['startDate'] = unlockDateFinal
-                
-                assignmentObj['link'] = assignment['html_url']
-                assignmentObj['relatedLinks'] = ''
-                # pass in description to use later in assignment section (not atm)
-                if (assignment['description'] == None):
-                    assignmentObj['notes'] = ""
-                else:
-                    desc = replaceQuote(assignment['description'])
-                # print("DESC: " + desc)
-                    assignmentObj['notes'] = desc
-                # assignmentObj['notes'] = '<p><strong>Consider 1</strong> of the 7 principles to universal design from the video.&nbsp;</p>'
-                #assignment['description']
-
-
-                #check if the assignment has a submission NOT IN CANVAS>?
-                # submission = assignment['has_submitted_submissions']
-                # if(submission == False):
-                #     assignmentObj['complete'] = False
-                # else:    
-                #     assignmentObj['complete'] = True
-                
-                assignmentObj['complete'] = False
-
-                if (dueDate != None):
-                    delta = dueDate - date.today()
-                    # print("Delta is " + delta)
-                    ##checks if assignment is less than one day overdue, if not then displays
-                    isNotPastAssignment = delta > timedelta(days = 1)
-                    if(isNotPastAssignment):
-                        assignmentList.append(assignmentObj)
-                    else:
-                        #print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
-                        pass
-                else:
-                    assignmentList.append(assignmentObj)
-
-                
+        assignmentObj['complete'] = False
+        if (dueDate != None):
+            delta = dueDate - date.today()
+            # print("Delta is " + delta)
+            ##checks if assignment is less than one day overdue, if not then displays
+            isNotPastAssignment = delta > timedelta(days = 1)
+            if(isNotPastAssignment):
+                assignmentList.append(assignmentObj)
             else:
-                continue
-        # print("End of Module")  
+                pass
+                print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+        else:
+            assignmentList.append(assignmentObj)
 
-
-
-        # create classobj for each class
+    # create classobj for each class
         classObj = {}
         classObj['name'] = courseName
         classObj['color'] = 'rgb(162, 214, 161);'
         classObj['assignments'] = assignmentList
         classObj['order'] = order
 
+    # # module search section
+    # url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/modules?include=items&per_page=1000/"
 
+    # #eventually will take bearer token as an argument
+    # token = tokenDict['token']
+    # # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+    # headers = {'Authorization' : 'Bearer '+ token}
+
+    # resp = requests.get(url, headers=headers)
+
+    # # Takes every moduleID and puts it into a dict 
+    # moduleDict = {}
+    # for module in resp.json():
+    #     moduleID = module["id"]
+    #     moduleDict[moduleID] = module["name"]  
+
+    # # may need to change localtion of this   
+    # assignmentList = []
+
+    # for moduleCheck in resp.json():
+    #     # print(assignmentCHECK)
+    #     # print(assignmentCHECK['name'])
+    #     assignmentItems =  moduleCheck['items']
+    #     for assignmentCheck in assignmentItems:
+    #         # checking for assignments in the module
+    #         # print(assignmentCheck['type'])
+    #         assignmentType = assignmentCheck['type']
+    #         if (assignmentType == 'Quiz'):
+    #             #assignmentNameCheck = checkInvalidChar(assignment['title'])
+    #             # need to make another call to get assignment info
+    #             content_id = str(assignmentCheck['content_id'])
+
+    #             url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/quizzes/"+content_id+"/"
+
+    #             #eventually will take bearer token as an argument
+    #             token = tokenDict['token']
+    #             # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+    #             headers = {'Authorization' : 'Bearer '+ token}
+
+    #             resp = requests.get(url, headers=headers)
+    #             assignment = resp.json()
+        
+    #             # TODO: Noticed some dates are null for assignments need to check
+    #             assignmentObj = {}
+    #             assignmentNameCheck = checkInvalidChar(assignment['title'])
+    #             assignmentObj['name'] = "Canvas " + assignmentNameCheck
+    #             assignmentObj['class'] = courseName
+    #             assignmentObj['priority'] = 3
+    #             # issues with due date being null
+    #             if (assignment['due_at'] == None):
+    #                 # print(assignmentNameCheck + " is null")
+    #                 dueDateNone = str(date.today())
+    #                 dueDateNone += "T23:59"
+    #                 assignmentObj['dueDate'] = dueDateNone
+    #                 dueDate = None
+    #             else:
+    #                 # [:-4] gets rid of milliseconds which cause issues with dates
+
+    #                 assignDate = assignment['due_at'][:-1]
+    #                 assignDate = assignDate.replace('T', " ")
+                   
+    #                 # taken from https://stackoverflow.com/questions/4770297/convert-utc-datetime-string-to-local-datetime#comment7256053_4771733
+    #                 # METHOD 2: Auto-detect zones:
+    #                 from_zone = tz.tzutc()
+    #                 to_zone = tz.tzlocal()
+    #                 # utc = datetime.utcnow()
+    #                 utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                  
+    #                 # Tell the datetime object that it's in UTC time zone since 
+    #                 # datetime objects are 'naive' by default
+    #                 utc = utc.replace(tzinfo=from_zone)
+                  
+    #                 # Convert time zone
+    #                 dueTimeFinal = str(utc.astimezone(to_zone))
+                   
+    #                 # parses info from date to use in final date
+    #                 dueDateNew = dueTimeFinal[0:10]
+    #                 dueTimeEnd = dueTimeFinal[13:16]
+    #                 dueTimeChange = dueTimeFinal[11:13]
+                   
+    #                 # creates new final due Date for assignment
+    #                 dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
+    #                 #print(assignmentNameCheck + " due time is " + dueDateFinal)
+    #                 assignmentObj['dueDate'] = dueDateFinal
+                   
+    #                 # parses info from date to use in checking if overdue
+    #                 dueDateYear = int(assignment['due_at'][0:4])
+    #                 dueDateMonth = int(assignment['due_at'][5:7])
+    #                 dueDateDay = int(assignment['due_at'][8:10])
+
+    #                 dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+                   
+    #             # startDate should be unlock or created at? 
+    #             # [:-4] gets rid of milliseconds which cause issues with dates
+    #             if (assignment['unlock_at'] == None):
+    #                 # print(assignmentNameCheck + " is null")
+    #                 startDateNone = str(date.today())
+    #                 startDateNone += "T23:59"
+    #                 assignmentObj['startDate'] = startDateNone
+    #             else:
+    #                 # [:-4] gets rid of milliseconds which cause issues with dates
+    #                 # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
+    #                 # assignmentObj['startDate'] = assignment['unlock_at'][:-4]
+    #                 assignDate = assignment['unlock_at'][:-1]
+    #                 assignDate = assignDate.replace('T', " ")
+                  
+    #                 # METHOD 2: Auto-detect zones:
+    #                 from_zone = tz.tzutc()
+    #                 to_zone = tz.tzlocal()
+                
+    #                 utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+    #                 # Tell the datetime object that it's in UTC time zone since 
+    #                 # datetime objects are 'naive' by default
+    #                 utc = utc.replace(tzinfo=from_zone)
+             
+    #                 # Convert time zone
+    #                 unlockTimeFinal = str(utc.astimezone(to_zone))
+
+    #                 # splits unlock time so I can append them to the correct format 
+    #                 unlockDateNew = unlockTimeFinal[0:10]
+    #                 unlockTimeEnd = unlockTimeFinal[13:16]
+    #                 unlockTimeChange = unlockTimeFinal[11:13]
+                    
+    #                  # splits unlock time so I can append them to the correct format 
+    #                 unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
+    #                 #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+    #                 assignmentObj['startDate'] = unlockDateFinal
+                
+    #             assignmentObj['link'] = assignment['html_url']
+    #             assignmentObj['relatedLinks'] = ''
+    #             # descrip = "<h2><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534984/download?verifier=1lviDEMOpbDLX3Z9OkQQtnVxqNSJoga5lGamNUvT\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534984\" data-api-returntype=\"File\">Week 1 Discussion</strong></h2><p>This discussion is meant to introduce you to the discussion process and to your peers. It is set up similar to the weekly discussion, but mostly you will get points just for participating. You will be split into groups of 10–15 other students in the class, this selection is random, and you will be kept with your same group members from week to week, so get to know your new friends/colleagues.&nbsp;</p><p>&nbsp;</p><h3><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534966/download?verifier=luLPvdhYbR8Z4pJaQh5nL2y0gWM2jdoJKU1tdANk\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534966\" data-api-returntype=\"File\">Guidelines</strong></h3><p><span style=\"font-size: 14pt;\">To receive credit for the week:</span></p><ul><li><strong><span style=\"font-size: 14pt;\">note, the following dates are adjusted for this first week, initial responses will normally be due </span><span style=\"font-size: 18.6667px;\">Wednesdays</span><span style=\"font-size: 14pt;\"> and </span><span style=\"font-size: 18.6667px;\">replies</span><span style=\"font-size: 14pt;\"> on Fridays<br></span></strong></li><li><span style=\"background-color: #f1c40f;\"><strong><span style=\"font-size: large;\">Also note, in all future discussions you will be required to copy and paste your initial post into a&nbsp;separate assignment in the modules to check it with TurnItIn. I do not require that for this discussion.</span></strong></span></li><li><span style=\"font-size: 14pt;\"><span style=\"text-decoration: underline;\"><strong>by Friday Jan. 21 11:59pm</strong></span> respond to the prompt below in at least 150 words<br></span></li><li><span style=\"font-size: 14pt;\"><span style=\"text-decoration: underline;\"><strong>by Monday Jan. 24 11:59pm</strong></span> reply to at least two (2) other students' response (no word min.) with a thoughtful response to their reply</span><ul><li><span style=\"font-size: 14pt;\">Perhaps, a classmate asks a question, and you know the answer, you can respond. </span></li><li><span style=\"font-size: 14pt;\">Perhaps you classmate makes a good or interesting point, expand on that.&nbsp;</span></li><li><span style=\"font-size: 14pt;\">Try to respond to to someone that does not have a reply yet.</span></li></ul></li></ul><p>I will also monitor these discussions, and answer questions where I see a need. There are 300 of you in this course though, so I will not be able to respond to everyone each week. If you have a specific question about a topic, feel free to email me or come to my virtual office hours! I am always happy to talk more geology :)</p><p><br>BE RESPECTFUL of everyone. I will have no tolerance for rude, discriminatory, or <span>condescension</span>. If I see this behavior at all, that student will receive a zero credit for this discussion. See full statement in the syllabus.</p><p><strong><span style=\"font-size: 18pt;\">Rubric</span></strong></p><p>To see the Rubric for grading click the radio button in the upper right and \"Show Rubric.\" This will be the same rubric from week to week, but since this is \"about you\" this week, you will earn full points as long as you say something about yourself in at least 150 words and respond to two peers.&nbsp;</p><p><img src=\"https://canvas.tamu.edu/courses/133720/files/36909942/preview?verifier=t7neDCfzXxtdhtwQSBmBmzEnR1ZqZu4athYQwXX7\" alt=\"Select rubric using radio button in upper right corner of discussion page\" width=\"1309\" height=\"361\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36909942\" data-api-returntype=\"File\"></p><p>&nbsp;</p><p><img id=\"716858\" src=\"https://canvas.tamu.edu/courses/133720/files/36534950/preview?verifier=O8bwdnTElOhtFG6p1PZXcgSB1RzZLU5Z8dG0JsAu\" alt=\"magnifying-glass.png\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534950\" data-api-returntype=\"File\"><strong><span style=\"font-size: 18pt;\">The Prompt</span></strong></p><p><span style=\"font-size: 14pt;\">I want to treat this week as a \"get to know each other\" week. This class may be asynchronous, but you still have a community that you belong to, discussions help us remember that. Since you will be working with this group of peers for the next few weeks (I might change up groups half-way through the semester if needed) you should get to know one another. So in 150 or more words, tell us about yourself in as much or as little detail as you wish to provide. Some things you could to talk about:</span></p><ul><li><span style=\"font-size: 14pt;\">your major</span></li><li><span style=\"font-size: 14pt;\">hobbies</span></li><li><span style=\"font-size: 14pt;\">pets</span></li><li><span style=\"font-size: 14pt;\">do you have a favorite rock/mineral?</span></li><li><span style=\"font-size: 14pt;\">what are you looking forward to most in this class?<br></span></li><li><span style=\"font-size: 14pt;\">is this your first asynchronous class? </span><ul><li><span style=\"font-size: 14pt;\">If not, do you have tips for staying on track?</span></li></ul></li><li><span style=\"font-size: 14pt;\">something else?</span></li><li><span style=\"font-size: 14pt;\">Please include a picture, of yourself, your pet, your favorite meme (keep it clean), something that helps us get to know YOU!</span><ul><li><span style=\"font-size: 14pt;\"><span>at the top of the text box will be a little icon of mountains and a sun that says \"images\" when you mouse over</span></span></li><li><span style=\"font-size: 14pt;\"><span>this is used to show you how to upload an image for future discussions</span></span></li><li><a class=\"inline_disabled\" href=\"https://community.canvaslms.com/t5/Student-Guide/How-do-I-embed-an-image-in-a-discussion-reply-as-a-student/ta-p/313\" target=\"_blank\"><span style=\"font-size: 14pt;\"><span>Canvas Guide on How to Embed an image in a post/reply</span></span></a></li></ul></li><li><span style=\"font-size: 14pt;\">ASK a question! What do you want to know about your peers? Do you want advice for studying? Do you want advice for a good coffee place in town?&nbsp;</span></li></ul><p>&nbsp;</p><h3><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534892/download?verifier=i47lB0P1Vf0QQvhJTig99hRn5Ct3p1ywJNA06P8F\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534892\" data-api-returntype=\"File\">Technical Support</strong></h3><p>Need help using Canvas Discussions? If so, please review the following guide:</p><ul><li><a class=\"external\" title=\"\" href=\"https://community.canvaslms.com/docs/DOC-10701#jive_content_id_Discussions\" target=\"_blank\"><span>Canvas Student Guide - Discussions</span></a></li></ul>"
+    #             # descrip = "<p><strong>Consider 1</strong> of the 7 principles to universal design from the video.&nbsp;</p><p><iframe title="YouTube video player" src="https://www.youtube.com/embed/G-tHuD7R8cs/" width="560" height="315" allowfullscreen="allowfullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></p><p><span style="text-decoration: underline;">7 Principles of Universal Design:</span></p><ol><li>Equitable use</li><li>Flexibility in use</li><li>Simple and intuitive use</li><li>Perceptible information</li><li>Tolerance for error</li><li>Low physical effort</li><li>Size and space for approach and use</li></ol><p><strong>Discuss</strong> how this principle applies to software.&nbsp; You can support your discussion with a specific example.</p>"
+    #             if (assignment['description'] == None):
+    #                 assignmentObj['notes'] = ""
+    #             else:
+    #                 desc = replaceQuote(assignment['description'])
+    #             # print("DESC: " + desc)
+    #                 assignmentObj['notes'] = desc
+    #             #assignment['description']
+               
+
+    #             #check if the assignment has a submission
+    #             # submission = assignment['has_submitted_submissions']
+    #             # if(submission == False):
+    #             #     assignmentObj['complete'] = False
+    #             # else:    
+    #             #     assignmentObj['complete'] = True
+    #             # dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+
+    #             assignmentObj['complete'] = False
+    #             if (dueDate != None):
+    #                 delta = dueDate - date.today()
+    #                 # print("Delta is " + delta)
+    #                 ##checks if assignment is less than one day overdue, if not then displays
+    #                 isNotPastAssignment = delta > timedelta(days = 1)
+    #                 if(isNotPastAssignment):
+    #                     assignmentList.append(assignmentObj)
+    #                 else:
+    #                     pass
+    #                     #print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+    #             else:
+    #                 assignmentList.append(assignmentObj)
+
+    #             # assignmentList.append(assignmentObj)
+    #         elif (assignmentType == 'Discussion'):
+    #             #assignmentNameCheck = checkInvalidChar(assignment['title'])
+    #             # need to make another call to get assignment info
+    #             content_id = str(assignmentCheck['content_id'])
+
+    #             url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/discussion_topics/"+content_id+"/"
+
+    #             #eventually will take bearer token as an argument
+    #             token = tokenDict['token']
+    #             # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+    #             headers = {'Authorization' : 'Bearer '+ token}
+
+    #             resp = requests.get(url, headers=headers)
+       
+    #             assignment = resp.json()
+    #             # TODO: Noticed some dates are null for assignments need to check
+    #             # assignmentList = []
+    #             #create a new assignmentObj to make JSON
+             
+    #             assignmentObj = {}
+    #             assignmentNameCheck = checkInvalidChar(assignment['assignment']['name'])
+               
+    #             assignmentObj['name'] = "Canvas " + assignmentNameCheck
+    #             assignmentObj['class'] = courseName
+    #             assignmentObj['priority'] = 3
+    #             # issues with due date being null
+    #             if (assignment['assignment']['due_at'] == None):
+    #                 # print(assignmentNameCheck + " is null")
+    #                 dueDateNone = str(date.today())
+    #                 dueDateNone += "T23:59"
+    #                 assignmentObj['dueDate'] = dueDateNone
+    #                 dueDate = None
+    #             else:
+    #                 # [:-4] gets rid of milliseconds which cause issues with dates
+    #                 assignDate = assignment['assignment']['due_at'][:-1]
+    #                 assignDate = assignDate.replace('T', " ")
+                 
+    #                 # METHOD 2: Auto-detect zones:
+    #                 from_zone = tz.tzutc()
+    #                 to_zone = tz.tzlocal()
+    #                 # utc = datetime.utcnow()
+    #                 utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+    #                 # Tell the datetime object that it's in UTC time zone since 
+    #                 # datetime objects are 'naive' by default
+    #                 utc = utc.replace(tzinfo=from_zone)
+                  
+    #                 # Convert time zone
+    #                 dueTimeFinal = str(utc.astimezone(to_zone))
+
+    #                 # parses info from date to use in final date
+    #                 dueDateNew = dueTimeFinal[0:10]
+    #                 dueTimeEnd = dueTimeFinal[13:16]
+    #                 dueTimeChange = dueTimeFinal[11:13]
+        
+    #                 # parses info from date to use in final date
+    #                 dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
+    #                 #print(assignmentNameCheck + " due time is " + dueDateFinal)
+    #                 assignmentObj['dueDate'] = dueDateFinal
+
+    #                 # parses info from date to use in checking if overdue
+    #                 dueDateYear = int(assignment['assignment']['due_at'][0:4])
+    #                 dueDateMonth = int(assignment['assignment']['due_at'][5:7])
+    #                 dueDateDay = int(assignment['assignment']['due_at'][8:10])
+    #                 dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+                  
+
+                
+    #             if (assignment['assignment']['unlock_at'] == None):
+    #                 # print(assignmentNameCheck + " is null")
+    #                 startDateNone = str(date.today())
+    #                 startDateNone += "T23:59"
+    #                 assignmentObj['startDate'] = startDateNone
+    #             else:
+    #                 # [:-1] gets rid of Z which cause issues with dates
+
+    #                 assignDate = assignment['assignment']['unlock_at'][:-1]
+    #                 assignDate = assignDate.replace('T', " ")
+                  
+    #                 # METHOD 2: Auto-detect zones:
+    #                 from_zone = tz.tzutc()
+    #                 to_zone = tz.tzlocal()
+                
+    #                 utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+    #                 # Tell the datetime object that it's in UTC time zone since 
+    #                 # datetime objects are 'naive' by default
+    #                 utc = utc.replace(tzinfo=from_zone)
+             
+    #                 # Convert time zone
+    #                 unlockTimeFinal = str(utc.astimezone(to_zone))
+
+    #                 # parses info from date to use in final date
+    #                 unlockDateNew = unlockTimeFinal[0:10]
+    #                 unlockTimeEnd = unlockTimeFinal[13:16]
+    #                 unlockTimeChange = unlockTimeFinal[11:13]
+                    
+    #                 # splits unlock time so I can append them to the correct format 
+    #                 unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
+    #                 #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+    #                 assignmentObj['startDate'] = unlockDateFinal
+                    
+    #             assignmentObj['link'] = assignment['html_url']
+    #             assignmentObj['relatedLinks'] = ''
+    #             if (assignment['assignment']['description'] == None):
+    #                 assignmentObj['notes'] = ""
+    #             else:
+    #                 desc = replaceQuote(assignment['assignment']['description'])
+    #             # print("DESC: " + desc)
+    #                 assignmentObj['notes'] = desc
+               
+           
+    #             #check if the assignment has a submission
+    #             # submission = assignment['has_submitted_submissions']
+    #             # if(submission == False):
+    #             #     assignmentObj['complete'] = False
+    #             # else:    
+    #             #     assignmentObj['complete'] = True
+
+    #             assignmentObj['complete'] = False
+
+    #             if (dueDate != None):
+    #                 delta = dueDate - date.today()
+    #                 ##checks if assignment is less than one day overdue, if not then displays
+    #                 isNotPastAssignment = delta > timedelta(days = 1)
+    #                 if(isNotPastAssignment):
+    #                     assignmentList.append(assignmentObj)
+    #                 else:
+    #                     pass
+    #             else:
+    #                 assignmentList.append(assignmentObj)
+
+    #         elif (assignmentType == 'Assignment'):
+    #             # need to make another call to get assignment info
+    #             content_id = str(assignmentCheck['content_id'])
+
+    #             url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments/"+content_id+"/"
+
+    #             #eventually will take bearer token as an argument
+    #             token = tokenDict['token']
+    #             # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+    #             headers = {'Authorization' : 'Bearer '+ token}
+
+    #             resp = requests.get(url, headers=headers)
+            
+    #             assignment = resp.json()
+        
+    #             # loops through current class assignmnent
+    #             # puts everything required into assignmentObj
+    #             # TODO: Noticed some dates are null for assignments need to check
+    #             assignmentObj = {}
+    #             assignmentNameCheck = checkInvalidChar(assignment['name'])
+    #             assignmentObj['name'] = "Canvas " + assignmentNameCheck
+    #             assignmentObj['class'] = courseName
+    #             assignmentObj['priority'] = 3
+    #             # issues with due date being null
+    #             if (assignment['due_at'] == None):
+    #                 dueDateNone = str(date.today())
+    #                 dueDateNone += "T23:59"
+    #                 assignmentObj['dueDate'] = dueDateNone
+    #                 dueDate = None
+    #             else:
+    #                 # [:-4] gets rid of milliseconds which cause issues with dates
+
+    #                 assignDate = assignment['due_at'][:-1]
+    #                 assignDate = assignDate.replace('T', " ")
+                  
+    #                 # METHOD 2: Auto-detect zones:
+    #                 from_zone = tz.tzutc()
+    #                 to_zone = tz.tzlocal()
+                
+    #                 utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+    #                 # Tell the datetime object that it's in UTC time zone since 
+    #                 # datetime objects are 'naive' by default
+    #                 utc = utc.replace(tzinfo=from_zone)
+             
+    #                 # Convert time zone
+    #                 dueTimeFinal = str(utc.astimezone(to_zone))
+
+    #                 # parses info from date to use in final date
+    #                 dueDateNew = dueTimeFinal[0:10]
+    #                 dueTimeEnd = dueTimeFinal[13:16]
+    #                 dueTimeChange = dueTimeFinal[11:13]
+                    
+    #                 # splits due time so I can append them to the correct format 
+    #                 dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
+    #                 assignmentObj['dueDate'] = dueDateFinal
+
+    #                 # parses info from date to use in checking if overdue
+    #                 dueDateYear = int(assignment['due_at'][0:4])
+    #                 dueDateMonth = int(assignment['due_at'][5:7])
+    #                 dueDateDay = int(assignment['due_at'][8:10])
+
+    #                 dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+               
+    #             # startDate should be unlock or created at? 
+    #             # [:-1] gets rid of Z which cause issues with dates
+    #             if (assignment['unlock_at'] == None):
+    #                 # print(assignmentNameCheck + " is null")
+    #                 startDateNone = str(date.today())
+    #                 startDateNone += "T23:59"
+    #                 assignmentObj['startDate'] = startDateNone
+    #             else:
+    #                 # [:-1] gets rid of Z which cause issues with dates
+                
+    #                 assignDate = assignment['unlock_at'][:-1]
+    #                 assignDate = assignDate.replace('T', " ")
+                  
+    #                 # METHOD 2: Auto-detect zones:
+    #                 from_zone = tz.tzutc()
+    #                 to_zone = tz.tzlocal()
+                
+    #                 utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+    #                 # Tell the datetime object that it's in UTC time zone since 
+    #                 # datetime objects are 'naive' by default
+    #                 utc = utc.replace(tzinfo=from_zone)
+             
+    #                 # Convert time zone
+    #                 unlockTimeFinal = str(utc.astimezone(to_zone))
+
+    #                 # parses info from date to use in final date
+    #                 unlockDateNew = unlockTimeFinal[0:10]
+    #                 unlockTimeEnd = unlockTimeFinal[13:16]
+    #                 unlockTimeChange = unlockTimeFinal[11:13]
+
+    #                 # splits unlock time so I can append them to the correct format 
+    #                 unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
+    #                 #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+    #                 assignmentObj['startDate'] = unlockDateFinal
+                
+    #             assignmentObj['link'] = assignment['html_url']
+    #             assignmentObj['relatedLinks'] = ''
+    #             # pass in description to use later in assignment section (not atm)
+    #             if (assignment['description'] == None):
+    #                 assignmentObj['notes'] = ""
+    #             else:
+    #                 desc = replaceQuote(assignment['description'])
+    #             # print("DESC: " + desc)
+    #                 assignmentObj['notes'] = desc
+    #             # assignmentObj['notes'] = '<p><strong>Consider 1</strong> of the 7 principles to universal design from the video.&nbsp;</p>'
+    #             #assignment['description']
+
+
+    #             #check if the assignment has a submission NOT IN CANVAS>?
+    #             # submission = assignment['has_submitted_submissions']
+    #             # if(submission == False):
+    #             #     assignmentObj['complete'] = False
+    #             # else:    
+    #             #     assignmentObj['complete'] = True
+                
+    #             assignmentObj['complete'] = False
+
+    #             if (dueDate != None):
+    #                 delta = dueDate - date.today()
+    #                 # print("Delta is " + delta)
+    #                 ##checks if assignment is less than one day overdue, if not then displays
+    #                 isNotPastAssignment = delta > timedelta(days = 1)
+    #                 if(isNotPastAssignment):
+    #                     assignmentList.append(assignmentObj)
+    #                 else:
+    #                     #print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+    #                     pass
+    #             else:
+    #                 assignmentList.append(assignmentObj)
+
+                
+    #         else:
+    #             continue
+        # print("End of Module")  
+
+
+
+        # create classobj for each class
+        # classObj = {}
+        # classObj['name'] = courseName
+        # classObj['color'] = 'rgb(162, 214, 161);'
+        # classObj['assignments'] = assignmentList
+        # classObj['order'] = order
+
+    courseNameUnderScores = courseName.replace(' ','_')
     ##write classObj to JSON file
-    with open("./static/Scripts/Canvas"+courseName+".json", "w") as outfile:
+    with open("./static/Scripts/Canvas"+courseNameUnderScores+".json", "w") as outfile:
         json.dump(classObj, outfile) 
     session.pop("courseINFO", None)
     jsonStr = json.dumps(classObj)
@@ -1354,6 +1500,15 @@ def replaceQuote(description):
 
 @app.route("/bgSendSMS", methods = ['GET', 'POST'])
 def sendSMS():
+    assignmentsDue = json.loads(request.data)
+    # print(assignmentsDue)
+    msg = "These assignments are due in the next " + assignmentsDue['daysDue'] + " days: \n \n" 
+
+    for x in assignmentsDue['name']:
+        addAssignment = str(x)
+        msg +=  addAssignment + "\n" + "\n"
+
+    # print(msg)
     client = vonage.Client(key="5044506d", secret="mBJC1FV1dl8HxgMA")
     sms = vonage.Sms(client)
 
@@ -1361,7 +1516,7 @@ def sendSMS():
         {
             "from": "18889095613",
             "to": "18327953595",
-            "text": "Test Text from Python.",
+            "text": msg,
         }
     )
     print("responseData is : ")
