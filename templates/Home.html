@@ -70,7 +70,12 @@
 				<div class="ClassAssignmentsOutline">
 					<div class="NewClassName">
 						<form class="Font2">
-							Enter the Class Name: <input type="text" id="InputClassName" placeholder="Ex. 'CSCE 315'">
+							
+							Enter the Class Name: 
+							<div class="tooltipAddClass">
+								<input type="text" class="Font1" id="InputClassName" placeholder="Ex. 'CSCE 315'"> 
+								<div class="tooltipTextClass"><p>Names cannot contain '_' or letters specific to another language.</p> <p> The name cannot match an existing class you already added.</p></div>
+							</div>
 							<button class="SubmitButton Font1" type="button" value="" onclick="AddClass()">Submit</button>
 						</form>
 					</div>
