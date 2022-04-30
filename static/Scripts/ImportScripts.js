@@ -44,10 +44,65 @@ function  ImportAPICanvas(){
 }
 
 function sendSMS(){
+    // $.ajax({
+    //     url:"/bgLoadUserClasses",
+    //     type: "GET",
+    //     contentType: "application/json",
+    //     success: function (response){
+    //         DBclassList = JSON.parse(response);
+    //         //alert(typeof(DBclassList))
+    //         //console.log(DBclassList);
+            // DBclassList.forEach(newClassObj => {
+                // 		var jsonObj = JSON.stringify(newClassObj);
+                        
+                // 		newClassObj.assignments.forEach(assignment => {
+                // 			// timeDiff = assignment.dueDate - assignment.startDate;
+                // 			// console.log(timeDiff);
+                // 			var timeLeft = String(getTimeLeftLargestNonZero(assignment.dueDate));
+                // 			console.log(timeLeft);
+                // 			var dayDue = timeLeft.split(" ")[0];
+                // 			// var check = timeLeft.split(" ");
+                // 			var hourCheck = timeLeft.substr(timeLeft.indexOf(' ') + 1);
+                // 			// console.log(hourCheck);
+                // 			// var hourCheck = 
+                // 			// 3 is the days we'll look forward to reminding user for now 
+                // 			// "these assignments are due in 3 days"
+                // 			// assignmentList.push(assignment.name);
+                // 			if (dayDue == 4 || hourCheck == "Hours" || hourCheck == "Hour")
+                // 			{
+                // 				console.log(assignment.name);
+                // 				assignmentList.push(assignment.name);
+                // 				dueDict["name"] = assignmentList;
+                // 				dueDict["daysDue"] = String(4);
+                // 			}
+                // 		})
+                // 		console.log("DUE DICT");
+                // 		console.log(dueDict);
+                // 		localStorage.setItem(newClassObj.name, jsonObj);
+                //     });
+                // 	dueStuff = JSON.stringify(dueDict);
+                // 	$.ajax({
+                // 		url:"/bgSendSMS",
+                // 		type: "POST",
+                // 		contentType: "application/json",
+                // 		data: dueStuff,
+                // 		success: function (){
+                // 			// classList = JSON.parse(response);
+                // 			// assignmentGooglePop(classList);
+                // 			// storeGoogleImports(classList);
+                // 			console.log("SMS Sent Successfully");
+                // 		}
+                // 	});
+    //         loadPage(DBclassList);
+    //     }
+    // });
+
+    dueAssignments = JSON.stringify(dueDict);
     $.ajax({
         url:"/bgSendSMS",
         type: "POST",
         contentType: "application/json",
+        data: dueAssignments,
         success: function (){
             // classList = JSON.parse(response);
             // assignmentGooglePop(classList);
