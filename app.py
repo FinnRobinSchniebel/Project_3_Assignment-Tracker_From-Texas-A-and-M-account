@@ -26,6 +26,9 @@ from flask import request
 from flask import jsonify 
 from flask import session
 
+#SMS notif
+# import vonage
+
 from flask import Flask
 from flask import flash
 from flask_wtf import FlaskForm
@@ -339,14 +342,14 @@ def refreshGoogleJSONs():
 
 ##create signup form
 class CreateAccountForm(FlaskForm):
-    email = StringField("Enter valid email address", validators=[DataRequired()])
+    email = StringField("Enter valid Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     confirm = PasswordField("Confrim Password", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 #login form
 class LoginForm(FlaskForm):
-    email = StringField("Enter valid email address", validators=[DataRequired()])
+    email = StringField("Enter valid Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
@@ -917,7 +920,9 @@ def getCanvasAssignments():
                 # issues with due date being null
                 if (assignment['due_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['dueDate'] = ''
+                    dueDateNone = str(date.today())
+                    dueDateNone += "T23:59"
+                    assignmentObj['dueDate'] = dueDateNone
                     dueDate = None
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
@@ -960,7 +965,9 @@ def getCanvasAssignments():
                 # [:-4] gets rid of milliseconds which cause issues with dates
                 if (assignment['unlock_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['startDate'] = ''
+                    startDateNone = str(date.today())
+                    startDateNone += "T23:59"
+                    assignmentObj['startDate'] = startDateNone
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
                     # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
@@ -1011,6 +1018,8 @@ def getCanvasAssignments():
                 # else:    
                 #     assignmentObj['complete'] = True
                 # dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+
+                assignmentObj['complete'] = False
                 if (dueDate != None):
                     delta = dueDate - date.today()
                     # print("Delta is " + delta)
@@ -1043,19 +1052,19 @@ def getCanvasAssignments():
                 # TODO: Noticed some dates are null for assignments need to check
                 # assignmentList = []
                 #create a new assignmentObj to make JSON
-                # print(assignment)
-                # print(assignment)
+             
                 assignmentObj = {}
                 assignmentNameCheck = checkInvalidChar(assignment['assignment']['name'])
-                # print(assignmentNameCheck)
-                # print(assignmentNameCheck)
+               
                 assignmentObj['name'] = "Canvas " + assignmentNameCheck
                 assignmentObj['class'] = courseName
                 assignmentObj['priority'] = 3
                 # issues with due date being null
                 if (assignment['assignment']['due_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['dueDate'] = ''
+                    dueDateNone = str(date.today())
+                    dueDateNone += "T23:59"
+                    assignmentObj['dueDate'] = dueDateNone
                     dueDate = None
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
@@ -1095,7 +1104,9 @@ def getCanvasAssignments():
                 
                 if (assignment['assignment']['unlock_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['startDate'] = ''
+                    startDateNone = str(date.today())
+                    startDateNone += "T23:59"
+                    assignmentObj['startDate'] = startDateNone
                 else:
                     # [:-1] gets rid of Z which cause issues with dates
 
@@ -1133,8 +1144,7 @@ def getCanvasAssignments():
                     desc = replaceQuote(assignment['assignment']['description'])
                 # print("DESC: " + desc)
                     assignmentObj['notes'] = desc
-                # assignmentObj['notes'] = '<p><strong>Consider 1</strong> of the 7 principles to universal design from the video.&nbsp;</p>'
-                #assignment['assignment']['description']
+               
            
                 #check if the assignment has a submission
                 # submission = assignment['has_submitted_submissions']
@@ -1143,22 +1153,20 @@ def getCanvasAssignments():
                 # else:    
                 #     assignmentObj['complete'] = True
 
+                assignmentObj['complete'] = False
+
                 if (dueDate != None):
                     delta = dueDate - date.today()
-                    # print("Delta is " + delta)
                     ##checks if assignment is less than one day overdue, if not then displays
                     isNotPastAssignment = delta > timedelta(days = 1)
                     if(isNotPastAssignment):
                         assignmentList.append(assignmentObj)
                     else:
-                        #print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
                         pass
                 else:
                     assignmentList.append(assignmentObj)
 
-                # assignmentList.append(assignmentObj)
             elif (assignmentType == 'Assignment'):
-                #assignmentNameCheck = checkInvalidChar(assignment['title'])
                 # need to make another call to get assignment info
                 content_id = str(assignmentCheck['content_id'])
 
@@ -1183,7 +1191,9 @@ def getCanvasAssignments():
                 assignmentObj['priority'] = 3
                 # issues with due date being null
                 if (assignment['due_at'] == None):
-                    assignmentObj['dueDate'] = ''
+                    dueDateNone = str(date.today())
+                    dueDateNone += "T23:59"
+                    assignmentObj['dueDate'] = dueDateNone
                     dueDate = None
                 else:
                     # [:-4] gets rid of milliseconds which cause issues with dates
@@ -1224,7 +1234,9 @@ def getCanvasAssignments():
                 # [:-1] gets rid of Z which cause issues with dates
                 if (assignment['unlock_at'] == None):
                     # print(assignmentNameCheck + " is null")
-                    assignmentObj['startDate'] = ''
+                    startDateNone = str(date.today())
+                    startDateNone += "T23:59"
+                    assignmentObj['startDate'] = startDateNone
                 else:
                     # [:-1] gets rid of Z which cause issues with dates
                 
@@ -1274,6 +1286,7 @@ def getCanvasAssignments():
                 # else:    
                 #     assignmentObj['complete'] = True
                 
+                assignmentObj['complete'] = False
 
                 if (dueDate != None):
                     delta = dueDate - date.today()
@@ -1338,6 +1351,29 @@ def replaceQuote(description):
   
      
     return description
+
+@app.route("/bgSendSMS", methods = ['GET', 'POST'])
+def sendSMS():
+    client = vonage.Client(key="5044506d", secret="mBJC1FV1dl8HxgMA")
+    sms = vonage.Sms(client)
+
+    responseData = sms.send_message(
+        {
+            "from": "18889095613",
+            "to": "18327953595",
+            "text": "Test Text from Python.",
+        }
+    )
+    print("responseData is : ")
+    print(responseData)
+    if responseData["messages"][0]["status"] == "0":
+        print("Message sent successfully.")
+        return True
+    else:
+        print(f"Message failed with error: {responseData['messages'][0]['error-text']}")
+        return False
+
+    return False
 
 # def removeEndTime(date):
 
