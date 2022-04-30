@@ -736,6 +736,28 @@ function DeleteRequest(id, requesttype){
     //todo
 }
 
+/**
+ * This function is called by the remove phone number button
+ */
+function RemovePhoneNumberButton(){
+    //call function do deal with db
+    document.getElementById('PhoneNumberField').value ='';
+
+}
+/**
+ * Called by set phone number button
+ */
+function AddNumberButton(){
+    var number = document.getElementById('PhoneNumberField').value;
+    var numWithoutDash = number.replace('-', '');
+    if(numWithoutDash.length != 10){
+        alert("This is not a valid number. Please follow the format 'xxx-xxx-xxxx'");
+        return;
+    }
+    //call function for working with database here
+
+}
+
 // }
 //this function will remove temp objects when leaving page
 window.onbeforeunload = function(){
