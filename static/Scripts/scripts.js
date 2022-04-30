@@ -28,8 +28,18 @@ function addAssignment(className, classID){
 function AddClass(){
     // input from user
     var inputClassNameDisplay =  document.getElementById("InputClassName").value;
+
     // takes the space away to ensure variables are properly named
     inputClassNameDisplay = inputClassNameDisplay.trim();
+
+    if(inputClassNameDisplay.includes('_') === true){
+        alert("This is not a valid class name. Please make sure the name contains no _ in it");
+        return;
+    }
+    if(getClass(inputClassNameDisplay) != null){
+        alert("class already exists. Please use a different name");
+        return;
+    }
 
     //Add assignment will also call storeClass into local storage
     let emptyClass = [];

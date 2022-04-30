@@ -43,6 +43,9 @@ function getClass(className){
         if(classObj.name == className){
             return classObj;
         }
+        else if(i == 0){ //if i is 0 and the last element has been checked
+            return null;
+        }
     } 
 }
 
