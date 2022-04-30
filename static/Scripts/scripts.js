@@ -1,20 +1,20 @@
-function addAssignment(className){
+function addAssignment(className, ClassID){
     // inputs taken from user 
     // to make it dynamic, takes className from Parameter and is used to find the -
     // associated ID for variables
-    var newAssignmentDisplay = document.getElementById(''+className+'Name').value;
+    var newAssignmentDisplay = document.getElementById(''+ClassID+'Name').value;
     // takes the space away to ensure variables are properly named
-    var startTime = document.getElementById(''+className+'Start').value; //"`+inputClassName+`Start"
-    var endTime = document.getElementById(''+className+'End').value;
+    var startTime = document.getElementById(''+ClassID+'Start').value; //"`+inputClassName+`Start"
+    var endTime = document.getElementById(''+ClassID+'End').value;
     //console.log(endTime);
-    var noteDetails = document.getElementById(''+className+'Notes').value;
-    var priority = document.getElementById("PriorityCreate" + className).value;
+    var noteDetails = document.getElementById(''+ClassID+'Notes').value;
+    var priority = document.getElementById("PriorityCreate" + ClassID).value;
 
     //when these two variables are included in the html code below
     //assignment causes whole class to close
     //************************************** */
-    var relatedLinks = document.getElementById(''+className+'RelatedLinks').value;
-    var link = document.getElementById(''+className+'Link').value;
+    var relatedLinks = document.getElementById(''+ClassID+'RelatedLinks').value;
+    var link = document.getElementById(''+ClassID+'Link').value;
     
     
     //adds assignment to class in localstorage
@@ -236,7 +236,7 @@ function PopulateClass(className, closest, assignmentcount){
                                         <option value="5">5</option>
                                     </select>
                                 </div>
-                                <button class="btn btn-primary" onclick="addAssignment('`+inputClassName+`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-primary" onclick="addAssignment('`+inputClassName+`', '` + importClassName +`')" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     submit
                                 </button>
                             </div>
