@@ -142,8 +142,8 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
         canvasLocation: canvasClass
     };
 
-    var assignmentJSON = JSON.stringify(newAssignment)
-    addAssignmentToClassDB(assignmentJSON)
+    var assignmentJSON = JSON.stringify(newAssignment);
+    addAssignmentToClassDB(assignmentJSON);
 
     var classList = getClassList(); //array of class objects
     
@@ -158,7 +158,15 @@ function addAssignmentToClass(assignmentName, className, assignmentPriority, ass
     });
 
 }
-//delete assignment does not work
+
+
+
+/**
+ * deletes existing class of an assignment and replaces
+ * it with a class without the inputted assignment
+ * @param {*} className Name of inputted class name WITH spaces
+ * @param {*} assignmentID Name of assignment WITH underscores
+ */
 function deleteAssignment(className, assignmentID){
     assignmentName = assignmentID.replaceAll("_", " ");
     console.log(className+ " " + assignmentName);
@@ -167,7 +175,7 @@ function deleteAssignment(className, assignmentID){
     var assignmentObj = getAssignment(className, assignmentName);
     var assignmentList = classObj.assignments;
 
-    console.log("DELETE: AssignmentOBJ: "+ assignmentName)
+    console.log("DELETE: AssignmentOBJ: "+ assignmentName);
     //find index of assignment in array that needs to be removed
     var indexToRemove = assignmentList.findIndex(myAssignment =>{
         return myAssignment.name == assignmentObj.name;
@@ -202,13 +210,15 @@ function removeAssignment(className, assignmentName, assignmentDiv){
    
 }
 
+
 /**
- * Removes classes 
- * @param {*} inputClassName 
+ * 
+ * Removes HTML code of a User's class and calls deleteClass()
+ * @param {} inputClassName 
  */
 function removeClass(inputClassName){
     // input from user
-    var classDiv = inputClassName.replaceAll(' ', "_");
+    var classDiv = inputClassName.replaceAll(" ", "_");
 
     //used to remove class
     const element = document.getElementById(classDiv+ 'Section');
@@ -350,8 +360,7 @@ function completeButton(assignmentName,className){
 //this function is called when the color picker changes
 //this function stores the new color into local storage
 function changeClassColor(className){
-    var classID = classname.replaceAll(" ", "_");
-
+    var classID = className.replaceAll(" ", "_");
     let color = document.getElementById(classID+'ColorPicker').value;
     var RGB = parseColor(color);
 
@@ -390,6 +399,7 @@ function changeClassColor(className){
     });
 
     var classObj = JSON.stringify(getClass(className));
+    console.log(classObj);
     $.ajax({
         url:"/bgUpdateClass",
         type: "POST",
