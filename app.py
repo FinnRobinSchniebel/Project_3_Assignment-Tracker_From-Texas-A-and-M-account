@@ -36,6 +36,7 @@ from flask import request
 from flask import jsonify 
 from flask import session
 from flask_wtf import FlaskForm
+from sqlalchemy import outerjoin
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired
 from flask import url_for
@@ -44,13 +45,21 @@ from flask import redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+#pip install flask_assets for this to work
+from flask_assets import Bundle, Environment
 
 #import threading
 import time
 
-
+js = Bundle('Scripts/HTMLColor.js', 'Scripts/AssignmentCreatingScripts.js', 'Scripts/SortScript.js', 'Scripts/JSONGetsAndSets.js', 'Scripts/scripts.js', 'Scripts/QuickViewScript.js', output='gen/home.js')
+js2 = Bundle('Scripts/HTMLColor.js', 'Scripts/scripts.js', 'Scripts/QuickViewScript.js','Scripts/JSONGetsAndSets.js','Scripts/SortScript.js','Scripts/AssignmentCreatingScripts.js', output='gen/quick.js')
+js3 = Bundle('Scripts/JSONGetsAndSets.js', 'Scripts/ImportScripts.js', 'Scripts/AssignmentCreatingScripts.js', 'Scripts/scripts.js', output='gen/import.js')
 app = Flask(__name__)
 
+assets = Environment(app)
+assets.register('home_js', js)
+assets.register('quick_js', js2)
+assets.register('import_js', js3)
 
 #Google Scopes
 SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly', 'https://www.googleapis.com/auth/classroom.coursework.me']
