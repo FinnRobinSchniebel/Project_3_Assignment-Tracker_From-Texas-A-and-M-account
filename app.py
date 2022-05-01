@@ -1080,25 +1080,63 @@ def replaceQuote(description):
   
      
     return description
-    
+
+
+def loadClassesNotif():
+    userClassList = getUserClasses(current_user.id)
+    #app.logger.info(json.dumps(userClassList))
+    print("USER CLASSES")
+    print()
+    return userClassList
+
 @app.route("/bgSendSMS", methods = ['GET', 'POST'])
 def sendSMS():
     assignmentsDue = json.loads(request.data)
+    assignDict = {}
+    assignList = []
     # would check if user no longer wants notifications
     # stop running in background (once implementing)
-    # if (assignmentsDue['notifCheck'] == False){
-        #Users.query.filter_by(id = userID).first().Phone = ''
-    # }
+    if (assignmentsDue['notifCheck'] == False):
+        Users.query.filter_by(id = userID).first().Phone = ''
     # Users.query.filter_by(id = userID).first().Phone = assignmentsDue['phoneNum']
     # print(assignmentsDue)
+    else:
+        Users.query.filter_by(id = userID).first().Phone = assignmentsDue['phoneNum'] 
+        userClasses = loadClassesNotif()
+        #loops through the user's current classes and assignments
+        for classes in userClasses:
+            for assignments in classes['assignments']:
+
+                # parse dates to compare correctly 
+                dueDateYear = int(assignments['dueDate'][0:4])
+                dueDateMonth = int(assignments['dueDate'][5:7])
+                dueDateDay = int(assignments['dueDate'][8:10])
+                dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+
+                # finds how many days til assignment is due
+                delta = dueDate - date.today()
+                dayDue = str(delta)[0:1]
+                
+                # checks for overdue assignment
+                if (dayDue == "-"):
+                    # print("BAD")
+                    continue
+
+                dayDue = int(dayDue)
+
+                if (dayDue <= 3):
+                    assignList.append(assignments['name'])
+                    assignDict['assignment'] = assignList
+
+    print("Assign Dict")
+    print(assignDict)
     msg = "These assignments are due in the next " + assignmentsDue['daysDue'] + " days: \n \n" 
 
-    if (len(assignmentsDue['name']) == 0):
+    if (assignDict == {}):
         msg = "There are no assignments due in the next " + assignmentsDue['daysDue'] + " days."
     else:
-        for x in assignmentsDue['name']:
-            addAssignment = str(x)
-            msg +=  addAssignment + "\n" + "\n"
+        for assignName in assignDict['assignment']:
+            msg +=  assignName + "\n" + "\n"
 
     print(msg)
     # client = vonage.Client(key="5044506d", secret="mBJC1FV1dl8HxgMA")
