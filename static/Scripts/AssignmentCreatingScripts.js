@@ -56,6 +56,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var isQuick =0; //is this a quick view item
     if(Location == ""){
+        console.log(ClassNameAssignment);
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{

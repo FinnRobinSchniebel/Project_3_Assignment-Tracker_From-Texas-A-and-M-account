@@ -138,9 +138,9 @@ def getUserClasses(userID):
     else:
         returnList = json.loads(classText)
 
-    print("getUserClasses ReturnList: "+ str(type(returnList)))
-    print(returnList)
-    sys.stdout.flush()
+    # print("getUserClasses ReturnList: "+ str(type(returnList)))
+    # print(returnList)
+    # sys.stdout.flush()
     return returnList
 
 #this function takes in a classObj
@@ -519,10 +519,10 @@ def deleteClass():
     for i in range(len(userClassList)):
         if(userClassList[i]['name'] == classObj['name']):
             #app.logger.info("DELETING: " + userClassList[i]['name'])
-            print("DELETING: " + userClassList[i]['name'])   
+            #print("DELETING: " + userClassList[i]['name'])   
             userClassList.remove(userClassList[i])
             break     
-    print(userClassList)
+    #print(userClassList)
     sys.stdout.flush()
     if(len(json.dumps(userClassList)) == 0):
         Users.query.filter_by(id = current_user.id).first().classes = '{}'
@@ -784,8 +784,8 @@ def getGoogleJSONs():
 
 
             ##write classObj to JSON file
-            with open("./static/Scripts/googleClassObjs.json", "w") as outfile:
-                json.dump(classList, outfile) 
+            # with open("./static/Scripts/googleClassObjs.json", "w") as outfile:
+            #     json.dump(classList, outfile) 
 
             jsonStr = json.dumps(classList)
             return jsonStr
@@ -814,7 +814,8 @@ def getCanvasCourses():
     url = "https://canvas.tamu.edu/api/v1/courses?include=items&per_page=1000/"
 
     #eventually will take bearer token as an argument
-    token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+    #token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+    token = Users.query.filter_by(id = current_user.id).first().canvasBearer
     headers = {'Authorization' : 'Bearer '+ token}
 
     resp = requests.get(url, headers=headers)
@@ -839,7 +840,7 @@ def getCanvasCourses():
 
             # creates Dict of needed courseINFO
             courseDict = {}
-            courseDict['name'] = course["name"]  
+            courseDict['name'] = checkInvalidChar(course["name"])
             courseDict['id'] = courseID
             courseDict['order'] = orderCount
             orderCount += 1
@@ -853,7 +854,7 @@ def getCanvasCourses():
 app.secret_key = 'dljsaklqk24e21cjn!Ew@@dsa5'
 @app.route('/bgGetUserToken', methods=['POST'])
 def get_post_json():   
-
+    #15924~KJuUhLJlwLsiJtdeMxfBRsLUqCke0oLpL3HXAbGbJA27hdtWUeXplyWFshm9yFGS (Fred Token)
     # stores user Token 
     tokenDictionary = json.loads(request.data)
 
@@ -891,7 +892,7 @@ def getCanvasAssignments():
 
     courseDict = {}
     # takes Token from session to use to access APIs
-    token = Users.query.filter_by(current_user.id).first().canvasBearer
+    token = Users.query.filter_by(id = current_user.id).first().canvasBearer
 
     if(token == ''):
         return 'INVALID CANVAS TOKEN'
@@ -1046,47 +1047,48 @@ def getCanvasAssignments():
                 assignmentList.append(assignmentObj)
             else:
                 pass
-                print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+                #print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
         else:
             assignmentList.append(assignmentObj)
 
     # create classobj for each class
         classObj = {}
-        classObj['name'] = courseName
+        classObj['name'] = checkInvalidChar(courseName)
         classObj['color'] = 'rgb(162, 214, 161);'
         classObj['assignments'] = assignmentList
         classObj['order'] = order
 
     courseNameUnderScores = courseName.replace(' ','_')
     ##write classObj to JSON file
-    with open("./static/Scripts/Canvas"+courseNameUnderScores+".json", "w") as outfile:
-        json.dump(classObj, outfile) 
+    # with open("./static/Scripts/Canvas"+courseNameUnderScores+".json", "w") as outfile:
+    #     json.dump(classObj, outfile) 
     # session.pop("courseINFO", None)
     jsonStr = json.dumps(classObj)
     return jsonStr
 
 
 def checkInvalidChar(assignmentName):
-    regex = re.compile('[@!#$%^&+*(),<>?/\|}{~:]')
+    regex = re.compile('[@!#$%^&+*(),<>?/\|}{~:]-')
 
-    if(regex.search(assignmentName) == None):
-         return assignmentName
-    else:
-        assignmentName = assignmentName.replace(':',' ')
-        assignmentName = assignmentName.replace('#',' ')
-        assignmentName = assignmentName.replace('&','And')
-        assignmentName = assignmentName.replace('!','')
-        assignmentName = assignmentName.replace('?','')
-        assignmentName = assignmentName.replace('(',' ')
-        assignmentName = assignmentName.replace(')',' ')
-        assignmentName = assignmentName.replace(',','')
-        assignmentName = assignmentName.replace('+','')
-        assignmentName = assignmentName.replace('/','-')
-        # assignmentName = assignmentName.replace("\",' ')
-        assignmentName = assignmentName.replace('|',' ')
-        # assignmentName = assignmentName.replace('@','')
-     
+    assignmentName = assignmentName.replace(':',' ')
+    assignmentName = assignmentName.replace('-',' ')
+    assignmentName = assignmentName.replace('#',' ')
+    assignmentName = assignmentName.replace('&','And')
+    assignmentName = assignmentName.replace('!','')
+    assignmentName = assignmentName.replace('?','')
+    assignmentName = assignmentName.replace('(',' ')
+    assignmentName = assignmentName.replace(')',' ')
+    assignmentName = assignmentName.replace(',','')
+    assignmentName = assignmentName.replace('.','')
+    assignmentName = assignmentName.replace('+','')
+    assignmentName = assignmentName.replace('/',' ')
+    # assignmentName = assignmentName.replace("\",' ')
+    assignmentName = assignmentName.replace('|',' ')
+    # assignmentName = assignmentName.replace('@','')
+
+    print("checkInvalidChar return: " + assignmentName)
     return assignmentName
+
 def replaceQuote(description):
     description = description.replace('"','')
     description = description.replace("'",'')
@@ -1107,6 +1109,7 @@ def sendSMS():
     assignmentsDue = json.loads(request.data)
     assignDict = {}
     assignList = []
+    userID = current_user.id
     # would check if user no longer wants notifications
     # stop running in background (once implementing)
     if (assignmentsDue['notifCheck'] == False):
@@ -1141,8 +1144,8 @@ def sendSMS():
                     assignList.append(assignments['name'])
                     assignDict['assignment'] = assignList
 
-    print("Assign Dict")
-    print(assignDict)
+    #print("Assign Dict")
+    #print(assignDict)
     msg = "These assignments are due in the next " + assignmentsDue['daysDue'] + " days: \n \n" 
 
     if (assignDict == {}):
