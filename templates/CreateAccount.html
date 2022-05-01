@@ -28,9 +28,9 @@
         <img src="{{ url_for('static', filename='Images/Logo.png') }}" style="width: 20%; height: 20%; margin-top: -25px;" > 
         <div class = "shadow p-3 mb-5 bg-body rounded">
             <form method ="POST">
-                {{ form.email.label(class ="form-label") }}
+                {{ form.username.label(class ="form-label") }}
 
-                {{ form.email(class="form-control") }}
+                {{ form.username(class="form-control") }}
                 <br/>
 
                 {{ form.password.label(class ="form-label") }}

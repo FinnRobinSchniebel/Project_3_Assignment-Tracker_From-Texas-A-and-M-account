@@ -206,9 +206,14 @@ function getGoogleJSONs(){
         type: "GET",
         contentType: "application/json",
         success: function (response){
-            classList = JSON.parse(response);
-            assignmentGooglePop(classList);
-            storeGoogleImports(classList);
+            if(response == "NO TOKEN"){
+                alert("Please connect your Google account");
+                location.href = "./GoogleSignIn";
+            } else{
+                classList = JSON.parse(response);
+                assignmentGooglePop(classList);
+                storeGoogleImports(classList);   
+            }
         }
     });
     return classList;

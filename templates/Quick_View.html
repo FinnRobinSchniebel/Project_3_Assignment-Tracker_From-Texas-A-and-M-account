@@ -127,9 +127,9 @@
 							<div class="rightside" id="RightDivs">
 								<div class="AssignmentDetails" id="AssigmentDetailWrapper">
 									<p class="Font2">
-										Details:
+										Details/Notes:
 									<div class="genericWrittingBox Font1" contenteditable="true" id="Details" onblur="updateDiscription()">
-										<!-- Will need unique id in future-->
+										
 										
 									</div>
 									</p>
@@ -137,7 +137,7 @@
 								<div class="AssignmentStatus" id="CheckBoxWrapper">
 									<input type="checkbox" class="btn-check" id="CheckBoxComplete" autocomplete="off"
 										onclick="completeButton('Overview', 'CheckBoxComplete')">
-									<!-- Will need unique ids in future-->
+									
 									<label class="btn btn-outline-success Font1" for="CheckBoxComplete">Complete</label><br>
 								</div>
 								<div class="AssignmentDetails" id="priorWrapper">
@@ -146,9 +146,12 @@
 									</p>
 									<div id="SpacerRename" class="editingSpacers">
 										<label for="Rename" class="labelspace Font2">
-											Rename Name:
+											Rename:
 										</label>
-										<input class="genericWrittingBox Font1" contenteditable="true" id="Rename" value="">
+										<div class="tooltipAddAssignment">
+											<input class="genericWrittingBox Font1" contenteditable="true" id="Rename" value="">
+											<div class="tooltipTextAssignment Font1"><p>Names cannot contain '_' or letters specific to another language.</p> <p> The name cannot match an existing Assignment you already added to this class.</p></div>
+										</div>
 									</div>
 
 									<Label for="PriorityChange" class="labelspace Font2">Priority:</Label>
@@ -170,7 +173,7 @@
 									
 									
 									<div class="AssignmentRemoval" id="AssignmentRemove">
-										<button class="AssignmentButton Font1" id="removeButton" onclick="removeAssignment('className', 'assignmentName')">Force Remove</button>
+										<button class="AssignmentButton Font1" id="removeButton" onclick="removeAssignment('className', 'assignmentName','assignmentDiv')">Force Remove</button>
 									</div>
 								</div>
 								
@@ -180,7 +183,7 @@
 				</div>
 			</div>
 		</template>
-			<script>
+		<script>
 			//this function will call everytime home loads to populate localstorage
 			window.onload = function(){
 				//console.log("BEFORE: \n");
