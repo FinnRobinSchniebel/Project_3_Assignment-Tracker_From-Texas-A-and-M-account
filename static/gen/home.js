@@ -1378,7 +1378,7 @@ function PopulateClass(className, closest, assignmentcount){
                                             Assignment Name:
                                         </div>
                                         <div class="tooltipAddAssignment">
-                                            <input class="genericWrittingBox Font1" contenteditable="true" id="`+inputClassName+`Name" placeholder="Add Name"> 
+                                            <input class="genericWrittingBox Font1" id="`+inputClassName+`Name" placeholder="Add Name">
                                             <div class="tooltipTextAssignment Font1"><p>Names cannot contain '_' or letters specific to another language.</p> <p> The name cannot match an existing Assignment you already added to this class.</p></div>
                                         </div>
                                     </p>
