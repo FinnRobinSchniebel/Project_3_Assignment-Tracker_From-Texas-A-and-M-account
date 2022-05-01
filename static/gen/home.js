@@ -202,7 +202,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var isQuick =0; //is this a quick view item
     if(Location == ""){
-        console.log(ClassNameAssignment);
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
@@ -331,7 +330,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);
     //bar stuff
     var widthProgress = getDatePercent(assignmentStartDate, assignmentDueDate);
-    console.log(widthProgress);
     document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + widthProgress + '%' + "; background-color: purple;");
     if(parseInt(widthProgress) > 90){
         document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
