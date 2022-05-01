@@ -539,7 +539,7 @@ function updateName(text, assignmentName, className, isQuick){
     //console.log(text+ " " + assignmentName+" "+className+" "+isQuick);
     console.log(text);
     text = text.trim();
-    if(text == "" || text.includes('_') === true || (getAssignment(className, text) != null && getAssignment(className, text) != assignmentName)){
+    if(text == "" || text.includes('_') === true || (getAssignment(className, text) != null && getAssignment(className, text).name != assignmentName)){
         alert("This is not a valid Assignment name. Please make sure the name contains no '_' in it, Does not already exist, or is empty");
     }
 
