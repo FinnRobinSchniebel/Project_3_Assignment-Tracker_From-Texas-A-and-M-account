@@ -12,6 +12,7 @@
         <link id="BasicHome" rel="stylesheet" type="text/css" href="{{ url_for('static',filename='CSS/BasicHome.css') }}" />
         <script src="{{ url_for('static',filename='Scripts/JSONGetsAndSets.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/ImportScripts.js') }}"></script>
+        <script src="{{ url_for('static',filename='Scripts/AssignmentCreatingScripts.js') }}"></script>
         <script src="{{ url_for('static',filename='Scripts/scripts.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
@@ -124,7 +125,15 @@
         <input type="text" id="CanvasConnect" id="canvasConnectionInfo">
         <button class="importbutton" onclick="ImportAPICanvas()">Start Import</button>  -->
         <!-- <form> -->
-            <label for="CanvasConnect" class="TextfieldLeftLabel Font2">Enter Canvas Token here: <strong style="font-size: 28px; color: blue;">&#9432;</strong> </label>
+            <label for="CanvasConnect" class="TextfieldLeftLabel Font2">Enter Canvas Token here: <span class="tooltipAddClass"><strong style="font-size: 28px; color: blue;">&#9432;</strong> 
+            <span class="tooltipTextClass" style="width: 420px;">
+                <p>1) Log-in to your Canvas account associated with your class work</p>
+                <p>2) On your left Navigation bar, click on Account</p>
+                <p>3) In the Account menu, click on settings</p>
+                <p>4) From there, scroll down and click on "New Access Token"</p>
+                <p>5) For purpose, input "Assignment Stackers Access", and for expires, leave blank for no expiration or set a experation date.</p>
+                <p>6) Generate the Token, and copy and paste it into the box in order to import class work</p></span>
+            </span> </label>
             <input type="text" class="Font2" id="CanvasConnect" name="CanvasConnect" style="padding:4px; font-size: 25px;" placeholder="Ex. 'User Token'">
             <!-- <input type="text" id="InputClassName" placeholder="Ex. 'User Token'">  -->
             <button class="importbutton Font2" onclick="ImportAPICanvas()">Start Import</button>
