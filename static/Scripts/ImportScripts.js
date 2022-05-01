@@ -728,53 +728,54 @@ function sendSMS(phoneNum, notifCheck){
     }
     else{
         // Checks the database for the current classes to sift through
-        $.ajax({
-            url:"/bgLoadUserClasses",
-            type: "GET",
-            contentType: "application/json",
-            success: function (response){
-                DBclassList = JSON.parse(response);
+        // $.ajax({
+        //     url:"/bgLoadUserClasses",
+        //     type: "GET",
+        //     contentType: "application/json",
+        //     success: function (response){
+        //         DBclassList = JSON.parse(response);
+        //         dueAssignments = {}
+        //         assignmentList = []
+        //         DBclassList.forEach(newClassObj => {
+        //             console.log("Class: ");
+        //             console.log(newClassObj);
+        //             newClassObj.assignments.forEach(assignment => {
+        //                 console.log("assignment: ");
+        //                 console.log(assignment.name);
+
+        //                 var timeCheck = notifDateCheck(assignment.dueDate);
+        //                 console.log(assignment.name);
+
+
+        //                 // console.log(timeLeft);
+        //                 // var dayDue = timeLeft.split(" ")[0];
+        //                 // var check = timeLeft.split(" ");
+        //                 // var timeCheck = timeLeft.substr(timeLeft.indexOf(' ') + 1);
+        //                 // console.log(hourCheck);
+        //                 // 4 is the days we'll look forward to reminding user for now 
+        //                 // "these assignments are due in 3 days"
+        //                 // assignmentList.push(assignment.name);
+        //                 // if (dayDue <= 4 || timeCheck == "Hours" || timeCheck == "Hour" || timeCheck == "Minutes" || timeCheck == "Minutes" 
+        //                 //                 && timeCheck != "Months" && timeCheck != "Month")
+        //                 // {
+        //                 //     console.log("adding " + assignment.name);
+        //                 //     assignmentList.push(assignment.name);
+                            
+                            
+        //                 // }
+        //                 if (timeCheck == true){
+        //                     console.log("adding " + assignment.name);
+        //                     assignmentList.push(assignment.name);
+        //                 }
+        //                 else{
+        //                     console.log("not due soon");
+        //                 }
+        //             })
+
+        //         });
+                // dueAssignments["name"] = assignmentList;
                 dueAssignments = {}
-                assignmentList = []
-                DBclassList.forEach(newClassObj => {
-                    console.log("Class: ");
-                    console.log(newClassObj);
-                    newClassObj.assignments.forEach(assignment => {
-                        console.log("assignment: ");
-                        console.log(assignment.name);
-                        
-                        var timeCheck = notifDateCheck(assignment.dueDate);
-                        console.log(assignment.name);
-
-
-                        // console.log(timeLeft);
-                        // var dayDue = timeLeft.split(" ")[0];
-                        // var check = timeLeft.split(" ");
-                        // var timeCheck = timeLeft.substr(timeLeft.indexOf(' ') + 1);
-                        // console.log(hourCheck);
-                        // 4 is the days we'll look forward to reminding user for now 
-                        // "these assignments are due in 3 days"
-                        // assignmentList.push(assignment.name);
-                        // if (dayDue <= 4 || timeCheck == "Hours" || timeCheck == "Hour" || timeCheck == "Minutes" || timeCheck == "Minutes" 
-                        //                 && timeCheck != "Months" && timeCheck != "Month")
-                        // {
-                        //     console.log("adding " + assignment.name);
-                        //     assignmentList.push(assignment.name);
-                            
-                            
-                        // }
-                        if (timeCheck == true){
-                            console.log("adding " + assignment.name);
-                            assignmentList.push(assignment.name);
-                        }
-                        else{
-                            console.log("not due soon");
-                        }
-                    })
-
-                });
-                dueAssignments["name"] = assignmentList;
-                dueAssignments["daysDue"] = String(4);
+                dueAssignments["daysDue"] = String(3);
                 dueAssignments["phoneNum"] = phoneNum;
                 dueAssignments["notifCheck"] = notifCheck;
                 console.log("DUE DICT");
@@ -793,8 +794,8 @@ function sendSMS(phoneNum, notifCheck){
                     }
                 });
             }
-        });
-    }
+        // });
+    // }
     
 }
 //this function will remove temp objects when leaving page
