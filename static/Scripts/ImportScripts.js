@@ -694,9 +694,10 @@ function RemovePhoneNumberButton(){
 /**
  * Called by set phone number button
  */
-function AddNumberButton(){
+function AddNumberButton(){ 
     var number = document.getElementById('PhoneNumberField').value;
-    var numWithoutDash = number.replace('-', '');
+    var numWithoutDash = number.replaceAll('-', '');
+    console.log(number + " " +numWithoutDash);
     if(numWithoutDash.length != 10){
         alert("This is not a valid number. Please follow the format 'xxx-xxx-xxxx'");
         return;

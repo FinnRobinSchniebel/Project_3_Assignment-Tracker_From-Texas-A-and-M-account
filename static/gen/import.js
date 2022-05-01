@@ -793,7 +793,7 @@ function getGoogleJSONs(){
 function storeUserToken(){
     // probably will be moved later but this puts userToken in "memory" (?)
     // console.log(userToken);
-    var userToken =  '15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm';
+    var userToken = document.getElementById("CanvasConnect").value;
     $.ajax({
         type: "POST",
         url: '/bgGetUserToken',
@@ -1267,7 +1267,8 @@ function RemovePhoneNumberButton(){
  */
 function AddNumberButton(){
     var number = document.getElementById('PhoneNumberField').value;
-    var numWithoutDash = number.replace('-', '');
+    var numWithoutDash = number.replaceAll('-', '');
+    console.log(number + " " +numWithoutDash);
     if(numWithoutDash.length != 10){
         alert("This is not a valid number. Please follow the format 'xxx-xxx-xxxx'");
         return;
@@ -1440,6 +1441,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var isQuick =0; //is this a quick view item
     if(Location == ""){
+        console.log(ClassNameAssignment);
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
@@ -1559,9 +1561,20 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);
     //bar stuff
-    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + getDatePercent(assignmentStartDate, assignmentDueDate) + "; background-color: purple;");
-    document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
+    var widthProgress = getDatePercent(assignmentStartDate, assignmentDueDate);
+    console.log(widthProgress);
+    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + widthProgress + '%' + "; background-color: purple;");
+    if(parseInt(widthProgress) > 90){
+        document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
+        document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = '';
+    }
+    else{
+        document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
+        document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = '';
+    }
+    
 
+    //links
     document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
     document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
     // WIP FOR INCLUDING HTML DESCRIPTIONS FOR CANVAS
@@ -1599,7 +1612,7 @@ function getDatePercent(StartDate, DueDate){
     if(percent < 0){ //edge case (overdue)
         percent = 0;
     }
-    return ''+ percent + '%';
+    return percent;
 }
 
 //this function will return the largest nonzero value of the time left for the progress bar
