@@ -222,7 +222,7 @@ function getGoogleJSONs(){
 function storeUserToken(){
     // probably will be moved later but this puts userToken in "memory" (?)
     // console.log(userToken);
-    var userToken =  '15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm';
+    var userToken = document.getElementById("CanvasConnect").value;
     $.ajax({
         type: "POST",
         url: '/bgGetUserToken',
@@ -313,10 +313,16 @@ function getCanvasCourses(){
         type: "GET", 
         contentType: "application/json",
         success: function (response){
-            courseList = JSON.parse(response);
-            console.log("Successfully Imported CourseNames \n"+ response);
-            assignmentCanvasPop(courseList);
-            storeCanvasImports(courseList);
+            if(response == 'INVALID CANVAS TOKEN'){
+               alert("Invalid Token Entry: Please try again!") 
+            } else{
+                courseList = JSON.parse(response);
+                console.log("Successfully Imported CourseNames \n"+ response);
+                assignmentCanvasPop(courseList);
+                storeCanvasImports(courseList);                
+            }
+
+
             // console.log("STORING \n\n")
             // console.log(localStorage);
         }

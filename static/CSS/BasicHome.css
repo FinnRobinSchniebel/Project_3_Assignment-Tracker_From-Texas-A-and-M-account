@@ -9,7 +9,7 @@
     text-align: center; 
     max-height: 45%;
     height: fit-content;
-
+    z-index: 999;
     background-color: #ffffff;
     color: rgb(0, 0, 0);
     /*border-bottom-right-radius: 35px;*/
