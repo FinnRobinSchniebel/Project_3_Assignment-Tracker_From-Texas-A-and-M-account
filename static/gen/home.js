@@ -162,14 +162,14 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var ClassNameAssignment = className.replaceAll(" ", "_");
 
-    var isCanvasAssignment = false;
-    var isCanvasCheck = newAssignment.substring(0, 6);
+    // var isCanvasAssignment = false;
+    // var isCanvasCheck = newAssignment.substring(0, 6);
     // console.log("Assignmetn NAMNE E E: " + assignmentName);
     // console.log("isCanvasCheck: " + isCanvasCheck);
     // console.log("Assignment Notes: " + assignmentNotes);
-    if (isCanvasCheck == "Canvas"){
-        isCanvasAssignment = true;
-    }
+    // if (isCanvasCheck == "Canvas"){
+    //     isCanvasAssignment = true;
+    // }
 
     var NameToAddForID= ClassNameAssignment+newAssignment;
 
@@ -202,6 +202,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var isQuick =0; //is this a quick view item
     if(Location == ""){
+        console.log(ClassNameAssignment);
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
@@ -337,25 +338,26 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     //links
     document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
     document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
+    document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
     // WIP FOR INCLUDING HTML DESCRIPTIONS FOR CANVAS
-    if (isCanvasAssignment == true){
-        document.getElementById('AssigmentDetailWrapper'+ NameToAddForID).innerHTML = 
-        `<p>
-        Details: <br>
-        `+assignmentNotes+`
+    // if (isCanvasAssignment == true){
+    //     document.getElementById('AssigmentDetailWrapper'+ NameToAddForID).innerHTML = 
+    //     `<p>
+    //     Details: <br>
+    //     `+assignmentNotes+`
 
-        <div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
-            <!-- Will need unique id in future-->
+    //     <div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
+    //         <!-- Will need unique id in future-->
             
-        </div>
-        </p>`
+    //     </div>
+    //     </p>`
         
-        // document.getElementById('Details'+ NameToAddForID).innerText = '';
-    }
-    else{
-        document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
+    //     // document.getElementById('Details'+ NameToAddForID).innerText = '';
+    // }
+    // else{
+    //     document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
 
-    }
+    // }
     
 
 
@@ -438,43 +440,6 @@ function getTimeLeftLargestNonZero(DueDate){
 
 }
 
-function notifDateCheck(DueDate){
-    //cannot really be condensed much more than this
-
-    var curDate = new Date(CurrentDateISOTime());
-    
-
-    var timeCheck = new Date(DueDate) - curDate
-    // assignments aren't recognized as overdue, added this 
-    if (timeCheck < 0){
-        return "OVER DUE!!!";
-    }
-    
-    var timeSec = Math.abs(new Date(DueDate) - curDate)/1000;
-    
-    //var Seconds = timeSec%60;
-    var minutes = Math.floor(timeSec/60)%60;
-    var hours = Math.floor(timeSec/3600)%24;
-    var days = Math.floor(timeSec/86400)%30;
-    var months = Math.floor(timeSec/(2.69*Math.pow(10,6)))%12;
-    var years = Math.floor(Math.floor(timeSec/(2.69*Math.pow(10,6)))/12);
-
-    if(years > 0){
-        return false;
-    }
-   // var daysBetween = (new Date( (curDate).getFullYear(), curDate.month(), 0)).getDate() - curDate.getDate() + new Date(DueDate).getDate(); //max days in month - current date + days in following month
-
-    if(months > 0){ //30 as average length of a month
-        return false;
-    }
-
-    if(days <= 4){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
 function ChangeIDWith(oldName, NewName){
 
     for(var i=0; i <document.querySelectorAll('[id*="'+oldName+'"]').length; i++){
@@ -700,6 +665,7 @@ function addAssignmentToClassDB(assignmentObj){
     $.ajax({
         url:"/bgAddAssignment",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: assignmentObj,
         dataType: 'json',
@@ -713,6 +679,7 @@ function deleteClassDB(classObj){
     $.ajax({
         url:"/bgDeleteClass",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: classObj,
         dataType: 'json',
@@ -930,6 +897,7 @@ function storeClassDB(classObj){
     $.ajax({
         url:"/bgAddClass",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: classObj,
         dataType: 'json',
@@ -964,6 +932,7 @@ function completeButton(assignmentName,className){
     $.ajax({
         url:"/bgUpdateAssignment",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: jsonObj,
         dataType: 'json',
@@ -1023,6 +992,7 @@ function changeClassColor(className){
     $.ajax({
         url:"/bgUpdateClass",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: classObj,
         dataType: 'json',

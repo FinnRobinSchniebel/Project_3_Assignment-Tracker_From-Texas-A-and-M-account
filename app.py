@@ -503,7 +503,7 @@ def addAssignment():
 
 @app.route("/bgAddClass", methods = ['GET', 'POST'])
 def addClass():
-    time.sleep(1)
+    #time.sleep(1)
     classObj = json.loads(request.data)
     #app.logger.info(type(classObj))
 
