@@ -11,6 +11,9 @@ from datetime import timedelta
 from xml.dom.minidom import TypeInfo
 from dateutil import tz
 
+
+import google.oauth2.credentials
+import google_auth_oauthlib.flow 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -50,6 +53,7 @@ app = Flask(__name__)
 #initialize database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SECRET_KEY'] = "Superduper secret key NOBODY KNOWS WHAT IT IS"
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://mgtygsbrpjllap:461540cf82d26ae5423620b969aaf14ad692d3763eb9b559ef5a9e2b5219d9f4@ec2-3-223-213-207.compute-1.amazonaws.com:5432/d9vk0shfski2j'
 db = SQLAlchemy(app)
 
 #Flask login
