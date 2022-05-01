@@ -154,14 +154,14 @@ def getUserClasses(userID):
 
 def getUserPhone(userID):
     phoneNum = Users.query.filter_by(id = userID).first().Phone
-    if(phoneNum == '{}' or classText == '' or classText == []):
+    if(phoneNum == '{}' or phoneNum == '' or phoneNum == []):
         returnList = []
     else:
-        returnList = json.loads(classText)
+        returnList = json.loads(phoneNum)
 
-    print("getUserClasses ReturnList: "+ str(type(returnList)))
-    print(returnList)
-    sys.stdout.flush()
+    # print("getUserClasses ReturnList: "+ str(type(returnList)))
+    # print(returnList)
+    # sys.stdout.flush()
     return returnList
 #this function takes in a classObj
 #it returns a list of every googleClass that it contains
