@@ -43,6 +43,10 @@ function getClass(className){
         if(classObj.name == className){
             return classObj;
         }
+        else if(i == 0){ //if i is 0 and the last element has been checked
+            console.log("no item found");
+            return null;
+        }
     } 
 }
 
@@ -66,7 +70,7 @@ returns assignment obj in that class
 function getAssignment(inputClassName, inputAssignmentName){ 
     var classObj = getClass(inputClassName);
     var assignmentList = classObj.assignments;
-    var result;
+    var result = null;
     assignmentList.forEach((assignmentObj, i, array) => {
         if(assignmentObj.name == inputAssignmentName){
             result = assignmentObj;
@@ -89,7 +93,7 @@ function addAssignmentToClassDB(assignmentObj){
 }
 
 function deleteClassDB(classObj){
-    alert(classObj);
+    //alert(classObj);
     $.ajax({
         url:"/bgDeleteClass",
         type: "POST",
@@ -532,10 +536,14 @@ function updateDue(selected, assignmentName, className, isQuick){
 }
 
 function updateName(text, assignmentName, className, isQuick){
-    console.log(text+ " " + assignmentName+" "+className+" "+isQuick);
+    //console.log(text+ " " + assignmentName+" "+className+" "+isQuick);
+    console.log(text);
+    text = text.trim();
+    if(text == "" || text.includes('_') === true || (getAssignment(className, text) != null && getAssignment(className, text) != assignmentName)){
+        alert("This is not a valid Assignment name. Please make sure the name contains no '_' in it, Does not already exist, or is empty");
+    }
 
-
-    if(text != assignmentName && text != "" && text != " "){//cant be an empty string and cant be the same as before idk why it breaks from that
+    if(text != assignmentName && text != "" && text != " " && text.includes('_') === false){//cant be an empty string and cant be the same as before idk why it breaks from that
         var assignmentObj = getAssignment(className, assignmentName);
         //set new details
         assignmentObj.name = text;

@@ -23,7 +23,7 @@
 		<script src="{{ url_for('static',filename='Scripts/scripts.js') }}"></script>
 		<script src="{{ url_for('static',filename='Scripts/QuickViewScript.js') }}"></script> <!--DO not use any of these they are simply here for other functions that are shared-->
 		
-		
+		<link rel="shortcut icon" href="{{ url_for('static', filename='Images/FavCon2.png') }}">
 		
 
 
@@ -70,7 +70,12 @@
 				<div class="ClassAssignmentsOutline">
 					<div class="NewClassName">
 						<form class="Font2">
-							Enter the Class Name: <input type="text" id="InputClassName" placeholder="Ex. 'CSCE 315'">
+							
+							Enter the Class Name: 
+							<div class="tooltipAddClass">
+								<input type="text" class="Font1" id="InputClassName" placeholder="Ex. 'CSCE 315'"> 
+								<div class="tooltipTextClass"><p>Names cannot contain '_' or letters specific to another language.</p> <p> The name cannot match an existing class you already added.</p></div>
+							</div>
 							<button class="SubmitButton Font1" type="button" value="" onclick="AddClass()">Submit</button>
 						</form>
 					</div>
@@ -206,7 +211,10 @@
 										<label for="Rename" class="labelspace Font2">
 											Rename:
 										</label>
-										<input class="genericWrittingBox Font1" contenteditable="true" id="Rename" value="">
+										<div class="tooltipAddAssignment">
+											<input class="genericWrittingBox Font1" contenteditable="true" id="Rename" value="">
+											<div class="tooltipTextAssignment Font1"><p>Names cannot contain '_' or letters specific to another language.</p> <p> The name cannot match an existing Assignment you already added to this class.</p></div>
+										</div>
 									</div>
 
 									<Label for="PriorityChange" class="labelspace Font2">Priority:</Label>

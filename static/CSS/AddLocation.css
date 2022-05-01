@@ -167,7 +167,7 @@
     text-align: center;
 }
 .contentImp{
-    background-color: rgb(45, 71, 119);
+    background-color: rgb(135, 193, 211);
     box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
     border-bottom-left-radius: 50px;
     border-bottom-right-radius: 50px;
@@ -186,7 +186,7 @@
 }
 
 .LocationOverview{
-    background-color: rgb(62, 74, 139);
+    background-color: rgb(75, 139, 158);
     border-radius: 20px;
     color: rgb(0, 0, 0);
     cursor: pointer;
@@ -328,4 +328,126 @@
     font-size: 25px;
     border: 3px solid rgb(138, 138, 138);
     border-radius: 10px;
+}
+
+
+.PhoneArea{
+    float: left;
+    width: 25%;
+    margin: 10px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    padding: 10px;
+    margin-left: 8%;
+    margin-right: 1%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 25px;
+    border: 1px solid rgb(138, 138, 138);
+    border-radius: 10px;
+}
+.PhoneNumberField{
+    float: left;
+    width: 30%;
+    margin: 10px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    padding: 8px;
+    margin-left: 1%;
+    margin-right: 1%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 25px;
+    border: 3px solid rgb(138, 138, 138);
+    border-radius: 10px;
+    text-decoration: underline;
+}
+.PhoneNumberField:hover{
+    background-color: rgb(221, 221, 221);
+}
+.PhoneNumberField:focus{
+    background-color: rgb(255, 255, 255);
+}
+
+.OptOut{
+    float:left;
+    background-color: rgb(230, 54, 54);
+    margin: 10px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    border: 2px solid rgb(245, 90, 0);
+    color: rgb(0, 0, 0);
+    border-radius: 15px;
+    text-align: center;
+    display: inline;
+    font-size: 25px;
+    transition-duration: 5ms;
+    padding: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 15%;
+    height: 80%;
+    margin-left: 2%;
+}
+.OptOut:hover{
+    background-color:rgba(160, 0, 0, 0.932);
+    border: 3px solid rgba(87, 0, 0, 0.932);
+
+}
+.OptOut:active{
+    transform: translateY(3px);
+    background-color: 3px solid rgb(69, 90, 29);
+}
+
+.SubmitNumber{
+    float:left;
+    background-color: rgb(129, 194, 224);
+    margin: 10px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    border: 1px solid rgb(100, 149, 172);
+    color: rgb(0, 0, 0);
+    border-radius: 15px;
+    text-align: center;
+    display: inline;
+    font-size: 25px;
+    transition-duration: 5ms;
+    padding: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 10%;
+    height: 80%;
+    margin-left: 1%;
+}
+.SubmitNumber:hover{
+    background-color:rgba(24, 82, 170, 0.932);
+    border: 2px solid rgb(129, 194, 224);
+
+}
+.SubmitNumber:active{
+    transform: translateY(3px);
+    background-color: 3px solid rgb(69, 90, 29);
+}
+
+.PhoneNumberArea{
+    background-color: rgb(62, 74, 139);
+    border-radius: 10px;
+    color: rgb(0, 0, 0);
+    box-shadow: 0px 3px 6px rgba(47, 48, 50, 0.932);
+    text-align: center;
+    padding: 10px;
+    width: 90%;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid gray;
+    outline: none;
+    font-size: 15px;
+    height: 90px;
 }
