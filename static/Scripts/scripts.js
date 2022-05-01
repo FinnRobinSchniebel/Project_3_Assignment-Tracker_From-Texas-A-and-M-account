@@ -15,9 +15,17 @@ function addAssignment(className, classID){
     //************************************** */
     var relatedLinks = document.getElementById(''+classID+'RelatedLinks').value;
     var link = document.getElementById(''+classID+'Link').value;
+
+    if(newAssignmentDisplay.includes('_') === true){
+        alert("This is not a valid Assignment name. Please make sure the name contains no '_' in it");
+        return;
+    }
+    if(getAssignment(className, newAssignmentDisplay) != null){
+        alert("class already exists. Please use a different name");
+        return;
+    }
     
-    
-    //adds assignment to class in localstorage
+    //adds assignment to class in localstorage & server
     addAssignmentToClass(newAssignmentDisplay,className,priority,endTime,startTime, link, relatedLinks,noteDetails,false, '', '');
 
     populatePage();
@@ -33,7 +41,7 @@ function AddClass(){
     inputClassNameDisplay = inputClassNameDisplay.trim();
 
     if(inputClassNameDisplay.includes('_') === true){
-        alert("This is not a valid class name. Please make sure the name contains no _ in it");
+        alert("This is not a valid class name. Please make sure the name contains no '_' in it");
         return;
     }
     if(getClass(inputClassNameDisplay) != null){
@@ -73,7 +81,7 @@ function populatePage(){
     document.getElementById("classList").innerHTML = "";
    
     var classList = getClassList(); //array of class objects
-    console.log(classList);
+    //console.log(classList);
     //console.debug(classList);
     // makes classes reverse display 
     // color not saved ATM
@@ -193,8 +201,10 @@ function PopulateClass(className, closest, assignmentcount){
                                         <div class="Font2">
                                             Assignment Name:
                                         </div>
-                                        <input class="genericWrittingBox Font1" contenteditable="true" id="`+inputClassName+`Name" placeholder="Add Name"> 
-                                        
+                                        <div class="tooltipAddAssignment">
+                                            <input class="genericWrittingBox Font1" contenteditable="true" id="`+inputClassName+`Name" placeholder="Add Name"> 
+                                            <div class="tooltipTextAssignment Font1"><p>Names cannot contain '_' or letters specific to another language.</p> <p> The name cannot match an existing Assignment you already added to this class.</p></div>
+                                        </div>
                                     </p>
                                     
                                 </div>
