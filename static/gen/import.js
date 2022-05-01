@@ -780,6 +780,7 @@ function getGoogleJSONs(){
     $.ajax({
         url:"/bgGoogleImport",
         type: "GET",
+        async: false,
         contentType: "application/json",
         success: function (response){
             if(response == "NO TOKEN"){
@@ -803,6 +804,7 @@ function storeUserToken(){
         type: "POST",
         url: '/bgGetUserToken',
         contentType: "application/json",
+        async: false,
         data: JSON.stringify({token: userToken}),
         dataType: "json",
         success: function(response) {
@@ -887,6 +889,7 @@ function getCanvasCourses(){
     $.ajax({
         url:`/bgGetCanvasCourses`,
         type: "GET", 
+        async: false,
         contentType: "application/json",
         success: function (response){
             if(response == 'INVALID CANVAS TOKEN'){
@@ -1025,6 +1028,7 @@ function appendAssignmentListDB(className, assignmentList){
         type: "POST",
         contentType: "application/json",
         data: jsonObj,
+        async: false,
         dataType: 'json',
         success: function (response){
         }
@@ -1267,6 +1271,7 @@ function RemovePhoneNumberButton(){
     $.ajax({
         url:"/bgRemoveNum",
         type: "POST",
+        async: false,
         contentType: "application/json",
         success: function (){
             // classList = JSON.parse(response);
@@ -1279,7 +1284,7 @@ function RemovePhoneNumberButton(){
 /**
  * Called by set phone number button
  */
-function AddNumberButton(){
+function AddNumberButton(){ 
     var number = document.getElementById('PhoneNumberField').value;
     var numWithoutDash = number.replaceAll('-', '');
     console.log(number + " " +numWithoutDash);
@@ -1295,6 +1300,7 @@ function AddNumberButton(){
     $.ajax({
         url:"/bgStoreNum",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: storeNum,
         success: function (){
@@ -1307,6 +1313,7 @@ function AddNumberButton(){
     $.ajax({
         url:"/bgSendSMS",
         type: "POST",
+        async: false,
         contentType: "application/json",
         success: function (){
             // classList = JSON.parse(response);
@@ -1509,33 +1516,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     if(parseInt(widthProgress) > 90){
         document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
         document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = '';
-<<<<<<< HEAD
-=======
-    }
-    else{
-        document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
-        document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = '';
-    }
-    
-
-    //links
-    document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
-    document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
-    // WIP FOR INCLUDING HTML DESCRIPTIONS FOR CANVAS
-    if (isCanvasAssignment == true){
-        document.getElementById('AssigmentDetailWrapper'+ NameToAddForID).innerHTML = 
-        `<p>
-        Details: <br>
-        `+assignmentNotes+`
-
-        <div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
-            <!-- Will need unique id in future-->
-            
-        </div>
-        </p>`
-        
-        // document.getElementById('Details'+ NameToAddForID).innerText = '';
->>>>>>> 63644eed377c07f435fae9ffb4c814967f404c07
     }
     else{
         document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
@@ -1700,6 +1680,7 @@ function addAssignment(className, classID){
     // to make it dynamic, takes className from Parameter and is used to find the -
     // associated ID for variables
     var newAssignmentDisplay = document.getElementById(''+classID+'Name').value;
+    newAssignmentDisplay = newAssignmentDisplay.trim();
     // takes the space away to ensure variables are properly named
     var startTime = document.getElementById(''+classID+'Start').value; //"`+inputClassName+`Start"
     var endTime = document.getElementById(''+classID+'End').value;
@@ -1713,8 +1694,8 @@ function addAssignment(className, classID){
     var relatedLinks = document.getElementById(''+classID+'RelatedLinks').value;
     var link = document.getElementById(''+classID+'Link').value;
 
-    if(newAssignmentDisplay.includes('_') === true){
-        alert("This is not a valid Assignment name. Please make sure the name contains no '_' in it");
+    if(newAssignmentDisplay.includes('_') === true || newAssignmentDisplay == ""){
+        alert("This is not a valid Assignment name. Please make sure the name contains no '_' in it or is an empty name");
         return;
     }
     if(getAssignment(className, newAssignmentDisplay) != null){
