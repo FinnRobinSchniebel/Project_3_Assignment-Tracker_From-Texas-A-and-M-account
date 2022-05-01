@@ -1180,7 +1180,7 @@ def sendSMS():
     # responseData = sms.send_message(
     #     {
     #         "from": "18889095613",
-    #         "to": userNum,
+    #         "to": "1" + userNum,
     #         "text": msg,
     #     }
     # )
