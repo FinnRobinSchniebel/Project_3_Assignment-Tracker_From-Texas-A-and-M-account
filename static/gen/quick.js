@@ -1289,6 +1289,14 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     else{
         document.getElementById('CheckBoxComplete'+ NameToAddForID).onclick = function(){completeButton(assignmentName, className)};
     }
+    if(isComplete === true){
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).complete =true;
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).checked =true;
+    }
+    else if(isComplete === false){
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).complete =false;
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).checked =false;
+    }
 
     //remove button
     document.getElementById('removeButton'+ NameToAddForID).setAttribute('onclick', "removeAssignment('" + className + "','" + assignmentName +"','Assignment" + NameToAddForID +"')");
