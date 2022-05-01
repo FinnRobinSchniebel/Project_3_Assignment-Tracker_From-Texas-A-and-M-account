@@ -176,9 +176,20 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);
     //bar stuff
-    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + getDatePercent(assignmentStartDate, assignmentDueDate) + "; background-color: purple;");
-    document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
+    var widthProgress = getDatePercent(assignmentStartDate, assignmentDueDate);
+    console.log(widthProgress);
+    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + widthProgress + '%' + "; background-color: purple;");
+    if(parseInt(widthProgress) > 90){
+        document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
+        document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = '';
+    }
+    else{
+        document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
+        document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = '';
+    }
+    
 
+    //links
     document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
     document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
     // WIP FOR INCLUDING HTML DESCRIPTIONS FOR CANVAS
@@ -216,7 +227,7 @@ function getDatePercent(StartDate, DueDate){
     if(percent < 0){ //edge case (overdue)
         percent = 0;
     }
-    return ''+ percent + '%';
+    return percent;
 }
 
 //this function will return the largest nonzero value of the time left for the progress bar
