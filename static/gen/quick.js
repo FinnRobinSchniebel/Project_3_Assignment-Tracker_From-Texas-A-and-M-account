@@ -1390,33 +1390,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     if(parseInt(widthProgress) > 90){
         document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
         document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = '';
-<<<<<<< HEAD
-=======
-    }
-    else{
-        document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
-        document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = '';
-    }
-    
-
-    //links
-    document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
-    document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
-    // WIP FOR INCLUDING HTML DESCRIPTIONS FOR CANVAS
-    if (isCanvasAssignment == true){
-        document.getElementById('AssigmentDetailWrapper'+ NameToAddForID).innerHTML = 
-        `<p>
-        Details: <br>
-        `+assignmentNotes+`
-
-        <div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
-            <!-- Will need unique id in future-->
-            
-        </div>
-        </p>`
-        
-        // document.getElementById('Details'+ NameToAddForID).innerText = '';
->>>>>>> 63644eed377c07f435fae9ffb4c814967f404c07
     }
     else{
         document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
