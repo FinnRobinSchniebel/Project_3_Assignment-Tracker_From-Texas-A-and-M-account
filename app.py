@@ -864,10 +864,21 @@ app.secret_key = 'dljsaklqk24e21cjn!Ew@@dsa5'
 def get_post_json():   
 
     # stores user Token 
-    data = request.get_json()
-    session["token"] = data
+    tokenDictionary = json.loads(request.data)
 
-    return jsonify(status="success", data=data)
+    isValidToken = ValidateCanvasBearer(tokenDictionary['token'])
+
+    if isValidToken:
+        Users.query.filter_by(id = current_user.id).first().canvasBearer = tokenDictionary['token']
+        db.session.commit()
+
+
+    return jsonify(status="success")
+
+def ValidateCanvasBearer(token): 
+    ## Make a test API call
+    ## Return false if invalid
+    return True
 
 
 @app.route('/bgStoreCourseINFO', methods=['POST'])
@@ -889,7 +900,10 @@ def getCanvasAssignments():
 
     courseDict = {}
     # takes Token from session to use to access APIs
-    tokenDict = session.get("token")
+    token = Users.query.filter_by(current_user.id).first().canvasBearer
+
+    if(token == ''):
+        return 'INVALID CANVAS TOKEN'
     # grabs courseINFO that was passed in
     time.sleep(1)
     courseINFO = session.get("courseINFO")
@@ -911,7 +925,6 @@ def getCanvasAssignments():
     url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments?include=items&per_page=1000/"
 
     # eventually will take bearer token as an argument
-    token = tokenDict['token']
     # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
     headers = {'Authorization' : 'Bearer '+ token}
 
