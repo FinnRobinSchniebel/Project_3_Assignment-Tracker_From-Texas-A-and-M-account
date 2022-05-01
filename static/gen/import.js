@@ -884,10 +884,16 @@ function getCanvasCourses(){
         type: "GET", 
         contentType: "application/json",
         success: function (response){
-            courseList = JSON.parse(response);
-            console.log("Successfully Imported CourseNames \n"+ response);
-            assignmentCanvasPop(courseList);
-            storeCanvasImports(courseList);
+            if(response == 'INVALID CANVAS TOKEN'){
+               alert("Invalid Token Entry: Please try again!") 
+            } else{
+                courseList = JSON.parse(response);
+                console.log("Successfully Imported CourseNames \n"+ response);
+                assignmentCanvasPop(courseList);
+                storeCanvasImports(courseList);                
+            }
+
+
             // console.log("STORING \n\n")
             // console.log(localStorage);
         }
