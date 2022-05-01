@@ -43,74 +43,7 @@ function  ImportAPICanvas(){
     
 }
 
-function sendSMS(){
-    // $.ajax({
-    //     url:"/bgLoadUserClasses",
-    //     type: "GET",
-    //     contentType: "application/json",
-    //     success: function (response){
-    //         DBclassList = JSON.parse(response);
-    //         //alert(typeof(DBclassList))
-    //         //console.log(DBclassList);
-            // DBclassList.forEach(newClassObj => {
-                // 		var jsonObj = JSON.stringify(newClassObj);
-                        
-                // 		newClassObj.assignments.forEach(assignment => {
-                // 			// timeDiff = assignment.dueDate - assignment.startDate;
-                // 			// console.log(timeDiff);
-                // 			var timeLeft = String(getTimeLeftLargestNonZero(assignment.dueDate));
-                // 			console.log(timeLeft);
-                // 			var dayDue = timeLeft.split(" ")[0];
-                // 			// var check = timeLeft.split(" ");
-                // 			var hourCheck = timeLeft.substr(timeLeft.indexOf(' ') + 1);
-                // 			// console.log(hourCheck);
-                // 			// var hourCheck = 
-                // 			// 3 is the days we'll look forward to reminding user for now 
-                // 			// "these assignments are due in 3 days"
-                // 			// assignmentList.push(assignment.name);
-                // 			if (dayDue == 4 || hourCheck == "Hours" || hourCheck == "Hour")
-                // 			{
-                // 				console.log(assignment.name);
-                // 				assignmentList.push(assignment.name);
-                // 				dueDict["name"] = assignmentList;
-                // 				dueDict["daysDue"] = String(4);
-                // 			}
-                // 		})
-                // 		console.log("DUE DICT");
-                // 		console.log(dueDict);
-                // 		localStorage.setItem(newClassObj.name, jsonObj);
-                //     });
-                // 	dueStuff = JSON.stringify(dueDict);
-                // 	$.ajax({
-                // 		url:"/bgSendSMS",
-                // 		type: "POST",
-                // 		contentType: "application/json",
-                // 		data: dueStuff,
-                // 		success: function (){
-                // 			// classList = JSON.parse(response);
-                // 			// assignmentGooglePop(classList);
-                // 			// storeGoogleImports(classList);
-                // 			console.log("SMS Sent Successfully");
-                // 		}
-                // 	});
-    //         loadPage(DBclassList);
-    //     }
-    // });
 
-    dueAssignments = JSON.stringify(dueDict);
-    $.ajax({
-        url:"/bgSendSMS",
-        type: "POST",
-        contentType: "application/json",
-        data: dueAssignments,
-        success: function (){
-            // classList = JSON.parse(response);
-            // assignmentGooglePop(classList);
-            // storeGoogleImports(classList);
-            console.log("SMS Sent Successfully");
-        }
-    });
-}
 function assignmentGooglePop(ClassList){
     var listlen = ClassList.length;
     document.getElementById('SelectLocation').innerHTML = ``;
@@ -742,7 +675,10 @@ function DeleteRequest(id, requesttype){
 function RemovePhoneNumberButton(){
     //call function do deal with db
     document.getElementById('PhoneNumberField').value ='';
+    var noNumber= document.getElementById('PhoneNumberField').value;
+    var sendNotif = false;
 
+    sendSMS(noNumber, sendNotif);
 }
 /**
  * Called by set phone number button
@@ -755,10 +691,107 @@ function AddNumberButton(){
         return;
     }
     //call function for working with database here
+    var sendNotif = true;
+    sendSMS(numWithoutDash, sendNotif);
+
 
 }
+/**
+ * Will be used by add/remove number to determine if notifications 
+ * will be sent to user
+ * @param {*} phoneNum 
+ * @param {*} notifCheck 
+ */
+function sendSMS(phoneNum, notifCheck){
 
-// }
+    if (notifCheck == false){
+        dueAssignments = {}
+        dueAssignments["notifCheck"] = notifCheck;
+        console.log("Remove Number and Stop Notifs");
+        // $.ajax({
+        //     url:"/bgSendSMS",
+        //     type: "POST",
+        //     contentType: "application/json",
+        //     data: dueAssignments,
+        //     success: function (){
+        //         // classList = JSON.parse(response);
+        //         // assignmentGooglePop(classList);
+        //         // storeGoogleImports(classList);
+        //         console.log("SMS Sent Successfully");
+        //     }
+        // });
+    }
+    else{
+        // Checks the database for the current classes to sift through
+        $.ajax({
+            url:"/bgLoadUserClasses",
+            type: "GET",
+            contentType: "application/json",
+            success: function (response){
+                DBclassList = JSON.parse(response);
+                dueAssignments = {}
+                assignmentList = []
+                DBclassList.forEach(newClassObj => {
+                    console.log("Class: ");
+                    console.log(newClassObj);
+                    newClassObj.assignments.forEach(assignment => {
+                        console.log("assignment: ");
+                        console.log(assignment.name);
+                        
+                        var timeCheck = notifDateCheck(assignment.dueDate);
+                        console.log(assignment.name);
+
+
+                        // console.log(timeLeft);
+                        // var dayDue = timeLeft.split(" ")[0];
+                        // var check = timeLeft.split(" ");
+                        // var timeCheck = timeLeft.substr(timeLeft.indexOf(' ') + 1);
+                        // console.log(hourCheck);
+                        // 4 is the days we'll look forward to reminding user for now 
+                        // "these assignments are due in 3 days"
+                        // assignmentList.push(assignment.name);
+                        // if (dayDue <= 4 || timeCheck == "Hours" || timeCheck == "Hour" || timeCheck == "Minutes" || timeCheck == "Minutes" 
+                        //                 && timeCheck != "Months" && timeCheck != "Month")
+                        // {
+                        //     console.log("adding " + assignment.name);
+                        //     assignmentList.push(assignment.name);
+                            
+                            
+                        // }
+                        if (timeCheck == true){
+                            console.log("adding " + assignment.name);
+                            assignmentList.push(assignment.name);
+                        }
+                        else{
+                            console.log("not due soon");
+                        }
+                    })
+
+                });
+                dueAssignments["name"] = assignmentList;
+                dueAssignments["daysDue"] = String(4);
+                dueAssignments["phoneNum"] = phoneNum;
+                dueAssignments["notifCheck"] = notifCheck;
+                console.log("DUE DICT");
+                console.log(dueAssignments);
+                dueAssignments = JSON.stringify(dueAssignments);
+                $.ajax({
+                    url:"/bgSendSMS",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: dueAssignments,
+                    success: function (){
+                        // classList = JSON.parse(response);
+                        // assignmentGooglePop(classList);
+                        // storeGoogleImports(classList);
+                        console.log("SMS Sent Successfully");
+                    }
+                });
+            }
+        });
+    }
+    
+}
 //this function will remove temp objects when leaving page
 window.onbeforeunload = function(){
     temp = getTempClassObjs();
