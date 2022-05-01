@@ -222,7 +222,7 @@ function getGoogleJSONs(){
 function storeUserToken(){
     // probably will be moved later but this puts userToken in "memory" (?)
     // console.log(userToken);
-    var userToken =  '15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm';
+    var userToken = document.getElementById("CanvasConnect").value;
     $.ajax({
         type: "POST",
         url: '/bgGetUserToken',
