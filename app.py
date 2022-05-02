@@ -153,17 +153,18 @@ def getUserClasses(userID):
     # sys.stdout.flush()
     return returnList
 
-def getUserPhone(userID):
-    phoneNum = Users.query.filter_by(id = userID).first().Phone
+@app.route("/bgGetUserPhone", methods = ['GET', 'POST'])
+def getUserPhone():
+    phoneNum = Users.query.filter_by(id = current_user.id).first().phone
     if(phoneNum == '{}' or phoneNum == '' or phoneNum == []):
-        returnList = []
+        returnNum = ''
     else:
-        returnList = json.loads(phoneNum)
+        returnNum = json.loads(phoneNum)
 
     # print("getUserClasses ReturnList: "+ str(type(returnList)))
     # print(returnList)
     # sys.stdout.flush()
-    return returnList
+    return returnNum
 #this function takes in a classObj
 #it returns a list of every googleClass that it contains
 def getAllGoogleClassesInExistingClass(classObj):
@@ -1165,16 +1166,19 @@ def replaceQuote(description):
 def loadClassesNotif():
     userClassList = getUserClasses(current_user.id)
     #app.logger.info(json.dumps(userClassList))
-    print("USER CLASSES")
-    print()
+    # print("USER CLASSES")
+    # print()
     return userClassList
 
 @app.route("/bgStoreNum", methods = ['GET', 'POST'])
 def storePhoneNum():
 
     phoneNum = json.loads(request.data)
-
+    # print("Phone taken from User")
+    # print(phoneNum)
     Users.query.filter_by(id = current_user.id).first().phone = json.dumps(phoneNum['phoneNum'])
+    # print("Is num in DB?")
+    # print(Users.query.filter_by(id = current_user.id).first().phone)
     db.session.commit()
 
     # time.sleep(5)
@@ -1182,8 +1186,10 @@ def storePhoneNum():
 
 @app.route("/bgRemoveNum", methods = ['GET', 'POST'])
 def removePhoneNum():
-
+    # print("Phone will be removed from DB")
     Users.query.filter_by(id = current_user.id).first().phone = json.dumps('')
+    # print("Is num in DB?")
+    # print(Users.query.filter_by(id = current_user.id).first().phone)
     db.session.commit()
 
     return str('')

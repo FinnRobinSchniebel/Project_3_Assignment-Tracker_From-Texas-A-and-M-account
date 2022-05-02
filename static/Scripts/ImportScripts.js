@@ -701,9 +701,12 @@ function RemovePhoneNumberButton(){
             // classList = JSON.parse(response);
             // assignmentGooglePop(classList);
             // storeGoogleImports(classList);
-            console.log("Num Removed");
+            console.log("Phone Number Removed Successfully");
         }
     });
+    // var test = returnUserPhoneNumber();
+    // console.log("test");
+    // console.log(test);
 }
 /**
  * Called by set phone number button
@@ -734,18 +737,30 @@ function AddNumberButton(){
             console.log("Phone Number Updated Successfully");
         }
     });
-    // $.ajax({
-    //     url:"/bgSendSMS",
-    //     type: "POST",
-    //     contentType: "application/json",
-    //     success: function (){
-    //         // classList = JSON.parse(response);
-    //         // assignmentGooglePop(classList);
-    //         // storeGoogleImports(classList);
-    //         console.log("SMS Sent Successfully");
-    //     }
-    // });
+    // var test = returnUserPhoneNumber();
+    // console.log("test");
+    // console.log(test);
+}
 
+/**
+ * Makes an ajax call to get current user's phone number
+ */
+function returnUserPhoneNumber() {
+    var phoneNum;
+    $.ajax({
+        url:"/bgGetUserPhone",
+        type: "POST",
+        async: false,
+        contentType: "application/json",
+        success: function (response){
+            // console.log("Number returned");
+            // console.log(response);
+            phoneNum = response;
+            return response;
+        }
+    });
+    // console.log("num is " + num);
+    return phoneNum;
 }
 
 //this function will remove temp objects when leaving page
