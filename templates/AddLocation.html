@@ -91,6 +91,7 @@
 				$.ajax({
 					url:"/bgLoadUserClasses",
 					type: "GET",
+                    async: false,
 					contentType: "application/json",
 					success: function (response){
 						DBclassList = JSON.parse(response);
@@ -98,6 +99,30 @@
 						loadPage(DBclassList);
 					}
 				});
+
+
+                // if currentCanvasToken == '', there is not canvasToken
+                var canvasToken;
+                var hasValidGoogleToken;
+                $.ajax({
+                    url:"/bgGetCurrUserTokens",
+                    type: "GET",
+                    async: false,
+                    contentType: "application/json",
+                    success: function (response){
+                        tokens = JSON.parse(response);
+                        canvasToken = tokens.canvas;
+                        hasValidGoogleToken = tokens.google;
+                        // alert(JSON.stringify(tokens));
+                        // console.log("Google Status: ", hasValidGoogleToken);
+                        // console.log("Canvas Token: ", canvasToken);
+                    }
+                });
+
+
+
+
+
                 CreateOptionPannel('info', 'locationType');
 			}
 

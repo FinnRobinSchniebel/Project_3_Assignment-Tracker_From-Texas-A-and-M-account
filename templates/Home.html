@@ -265,6 +265,7 @@
 				$.ajax({
 					url:"/bgLoadUserClasses",
 					type: "GET",
+					async: false,
 					contentType: "application/json",
 					success: function (response){
 						DBclassList = JSON.parse(response);

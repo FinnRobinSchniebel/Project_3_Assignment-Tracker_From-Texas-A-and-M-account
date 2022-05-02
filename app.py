@@ -26,6 +26,7 @@ import requests
 import re
 from requests.structures import CaseInsensitiveDict
 
+import vonage
 import time
 
 import flask
@@ -827,6 +828,21 @@ def getGoogleJSONs():
 
 #     return (resp.json())
 
+@app.route('/bgGetCurrUserTokens', methods=['GET', 'POST'])
+def sendToken():
+    canvasToken = Users.query.filter_by(id = current_user.id).first().canvasBearer
+    hasValidGoogleToken = False
+
+    if(Users.query.filter_by(id = current_user.id).first().googleToken != ''):
+        hasValidGoogleToken = True
+
+    tokens = {}
+    tokens['canvas'] = canvasToken
+    tokens['google'] = hasValidGoogleToken
+
+    return json.dumps(tokens)
+
+
 
 #will call for all courses of a user
 @app.route('/bgGetCanvasCourses', methods=['GET', 'POST'])
@@ -836,13 +852,21 @@ def getCanvasCourses():
     #eventually will take bearer token as an argument
     #token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
     token = Users.query.filter_by(id = current_user.id).first().canvasBearer
+    # print("TOKEN IN COURSES")
+    # print(token)
+    if(token == ''):
+        return 'INVALID CANVAS TOKEN'
+
     headers = {'Authorization' : 'Bearer '+ token}
 
+    # print("Token")
+    # print(token)
     resp = requests.get(url, headers=headers)
 
     # finds the max enrollment_term_id -> courses w/ this are in current semester 
     maxID = 0
     for ID in resp.json():
+        # print(ID)
         currID = ID["enrollment_term_id"]
         if currID > maxID:
             maxID = currID
@@ -870,7 +894,7 @@ def getCanvasCourses():
     return jsonStr
     # return (courseDict)
 
-# havent looked into this yet
+## Gets Inputted user canvas token
 app.secret_key = 'dljsaklqk24e21cjn!Ew@@dsa5'
 @app.route('/bgGetUserToken', methods=['POST'])
 def get_post_json():   
@@ -881,16 +905,38 @@ def get_post_json():
     isValidToken = ValidateCanvasBearer(tokenDictionary['token'])
 
     if isValidToken:
+        # print("token true")
+        # print(tokenDictionary['token'])
         Users.query.filter_by(id = current_user.id).first().canvasBearer = tokenDictionary['token']
         db.session.commit()
-
+    else:
+        # print("token false")
+        # print(tokenDictionary['token'])
+        Users.query.filter_by(id = current_user.id).first().canvasBearer = ''
+        db.session.commit()
+        #return jsonify(status="error")
 
     return jsonify(status="success")
 
 def ValidateCanvasBearer(token): 
     ## Make a test API call
     ## Return false if invalid
-    return True
+    url = "https://canvas.tamu.edu/api/v1/courses?include=items&per_page=1000/"
+
+    # eventually will take bearer token as an argument
+    # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+    headers = {'Authorization' : 'Bearer '+ token}
+
+    resp = requests.get(url, headers=headers)
+    # print("resp")
+    # print(resp.status_code)
+    if (resp.status_code == 200):
+        # print("TRUE")
+        return True
+    else:
+        # print("FALSE")
+        return False
+
 
 
 @app.route('/bgStoreCourseINFO', methods=['POST'])
@@ -914,8 +960,6 @@ def getCanvasAssignments():
     # takes Token from session to use to access APIs
     token = Users.query.filter_by(id = current_user.id).first().canvasBearer
 
-    if(token == ''):
-        return 'INVALID CANVAS TOKEN'
     # grabs courseINFO that was passed in
     time.sleep(1)
     courseINFO = session.get("courseINFO")
@@ -948,7 +992,7 @@ def getCanvasAssignments():
         # TODO: Noticed some dates are null for assignments need to check
         assignmentObj = {}
         assignmentNameCheck = checkInvalidChar(assignment['name'])
-        assignmentObj['name'] = "Canvas " + assignmentNameCheck
+        assignmentObj['name'] = assignmentNameCheck
         assignmentObj['class'] = courseName
         assignmentObj['priority'] = 3
         # issues with due date being null
@@ -1143,9 +1187,17 @@ def removePhoneNum():
     db.session.commit()
 
     return str('')
+
 @app.route("/bgSendSMS", methods = ['GET', 'POST'])
 def sendSMS():
-    # assignmentsDue = json.loads(request.data)
+    # constantly updates to check if time is 8am
+    # now = datetime.now()
+    # currentTime = now.strftime("%H:%M")
+    # checkTime1 = now.replace(hour=8, minute=00).strftime("%H:%M")
+    # checkTime2 = now.replace(hour=8, minute=01).strftime("%H:%M")
+    # checkTime3 = now.replace(hour=8, minute=02).strftime("%H:%M")
+
+    # if (currentTime == checkTime1):
     userID = current_user.id
     phoneNum = Users.query.filter_by(id = userID).first().phone
     print("phoneNum")
@@ -1157,14 +1209,17 @@ def sendSMS():
     # stop running in background (once implementing)
     if (phoneNum == None or phoneNum == '' or phoneNum == ""):
         Users.query.filter_by(id = userID).first().phone = ''
+        infin = False
         return False
     # Users.query.filter_by(id = userID).first().Phone = assignmentsDue['phoneNum']
     # print(assignmentsDue)
     else:
+        msg = "These assignments are due in the next 3 days: \n \n"
         userClasses = loadClassesNotif()
         userNum = str(phoneNum)
         #loops through the user's current classes and assignments
         for classes in userClasses:
+            msg+= "For this class, " +classes['name']+ ":\n"
             for assignments in classes['assignments']:
 
                 # parse dates to compare correctly 
@@ -1186,40 +1241,39 @@ def sendSMS():
 
                 if (dayDue <= 3):
                     assignList.append(assignments['name'])
+                    msg += assignments['name'] + "\n" + "\n"
                     assignDict['assignment'] = assignList
 
-    print("Assign Dict")
-    print(assignDict)
-    msg = "These assignments are due in the next 3 days: \n \n" 
+        if (assignDict == {}):
+            msg = "There are no assignments due in the next 3 days."
 
-    if (assignDict == {}):
-        msg = "There are no assignments due in the next 3 days."
-    else:
-        for assignName in assignDict['assignment']:
-            msg +=  assignName + "\n" + "\n"
+        print(msg)
+        # client = vonage.Client(key="5044506d", secret="mBJC1FV1dl8HxgMA")
+        # sms = vonage.Sms(client)
 
-    print(msg)
-    # client = vonage.Client(key="5044506d", secret="mBJC1FV1dl8HxgMA")
-    # sms = vonage.Sms(client)
+        # responseData = sms.send_message(
+        #     {
+        #         "from": "18889095613",
+        #         "to": "18327953595",
+        #         "text": msg,
+        #     }
+        # )
+        # if responseData["messages"][0]["status"] == "0":
+        #     print("Message sent successfully.")
+        #     # time.sleep(70)
+        # else:
+        #     print(f"Message failed with error: {responseData['messages'][0]['error-text']}")
+        #     # infin = False
+        #     return False
+    # returned this to stop type error from occuring 
+    dictThing = {}
+    return dictThing
 
-    # responseData = sms.send_message(
-    #     {
-    #         "from": "18889095613",
-    #         "to": "1" + userNum,
-    #         "text": msg,
-    #     }
-    # )
-    # print("responseData is : ")
-    # print(responseData)
-    # if responseData["messages"][0]["status"] == "0":
-    #     print("Message sent successfully.")
-    #     return True
-    # else:
-    #     print(f"Message failed with error: {responseData['messages'][0]['error-text']}")
-    #     return False
-
-    return False
 # def removeEndTime(date):
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug = True)
