@@ -202,7 +202,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var isQuick =0; //is this a quick view item
     if(Location == ""){
-        console.log(ClassNameAssignment);
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
@@ -225,6 +224,14 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     }
     else{
         document.getElementById('CheckBoxComplete'+ NameToAddForID).onclick = function(){completeButton(assignmentName, className)};
+    }
+    if(isComplete === true){
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).complete =true;
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).checked =true;
+    }
+    else if(isComplete === false){
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).complete =false;
+        document.getElementById('CheckBoxComplete'+ NameToAddForID).checked =false;
     }
 
     //remove button
@@ -323,7 +330,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);
     //bar stuff
     var widthProgress = getDatePercent(assignmentStartDate, assignmentDueDate);
-    console.log(widthProgress);
     document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + widthProgress + '%' + "; background-color: purple;");
     if(parseInt(widthProgress) > 90){
         document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
@@ -1160,6 +1166,7 @@ function addAssignment(className, classID){
     // to make it dynamic, takes className from Parameter and is used to find the -
     // associated ID for variables
     var newAssignmentDisplay = document.getElementById(''+classID+'Name').value;
+    newAssignmentDisplay = newAssignmentDisplay.trim();
     // takes the space away to ensure variables are properly named
     var startTime = document.getElementById(''+classID+'Start').value; //"`+inputClassName+`Start"
     var endTime = document.getElementById(''+classID+'End').value;
@@ -1173,8 +1180,8 @@ function addAssignment(className, classID){
     var relatedLinks = document.getElementById(''+classID+'RelatedLinks').value;
     var link = document.getElementById(''+classID+'Link').value;
 
-    if(newAssignmentDisplay.includes('_') === true){
-        alert("This is not a valid Assignment name. Please make sure the name contains no '_' in it");
+    if(newAssignmentDisplay.includes('_') === true || newAssignmentDisplay == ""){
+        alert("This is not a valid Assignment name. Please make sure the name contains no '_' in it or is an empty name");
         return;
     }
     if(getAssignment(className, newAssignmentDisplay) != null){
