@@ -116,7 +116,7 @@ function colorAllAssignment(classList){
     classList.forEach((classObj)=>{ 
         var classColor = classObj.color;
         var classID = classObj.name;
-        classId = classID.replaceAll(" ", "_");
+        classID = classID.replaceAll(" ", "_");
         //parsing rgb string into array of numbers
         var inputSubstring = classColor.substring(4,classColor.length-1);
         var RGBstringArray = inputSubstring.split(",");
