@@ -84,6 +84,7 @@ function addAssignmentToClassDB(assignmentObj){
     $.ajax({
         url:"/bgAddAssignment",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: assignmentObj,
         dataType: 'json',
@@ -97,6 +98,7 @@ function deleteClassDB(classObj){
     $.ajax({
         url:"/bgDeleteClass",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: classObj,
         dataType: 'json',
@@ -314,6 +316,7 @@ function storeClassDB(classObj){
     $.ajax({
         url:"/bgAddClass",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: classObj,
         dataType: 'json',
@@ -348,6 +351,7 @@ function completeButton(assignmentName,className){
     $.ajax({
         url:"/bgUpdateAssignment",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: jsonObj,
         dataType: 'json',
@@ -407,6 +411,7 @@ function changeClassColor(className){
     $.ajax({
         url:"/bgUpdateClass",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: classObj,
         dataType: 'json',
@@ -775,6 +780,7 @@ function getGoogleJSONs(){
     $.ajax({
         url:"/bgGoogleImport",
         type: "GET",
+        async: false,
         contentType: "application/json",
         success: function (response){
             if(response == "NO TOKEN"){
@@ -793,11 +799,12 @@ function getGoogleJSONs(){
 function storeUserToken(){
     // probably will be moved later but this puts userToken in "memory" (?)
     // console.log(userToken);
-    var userToken =  '15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm';
+    var userToken = document.getElementById("CanvasConnect").value;
     $.ajax({
         type: "POST",
         url: '/bgGetUserToken',
         contentType: "application/json",
+        async: false,
         data: JSON.stringify({token: userToken}),
         dataType: "json",
         success: function(response) {
@@ -882,6 +889,7 @@ function getCanvasCourses(){
     $.ajax({
         url:`/bgGetCanvasCourses`,
         type: "GET", 
+        async: false,
         contentType: "application/json",
         success: function (response){
             if(response == 'INVALID CANVAS TOKEN'){
@@ -1020,6 +1028,7 @@ function appendAssignmentListDB(className, assignmentList){
         type: "POST",
         contentType: "application/json",
         data: jsonObj,
+        async: false,
         dataType: 'json',
         success: function (response){
         }
@@ -1165,6 +1174,14 @@ function FinalizeCanvas(){
 
 }
 
+
+function getCanvasToken(){
+}
+
+function isGoogleImportValid(){
+    return 0
+}
+
 function PopulateImporterOptions(){
     //todo
 }
@@ -1258,123 +1275,64 @@ function RemovePhoneNumberButton(){
     //call function do deal with db
     document.getElementById('PhoneNumberField').value ='';
     var noNumber= document.getElementById('PhoneNumberField').value;
-    var sendNotif = false;
 
-    sendSMS(noNumber, sendNotif);
+    $.ajax({
+        url:"/bgRemoveNum",
+        type: "POST",
+        async: false,
+        contentType: "application/json",
+        success: function (){
+            // classList = JSON.parse(response);
+            // assignmentGooglePop(classList);
+            // storeGoogleImports(classList);
+            console.log("Num Removed");
+        }
+    });
 }
 /**
  * Called by set phone number button
  */
-function AddNumberButton(){
+function AddNumberButton(){ 
     var number = document.getElementById('PhoneNumberField').value;
-    var numWithoutDash = number.replace('-', '');
+    var numWithoutDash = number.replaceAll('-', '');
+    console.log(number + " " +numWithoutDash);
     if(numWithoutDash.length != 10){
         alert("This is not a valid number. Please follow the format 'xxx-xxx-xxxx'");
         return;
     }
     //call function for working with database here
-    var sendNotif = true;
-    sendSMS(numWithoutDash, sendNotif);
-
+    // sendSMS(numWithoutDash, sendNotif);
+    storeNum = {}
+    storeNum["phoneNum"] = numWithoutDash;
+    storeNum = JSON.stringify(storeNum);
+    $.ajax({
+        url:"/bgStoreNum",
+        type: "POST",
+        async: false,
+        contentType: "application/json",
+        data: storeNum,
+        success: function (){
+            // classList = JSON.parse(response);
+            // assignmentGooglePop(classList);
+            // storeGoogleImports(classList);
+            console.log("SMS Sent Successfully");
+        }
+    });
+    $.ajax({
+        url:"/bgSendSMS",
+        type: "POST",
+        async: false,
+        contentType: "application/json",
+        success: function (){
+            // classList = JSON.parse(response);
+            // assignmentGooglePop(classList);
+            // storeGoogleImports(classList);
+            console.log("SMS Sent Successfully");
+        }
+    });
 
 }
-/**
- * Will be used by add/remove number to determine if notifications 
- * will be sent to user
- * @param {*} phoneNum 
- * @param {*} notifCheck 
- */
-function sendSMS(phoneNum, notifCheck){
 
-    if (notifCheck == false){
-        dueAssignments = {}
-        dueAssignments["notifCheck"] = notifCheck;
-        console.log("Remove Number and Stop Notifs");
-        // $.ajax({
-        //     url:"/bgSendSMS",
-        //     type: "POST",
-        //     contentType: "application/json",
-        //     data: dueAssignments,
-        //     success: function (){
-        //         // classList = JSON.parse(response);
-        //         // assignmentGooglePop(classList);
-        //         // storeGoogleImports(classList);
-        //         console.log("SMS Sent Successfully");
-        //     }
-        // });
-    }
-    else{
-        // Checks the database for the current classes to sift through
-        // $.ajax({
-        //     url:"/bgLoadUserClasses",
-        //     type: "GET",
-        //     contentType: "application/json",
-        //     success: function (response){
-        //         DBclassList = JSON.parse(response);
-        //         dueAssignments = {}
-        //         assignmentList = []
-        //         DBclassList.forEach(newClassObj => {
-        //             console.log("Class: ");
-        //             console.log(newClassObj);
-        //             newClassObj.assignments.forEach(assignment => {
-        //                 console.log("assignment: ");
-        //                 console.log(assignment.name);
-
-        //                 var timeCheck = notifDateCheck(assignment.dueDate);
-        //                 console.log(assignment.name);
-
-
-        //                 // console.log(timeLeft);
-        //                 // var dayDue = timeLeft.split(" ")[0];
-        //                 // var check = timeLeft.split(" ");
-        //                 // var timeCheck = timeLeft.substr(timeLeft.indexOf(' ') + 1);
-        //                 // console.log(hourCheck);
-        //                 // 4 is the days we'll look forward to reminding user for now 
-        //                 // "these assignments are due in 3 days"
-        //                 // assignmentList.push(assignment.name);
-        //                 // if (dayDue <= 4 || timeCheck == "Hours" || timeCheck == "Hour" || timeCheck == "Minutes" || timeCheck == "Minutes" 
-        //                 //                 && timeCheck != "Months" && timeCheck != "Month")
-        //                 // {
-        //                 //     console.log("adding " + assignment.name);
-        //                 //     assignmentList.push(assignment.name);
-                            
-                            
-        //                 // }
-        //                 if (timeCheck == true){
-        //                     console.log("adding " + assignment.name);
-        //                     assignmentList.push(assignment.name);
-        //                 }
-        //                 else{
-        //                     console.log("not due soon");
-        //                 }
-        //             })
-
-        //         });
-                // dueAssignments["name"] = assignmentList;
-                dueAssignments = {}
-                dueAssignments["daysDue"] = String(3);
-                dueAssignments["phoneNum"] = phoneNum;
-                dueAssignments["notifCheck"] = notifCheck;
-                console.log("DUE DICT");
-                console.log(dueAssignments);
-                dueAssignments = JSON.stringify(dueAssignments);
-                $.ajax({
-                    url:"/bgSendSMS",
-                    type: "POST",
-                    contentType: "application/json",
-                    data: dueAssignments,
-                    success: function (){
-                        // classList = JSON.parse(response);
-                        // assignmentGooglePop(classList);
-                        // storeGoogleImports(classList);
-                        console.log("SMS Sent Successfully");
-                    }
-                });
-            }
-        // });
-    // }
-    
-}
 //this function will remove temp objects when leaving page
 window.onbeforeunload = function(){
     temp = getTempClassObjs();
@@ -1400,14 +1358,14 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var ClassNameAssignment = className.replaceAll(" ", "_");
 
-    var isCanvasAssignment = false;
-    var isCanvasCheck = newAssignment.substring(0, 6);
+    // var isCanvasAssignment = false;
+    // var isCanvasCheck = newAssignment.substring(0, 6);
     // console.log("Assignmetn NAMNE E E: " + assignmentName);
     // console.log("isCanvasCheck: " + isCanvasCheck);
     // console.log("Assignment Notes: " + assignmentNotes);
-    if (isCanvasCheck == "Canvas"){
-        isCanvasAssignment = true;
-    }
+    // if (isCanvasCheck == "Canvas"){
+    //     isCanvasAssignment = true;
+    // }
 
     var NameToAddForID= ClassNameAssignment+newAssignment;
 
@@ -1440,6 +1398,7 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var isQuick =0; //is this a quick view item
     if(Location == ""){
+        console.log(ClassNameAssignment);
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
@@ -1559,30 +1518,42 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);
     //bar stuff
-    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + getDatePercent(assignmentStartDate, assignmentDueDate) + "; background-color: purple;");
-    document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
-
-    document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
-    document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
-    // WIP FOR INCLUDING HTML DESCRIPTIONS FOR CANVAS
-    if (isCanvasAssignment == true){
-        document.getElementById('AssigmentDetailWrapper'+ NameToAddForID).innerHTML = 
-        `<p>
-        Details: <br>
-        `+assignmentNotes+`
-
-        <div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
-            <!-- Will need unique id in future-->
-            
-        </div>
-        </p>`
-        
-        // document.getElementById('Details'+ NameToAddForID).innerText = '';
+    var widthProgress = getDatePercent(assignmentStartDate, assignmentDueDate);
+    console.log(widthProgress);
+    document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + widthProgress + '%' + "; background-color: purple;");
+    if(parseInt(widthProgress) > 90){
+        document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
+        document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = '';
     }
     else{
-        document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
-
+        document.getElementById('TimeLeftBarText' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
+        document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = '';
     }
+    
+
+    //links
+    document.getElementById('AssignmentLink'+ NameToAddForID).innerText = assignmentLink;
+    document.getElementById('RelatedLinks'+ NameToAddForID).innerText = assignmentRelatedLinks;
+    document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
+    // WIP FOR INCLUDING HTML DESCRIPTIONS FOR CANVAS
+    // if (isCanvasAssignment == true){
+    //     document.getElementById('AssigmentDetailWrapper'+ NameToAddForID).innerHTML = 
+    //     `<p>
+    //     Details: <br>
+    //     `+assignmentNotes+`
+
+    //     <div class="genericWrittingBox" contenteditable="true" id="Details" onblur="updateDiscription()">
+    //         <!-- Will need unique id in future-->
+            
+    //     </div>
+    //     </p>`
+        
+    //     // document.getElementById('Details'+ NameToAddForID).innerText = '';
+    // }
+    // else{
+    //     document.getElementById('Details'+ NameToAddForID).innerText = assignmentNotes;
+
+    // }
     
 
 
@@ -1599,7 +1570,7 @@ function getDatePercent(StartDate, DueDate){
     if(percent < 0){ //edge case (overdue)
         percent = 0;
     }
-    return ''+ percent + '%';
+    return percent;
 }
 
 //this function will return the largest nonzero value of the time left for the progress bar
@@ -1665,43 +1636,6 @@ function getTimeLeftLargestNonZero(DueDate){
 
 }
 
-function notifDateCheck(DueDate){
-    //cannot really be condensed much more than this
-
-    var curDate = new Date(CurrentDateISOTime());
-    
-
-    var timeCheck = new Date(DueDate) - curDate
-    // assignments aren't recognized as overdue, added this 
-    if (timeCheck < 0){
-        return "OVER DUE!!!";
-    }
-    
-    var timeSec = Math.abs(new Date(DueDate) - curDate)/1000;
-    
-    //var Seconds = timeSec%60;
-    var minutes = Math.floor(timeSec/60)%60;
-    var hours = Math.floor(timeSec/3600)%24;
-    var days = Math.floor(timeSec/86400)%30;
-    var months = Math.floor(timeSec/(2.69*Math.pow(10,6)))%12;
-    var years = Math.floor(Math.floor(timeSec/(2.69*Math.pow(10,6)))/12);
-
-    if(years > 0){
-        return false;
-    }
-   // var daysBetween = (new Date( (curDate).getFullYear(), curDate.month(), 0)).getDate() - curDate.getDate() + new Date(DueDate).getDate(); //max days in month - current date + days in following month
-
-    if(months > 0){ //30 as average length of a month
-        return false;
-    }
-
-    if(days <= 4){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
 function ChangeIDWith(oldName, NewName){
 
     for(var i=0; i <document.querySelectorAll('[id*="'+oldName+'"]').length; i++){

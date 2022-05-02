@@ -84,6 +84,7 @@ function addAssignmentToClassDB(assignmentObj){
     $.ajax({
         url:"/bgAddAssignment",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: assignmentObj,
         dataType: 'json',
@@ -97,6 +98,7 @@ function deleteClassDB(classObj){
     $.ajax({
         url:"/bgDeleteClass",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: classObj,
         dataType: 'json',
@@ -314,6 +316,7 @@ function storeClassDB(classObj){
     $.ajax({
         url:"/bgAddClass",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: classObj,
         dataType: 'json',
@@ -348,6 +351,7 @@ function completeButton(assignmentName,className){
     $.ajax({
         url:"/bgUpdateAssignment",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: jsonObj,
         dataType: 'json',
@@ -407,6 +411,7 @@ function changeClassColor(className){
     $.ajax({
         url:"/bgUpdateClass",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: classObj,
         dataType: 'json',

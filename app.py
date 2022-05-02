@@ -155,10 +155,10 @@ def getUserClasses(userID):
 
 def getUserPhone(userID):
     phoneNum = Users.query.filter_by(id = userID).first().Phone
-    if(phoneNum == '{}' or classText == '' or classText == []):
+    if(phoneNum == '{}' or phoneNum == '' or phoneNum == []):
         returnList = []
     else:
-        returnList = json.loads(classText)
+        returnList = json.loads(phoneNum)
 
     # print("getUserClasses ReturnList: "+ str(type(returnList)))
     # print(returnList)
@@ -504,7 +504,7 @@ def addAssignment():
 
 @app.route("/bgAddClass", methods = ['GET', 'POST'])
 def addClass():
-    time.sleep(1)
+    #time.sleep(1)
     classObj = json.loads(request.data)
     #app.logger.info(type(classObj))
 
@@ -828,6 +828,21 @@ def getGoogleJSONs():
 
 #     return (resp.json())
 
+@app.route('/bgGetCurrUserTokens', methods=['GET', 'POST'])
+def sendToken():
+    canvasToken = Users.query.filter_by(id = current_user.id).first().canvasBearer
+    hasValidGoogleToken = False
+
+    if(Users.query.filter_by(id = current_user.id).first().googleToken != ''):
+        hasValidGoogleToken = True
+
+    tokens = {}
+    tokens['canvas'] = canvasToken
+    tokens['google'] = hasValidGoogleToken
+
+    return json.dumps(tokens)
+
+
 
 #will call for all courses of a user
 @app.route('/bgGetCanvasCourses', methods=['GET', 'POST'])
@@ -879,7 +894,7 @@ def getCanvasCourses():
     return jsonStr
     # return (courseDict)
 
-# havent looked into this yet
+## Gets Inputted user canvas token
 app.secret_key = 'dljsaklqk24e21cjn!Ew@@dsa5'
 @app.route('/bgGetUserToken', methods=['POST'])
 def get_post_json():   
@@ -1255,6 +1270,10 @@ def sendSMS():
     return dictThing
 
 # def removeEndTime(date):
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug = True)

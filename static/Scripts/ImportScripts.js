@@ -204,6 +204,7 @@ function getGoogleJSONs(){
     $.ajax({
         url:"/bgGoogleImport",
         type: "GET",
+        async: false,
         contentType: "application/json",
         success: function (response){
             if(response == "NO TOKEN"){
@@ -227,6 +228,7 @@ function storeUserToken(){
         type: "POST",
         url: '/bgGetUserToken',
         contentType: "application/json",
+        async: false,
         data: JSON.stringify({token: userToken}),
         dataType: "json",
         success: function(response) {
@@ -311,6 +313,7 @@ function getCanvasCourses(){
     $.ajax({
         url:`/bgGetCanvasCourses`,
         type: "GET", 
+        async: false,
         contentType: "application/json",
         success: function (response){
             if(response == 'INVALID CANVAS TOKEN'){
@@ -449,6 +452,7 @@ function appendAssignmentListDB(className, assignmentList){
         type: "POST",
         contentType: "application/json",
         data: jsonObj,
+        async: false,
         dataType: 'json',
         success: function (response){
         }
@@ -691,6 +695,7 @@ function RemovePhoneNumberButton(){
     $.ajax({
         url:"/bgRemoveNum",
         type: "POST",
+        async: false,
         contentType: "application/json",
         success: function (){
             // classList = JSON.parse(response);
@@ -703,9 +708,10 @@ function RemovePhoneNumberButton(){
 /**
  * Called by set phone number button
  */
-function AddNumberButton(){
+function AddNumberButton(){ 
     var number = document.getElementById('PhoneNumberField').value;
-    var numWithoutDash = number.replace('-', '');
+    var numWithoutDash = number.replaceAll('-', '');
+    console.log(number + " " +numWithoutDash);
     if(numWithoutDash.length != 10){
         alert("This is not a valid number. Please follow the format 'xxx-xxx-xxxx'");
         return;
@@ -718,6 +724,7 @@ function AddNumberButton(){
     $.ajax({
         url:"/bgStoreNum",
         type: "POST",
+        async: false,
         contentType: "application/json",
         data: storeNum,
         success: function (){
