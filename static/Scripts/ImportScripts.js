@@ -600,6 +600,7 @@ function FinalizeCanvas(){
 
 function PopulateImporterOptions(){
     //todo
+    
 }
 function CreateOptionPannel(info, locationType){
 

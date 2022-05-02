@@ -63,7 +63,9 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         document.getElementById(Location).appendChild(NewHTML);
         isQuick =1;
     }
-    
+
+    //collapse all other assignments on opening
+    document.getElementById('Overview'+ NameToAddForID).setAttribute('onclick', 'closeallOtherAssignments()');
 
 
     //set up the button to link to the right dropdown on the page
@@ -346,4 +348,8 @@ function TimeToString(time){
         //newTime = newTime.replaceAll('T', ' ');
     }
     return newTime;
+}
+
+function closeallOtherAssignments(){
+        jQuery('.assignmentCollapse').collapse('hide');
 }

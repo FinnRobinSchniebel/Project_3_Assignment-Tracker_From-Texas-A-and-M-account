@@ -209,7 +209,9 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         document.getElementById(Location).appendChild(NewHTML);
         isQuick =1;
     }
-    
+
+    //collapse all other assignments on opening
+    document.getElementById('Overview'+ NameToAddForID).setAttribute('onclick', 'closeallOtherAssignments()');
 
 
     //set up the button to link to the right dropdown on the page
@@ -492,6 +494,10 @@ function TimeToString(time){
         //newTime = newTime.replaceAll('T', ' ');
     }
     return newTime;
+}
+
+function closeallOtherAssignments(){
+        jQuery('.assignmentCollapse').collapse('hide');
 }
 src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js";
 
@@ -1329,7 +1335,7 @@ function PopulateClass(className, closest, assignmentcount){
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed
     newDiv.innerHTML += `
-    <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
+    <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`" data-parent="#classList" onclick=''>
         <div class="ClassName Font2">
             `+inputClassNameDisplay+`
         </div>
@@ -1443,8 +1449,20 @@ function PopulateClass(className, closest, assignmentcount){
         </div>
     </div>`;
     var ClassesDiv = document.getElementById("classList");
+
+    // var $classList = $('#classList');
+    // $classList.on('show.bs.collapse','.collapse', function() {
+    //     $myGroup.find('.collapse.in').collapse('hide');
+    // });
+
     ClassesDiv.innerHTML += newDiv.innerHTML;
+
+    document.getElementById(inputClassName+'Section').setAttribute('onclick', 'collapseOther()');
 } 
+
+function collapseOther(){
+    jQuery('.collapse').collapse('hide');
+}
 
 
 //Generates todays date and converts it to ISO keeping its timezone offset
