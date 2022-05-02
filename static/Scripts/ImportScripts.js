@@ -724,20 +724,20 @@ function AddNumberButton(){
             // classList = JSON.parse(response);
             // assignmentGooglePop(classList);
             // storeGoogleImports(classList);
-            console.log("SMS Sent Successfully");
+            console.log("Phone Number Updated Successfully");
         }
     });
-    $.ajax({
-        url:"/bgSendSMS",
-        type: "POST",
-        contentType: "application/json",
-        success: function (){
-            // classList = JSON.parse(response);
-            // assignmentGooglePop(classList);
-            // storeGoogleImports(classList);
-            console.log("SMS Sent Successfully");
-        }
-    });
+    // $.ajax({
+    //     url:"/bgSendSMS",
+    //     type: "POST",
+    //     contentType: "application/json",
+    //     success: function (){
+    //         // classList = JSON.parse(response);
+    //         // assignmentGooglePop(classList);
+    //         // storeGoogleImports(classList);
+    //         console.log("SMS Sent Successfully");
+    //     }
+    // });
 
 }
 
