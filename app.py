@@ -68,7 +68,7 @@ SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly', 'https:/
 
 #initialize database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ipnwjsunpreakc:893cfd8d5ea47c4bda19be8286789b4bbb105634ead9b253f00ac82b069b38ca@ec2-52-3-200-138.compute-1.amazonaws.com:5432/d6p1pfuav0bals'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://jtolkphovgxpcs:f8678953153080b775c3ca08bb6abfb45fb82015bfc79e9f5ba38994e708f5cb@ec2-52-86-115-245.compute-1.amazonaws.com:5432/dfh67sk8i9h2b'
 app.config['SECRET_KEY'] = "Superduper secret key NOBODY KNOWS WHAT IT IS"
 db = SQLAlchemy(app)
 
@@ -110,11 +110,12 @@ def refreshGoogleDB():
     for i in range(numUsers):
         userID = userList[i].id
         token = userList[i].googleToken
-        if(token != ''):
-            credsDictionary = json.loads(token)
+        if(token != '{}'):
             # print(str(credsDictionary))
             # sys.stdout.flush()
-            creds = google.oauth2.credentials.Credentials(**credsDictionary)
+            # print(str(json.loads(token)))
+            # sys.stdout.flush()
+            creds = google.oauth2.credentials.Credentials(**json.loads(token))
             # gets classList of loadedUse token 
             incomingClassList = refreshGoogleJSONs(creds)
             if(incomingClassList != []):
@@ -124,7 +125,7 @@ def refreshGoogleDB():
                 for j in range(len(existingClassList)):
                     existingAssignments = existingClassList[j]['assignments']
                     #this calls function that returns a list of all googleClasses contained in a class
-                    containedGoogleClasses = getAllGoogleClassesInExistingClass(existingClassList[j])
+                    containedGoogleClasses = getAllGoogleLocationsInExistingClass(existingClassList[j])
                     refreshedAssignments = refreshGoogleAssignmentList(existingAssignments, incomingAssignmentList, containedGoogleClasses)
                     print(str(refreshedAssignments))
                     sys.stdout.flush()
@@ -168,7 +169,7 @@ def getUserPhone():
     return returnNum
 #this function takes in a classObj
 #it returns a list of every googleClass that it contains
-def getAllGoogleClassesInExistingClass(classObj):
+def getAllGoogleLocationsInExistingClass(classObj):
     assignmentList = classObj['assignments']
     googleClasses = []
 
@@ -238,8 +239,8 @@ def refreshGoogleJSONs(creds):
 
         classList = []
         if not courses:
-            print('No courses found.')
-            return []
+            return 'NONE'
+        # used to keep track of classes 
         order = 0
         # Prints the names of the courses
         for course in courses:
@@ -296,8 +297,8 @@ def refreshGoogleJSONs(creds):
                 dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
                 delta = dueDate - date.today()
 
-                ##checks if assignment is less than ten days overdue, if not then displays
-                isNotPastAssignment = delta < timedelta(days = 1)
+                ##checks if assignment is less than one days overdue, if not then displays
+                isNotPastAssignment = delta > timedelta(days = 1)
 
 
 
@@ -329,7 +330,8 @@ def refreshGoogleJSONs(creds):
 
                 if(isNotPastAssignment):
                     assignmentList.append(assignmentObj)
-                
+            
+            
 
             #creating classObj for each course
             #store assignmentList of each course
@@ -343,10 +345,11 @@ def refreshGoogleJSONs(creds):
 
             classList.append(classObj)
 
+
         return classList
-        
+
     except HttpError as error:
-        print('An error occurred: %s' % error)
+            print('An error occurred: %s' % error)
 
 
 ##create signup form
@@ -718,7 +721,7 @@ def getGoogleJSONs():
                 for assignment in assignments:
                     #create a new assignmentObj to make JSON
                     assignmentObj = {}
-                    assignmentObj['name'] = assignment['title']
+                    assignmentObj['name'] = (assignment['title'])[0:15]
                     assignmentObj['class'] = className
                     assignmentObj['priority'] = 3
 
@@ -801,10 +804,6 @@ def getGoogleJSONs():
 
                 classList.append(classObj)
 
-
-            #update DB tokens
-            Users.query.filter_by(id = current_user.id).first().googleToken = json.dumps(session['credentials'])
-            db.session.commit()
 
 
             ##write classObj to JSON file
@@ -1024,7 +1023,7 @@ def getCanvasAssignments():
     # grabs courseINFO that was passed in
     time.sleep(1)
     courseINFO = session.get("courseINFO")
-    courseName = courseINFO['name']
+    courseName = (courseINFO['name'])[0:15]
     courseID = courseINFO['id']
 
     # was used before change, may not be needed anymore
@@ -1053,7 +1052,7 @@ def getCanvasAssignments():
         # TODO: Noticed some dates are null for assignments need to check
         assignmentObj = {}
         assignmentNameCheck = checkInvalidChar(assignment['name'])
-        assignmentObj['name'] = assignmentNameCheck
+        assignmentObj['name'] = assignmentNameCheck[0:15]
         assignmentObj['class'] = courseName
         assignmentObj['priority'] = 3
         # issues with due date being null
@@ -1356,8 +1355,8 @@ if __name__ == '__main__':
 #     i = 1
 #     while i > 0:
 #         time.sleep(1)
-#         print(i)
-#         sys.stdout.flush()
+#         # print(i)
+#         # sys.stdout.flush()
 #         i+=1
 #     return 0
 
