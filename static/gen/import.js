@@ -1174,15 +1174,22 @@ function FinalizeCanvas(){
 
 }
 
-function PopulateImporterOptions(){
+function PopulateImporterOptions(Canvas, Google){
     //todo
-    
-}
-function CreateOptionPannel(info, locationType){
+    if(Canvas != ''){
+        CreateOptionPannel(Canvas, 'Canvas', 'CanvasDelete', 'CanvaseForceImport');
+    }
+    if(Google === true){
+        CreateOptionPannel('Google Account Linked', 'Google Classroom', 'GoogleDelete', 'CanvaseForceImport')
+    }
 
     
-    var id = "Demo"; //todo  ****
-    var Data = "key"; //todo
+}
+function CreateOptionPannel(info, Type, deleteFunctionName, RequestFuctionName){
+
+    
+    var id = Type.replaceAll(' ', '_');
+    var Data = info; 
 
     var NewHTML = document.querySelector("#currentAPITemp").content;
 
@@ -1221,45 +1228,54 @@ function CreateOptionPannel(info, locationType){
 
 
     if(typeof(onclick) != "function"){
-        document.getElementById('RequestB'+ id).setAttribute('onclick', "ForceRequest('" + id + "','" + Data +"')");
+        document.getElementById('RequestB'+ id).setAttribute('onclick', ""+RequestFuctionName+"('" + id + "','" + Data +"')");
     }
-    else{
-        document.getElementById('RequestB'+ id).onclick = function(){ForceRequest(id, Data)};
-    }
+    // else{
+    //     document.getElementById('RequestB'+ id).onclick = function(){ForceRequest(id, Data)};
+    // }
 
     if(typeof(onclick) != "function"){
-        document.getElementById('RemoveB'+ id).setAttribute('onclick', "DeleteRequest('" + id + "','" + Data +"')");
+        document.getElementById('RemoveB'+ id).setAttribute('onclick', ''+deleteFunctionName+"('" + id + "','" + Data +"')");
     }
-    else{
-        document.getElementById('RemoveB'+ id).onclick = function(){DeleteRequest(id, Data)};
-    }
+    // else{
+    //     document.getElementById('RemoveB'+ id).onclick = function(){DeleteRequest(id, Data)};
+    // }
     
 
     
 
-    document.getElementById('LocationType'+ id).innerText = locationType;
+    document.getElementById('LocationType'+ id).innerText = Type;
     document.getElementById('info'+ id).innerText = Data;
 }
-
-
-
 
 
 /**
  * This function is desinged to forcfully make a server side update of the content comming from this source
  */
- function ForceRequest(id, requesttype){
-    //todo
+function GoogleDelete(){
+
+}
+/**
+ * this function is used to send a request to the server to stop the import from this location and delete all related information to the process 
+ */
+function GoogleForceImport(){
+
+}
+
+/**
+ * This function is desinged to forcfully make a server side update of the content comming from this source
+ */
+function CanvasDelete(){
+
 }
 
 /**
  * this function is used to send a request to the server to stop the import from this location and delete all related information to the process 
- * @param {*} id 
- * @param {*} requesttype 
  */
-function DeleteRequest(id, requesttype){
-    //todo
+function CanvaseForceImport(){
+
 }
+
 
 /**
  * This function is called by the remove phone number button
