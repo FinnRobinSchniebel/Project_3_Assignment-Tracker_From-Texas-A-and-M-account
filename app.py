@@ -132,13 +132,67 @@ def refreshGoogleDB():
                     existingClassList[j]['assignments'] = refreshedAssignments
                     #print(Users.query.filter_by(id = userID).first().classes)
                     #print(str(existingClassList[j]))
-
                 Users.query.filter_by(id = userID).first().classes = json.dumps(existingClassList)
                 
 
     db.session.commit()
     return str(existingClassList[0])
 
+@app.route('/refreshCanvasClasses', methods = ['GET', 'POST'])
+def refreshCanvasDB():
+    #get a list of all existing users
+    userList = Users.query.all()
+    numUsers = len(userList)
+
+    #iterate through all existing users
+    for i in range(numUsers):
+        userID = userList[i].id
+        token = userList[i].canvasBearer
+        if(token != ''):
+            # i think is canvastoken
+            # canvasBearer = json.loads(token)
+            # print(str(credsDictionary))
+            # sys.stdout.flush()
+            # creds = google.oauth2.credentials.Credentials(**credsDictionary)
+            # gets classList of loadedUse token 
+            incomingClassList = refreshCanvasJSONs()
+            
+            if(incomingClassList != []):
+                #incomingClassList = [{'name': 'CSCE315', 'color': 'rgb(162, 214, 161);', 'assignments': [{'name': 'HW1', 'class': 'CSCE315', 'priority': 3, 'dueDate': '2022-05-13T23:59', 'startDate': '2022-04-13T00:36', 'link': 'https://classroom.google.com/c/NTAwMjk2MDEyNTU4/a/NTAwMjk2MDEyNjI1/details', 'relatedLinks': '', 'notes': 'This is a test HW assignment.\nThis would be the instructions of an assignment.', 'googleLocation': 'CSCE315', 'canvasLocation': '', 'complete': False}], 'order': 0}, {'name': 'Project 3 Demo Course', 'color': 'rgb(162, 214, 161);', 'assignments': [{'name': 'FINAL', 'class': 'Project 3 Demo Course', 'priority': 3, 'dueDate': '2022-05-19T23:59', 'startDate': '2022-04-13T16:58', 'link': 'https://classroom.google.com/c/MzU0NDUyMDYwODEy/a/NTAwNDQ5MTUzMzQy/details', 'relatedLinks': '', 'notes': 'Very difficult test, not fun.', 'googleLocation': 'Project 3 Demo Course', 'canvasLocation': '', 'complete': False}, {'name': 'MIDTERM ', 'class': 'Project 3 Demo Course', 'priority': 3, 'dueDate': '2022-05-06T23:59', 'startDate': '2022-04-13T16:57', 'link': 'https://classroom.google.com/c/MzU0NDUyMDYwODEy/a/NTAwNDQ5MTUzMTg5/details', 'relatedLinks': '', 'notes': 'Whoa, its the instructions for my midterm!', 'googleLocation': 'Project 3 Demo Course', 'canvasLocation': '', 'complete': False}], 'order': 1}]
+                
+                incomingAssignmentList = getAssignments(incomingClassList)
+                # print("incoming assignment List")
+                # print(incomingAssignmentList)
+                existingClassList = getUserClasses(userID)
+                # print("OLD CLASSES")
+                # print(existingClassList)
+                # print()
+                for j in range(len(existingClassList)):
+                    existingAssignments = existingClassList[j]['assignments']
+                    # print("existing assignments List")
+                    # print(existingAssignments)
+                    # print()
+                    #this calls function that returns a list of all canvasClasses contained in a class
+                    containedCanvasClasses = getAllCanvasClassesInExistingClass(existingClassList[j])
+                    refreshedAssignments = refreshCanvasAssignmentList(existingAssignments, incomingAssignmentList, containedCanvasClasses)
+                    # print("Refreshed assignments")
+                    # print(str(refreshedAssignments))
+                    sys.stdout.flush()
+                    #replace the existing class' assignmentList with the refreshedAssignments
+                    existingClassList[j]['assignments'] = refreshedAssignments
+                    #print(Users.query.filter_by(id = userID).first().classes)
+                    #print(str(existingClassList[j]))
+                # print()
+                # print("NEW CLASSES")
+                # print(existingClassList)
+                currClasses = Users.query.filter_by(id = userID).first().classes
+                # print("curr classes")
+                # print(currClasses)
+                Users.query.filter_by(id = userID).first().classes = json.dumps(existingClassList)
+                
+
+    db.session.commit()
+    return str(existingClassList)
 
 #tool function to get UserClasses
 #returns it as a list of dictionarires
@@ -200,7 +254,55 @@ def refreshGoogleAssignmentList(existingAssignments, incomingAssignmentList, goo
 
     #print(updatedAssignments)
     return updatedAssignments
-            
+
+#it returns a list of every canvasClass that it contains
+def getAllCanvasClassesInExistingClass(classObj):
+    assignmentList = classObj['assignments']
+    canvasClasses = []
+
+    for i in range(len(assignmentList)):
+        if assignmentList[i]['canvasLocation'] in canvasClasses:
+            pass
+        else:
+            canvasClasses.append(assignmentList[i]['canvasLocation'])
+
+    return canvasClasses       
+
+#it returns an updated list of assignments for that class 
+def refreshCanvasAssignmentList(existingAssignments, incomingAssignmentList, canvasLocations): 
+    updatedAssignments = [] #result list
+
+    #iterate through all existing assignments
+    for i in range (len(existingAssignments)):
+        #add all manual assignments first
+        if(existingAssignments[i]['canvasLocation'] == ''):
+            if (existingAssignments[i]['complete'] == True):
+                continue
+            else:
+                updatedAssignments.append(existingAssignments[i])
+
+    #iterate through all incomingAssignments
+    completeCheck = False
+    for i in range (len(incomingAssignmentList)):
+        #check if this class is stored within this class
+        if incomingAssignmentList[i]['canvasLocation'] in canvasLocations:
+            # check existing assignments for completetion / pass over info 
+            for j in range (len(existingAssignments)):
+                if (incomingAssignmentList[i]['name'] == existingAssignments[j]['name']):
+                    if (existingAssignments[j]['complete'] == True):
+                        completeCheck = True
+                        continue
+                    incomingAssignmentList[i]['notes'] = existingAssignments[j]['notes']
+                    incomingAssignmentList[i]['relatedLinks'] = existingAssignments[j]['relatedLinks']
+
+            if (completeCheck == True):
+                completeCheck = False
+                continue
+            updatedAssignments.append(incomingAssignmentList[i])
+
+    #print(updatedAssignments)
+    return updatedAssignments
+
 #this function takes a list of classes and returns a list of assignments
 def getAssignments(incomingClassList):
     result = []
@@ -347,6 +449,227 @@ def refreshGoogleJSONs(creds):
         
     except HttpError as error:
         print('An error occurred: %s' % error)
+
+# @app.route('/refreshCanvasCourse', methods = ['GET', 'POST'])
+def refreshCanvasJSONs():
+    url = "https://canvas.tamu.edu/api/v1/courses?include=items&per_page=1000/"
+
+    #eventually will take bearer token as an argument
+    #token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+    token = Users.query.filter_by(id = current_user.id).first().canvasBearer
+    # print("TOKEN IN COURSES")
+    # print(token)
+    if(token == ''):
+        return 'INVALID CANVAS TOKEN IN DATABASE'
+
+    headers = {'Authorization' : 'Bearer '+ token}
+
+    # print("Token")
+    # print(token)
+    resp = requests.get(url, headers=headers)
+
+    # finds the max enrollment_term_id -> courses w/ this are in current semester 
+    maxID = 0
+    for ID in resp.json():
+        # print(ID)
+        currID = ID["enrollment_term_id"]
+        if currID > maxID:
+            maxID = currID
+
+    # creates dictionary w/ current semesters courseIDs as the key and names as the values
+    # this is done by looping through the courses again to find the ones with maxID
+    courseList = []
+    orderCount = 0
+    for course in resp.json():
+        if course["enrollment_term_id"] == maxID:     
+            courseID = course["id"]
+            # getting rid of JAPN for testing
+            if courseID == 123752: continue
+            # if courseID == 133720: continue
+
+            # creates Dict of needed courseINFO
+            courseDict = {}
+            courseDict['name'] = checkInvalidChar(course["name"])
+            courseDict['id'] = courseID
+            courseDict['order'] = orderCount
+            orderCount += 1
+            courseList.append(courseDict)
+
+    # grabs courseINFO that was passed in
+    # time.sleep(1)
+    # courseINFO = session.get("courseINFO")
+    # courseName = courseINFO['name']
+    # courseID = courseINFO['id']
+
+    classList = []
+    order = 0
+    for course in courseList:
+        # was used before change, may not be needed anymore
+        # makes a call to get moduleINFO for each course 
+        stringID = str(course['id'])
+        # takes course name and replaces : since it creates error later 
+        # TODO: what should the courseName be? Spaces? underscores? 
+        courseName = checkInvalidChar(course['name'])
+        # courseName = courseName.replace(' ','_')
+        #print(courseName)
+
+        # NOTE: currently call for assignments, takes less time, no timeout in heroku 
+        url = "https://canvas.tamu.edu/api/v1/courses/"+stringID+"/assignments?include=items&per_page=1000/"
+
+        # eventually will take bearer token as an argument
+        # token = "15924~zDtK69ahwZSbptMsKxYMYJM52mhuubfGvpL1ws6hA3XQpYEWtX4a6YZByEacZGgm"
+        headers = {'Authorization' : 'Bearer '+ token}
+
+        resp = requests.get(url, headers=headers)
+        assignmentList = []
+        for assignment in resp.json():
+            # moduleID = module["id"]
+            # moduleDict[moduleID] = module["name"]  
+            # TODO: Noticed some dates are null for assignments need to check
+            assignmentObj = {}
+            assignmentNameCheck = checkInvalidChar(assignment['name'])
+            assignmentObj['name'] = assignmentNameCheck
+            assignmentObj['class'] = courseName
+            assignmentObj['priority'] = 3
+            # issues with due date being null
+            if (assignment['due_at'] == None):
+                # print(assignmentNameCheck + " is null")
+                dueDateNone = str(date.today())
+                dueDateNone += "T23:59"
+                assignmentObj['dueDate'] = dueDateNone
+                dueDate = None
+            else:
+                # [:-4] gets rid of milliseconds which cause issues with dates
+
+                assignDate = assignment['due_at'][:-1]
+                assignDate = assignDate.replace('T', " ")
+                
+                # taken from https://stackoverflow.com/questions/4770297/convert-utc-datetime-string-to-local-datetime#comment7256053_4771733
+                # METHOD 2: Auto-detect zones:
+                from_zone = tz.tzutc()
+                to_zone = tz.tzlocal()
+                # utc = datetime.utcnow()
+                utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+                
+                # Tell the datetime object that it's in UTC time zone since 
+                # datetime objects are 'naive' by default
+                utc = utc.replace(tzinfo=from_zone)
+                
+                # Convert time zone
+                dueTimeFinal = str(utc.astimezone(to_zone))
+                
+                # parses info from date to use in final date
+                dueDateNew = dueTimeFinal[0:10]
+                dueTimeEnd = dueTimeFinal[13:16]
+                dueTimeChange = dueTimeFinal[11:13]
+                
+                # creates new final due Date for assignment
+                dueDateFinal = (dueDateNew + "T" + dueTimeChange + dueTimeEnd)
+                #print(assignmentNameCheck + " due time is " + dueDateFinal)
+                assignmentObj['dueDate'] = dueDateFinal
+                
+                # parses info from date to use in checking if overdue
+                dueDateYear = int(assignment['due_at'][0:4])
+                dueDateMonth = int(assignment['due_at'][5:7])
+                dueDateDay = int(assignment['due_at'][8:10])
+
+                dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+                
+            # startDate should be unlock or created at? 
+            # [:-4] gets rid of milliseconds which cause issues with dates
+            if (assignment['unlock_at'] == None):
+                # print(assignmentNameCheck + " is null")
+                startDateNone = str(date.today())
+                startDateNone += "T23:59"
+                assignmentObj['startDate'] = startDateNone
+            else:
+                # [:-4] gets rid of milliseconds which cause issues with dates
+                # print(assignmentNameCheck + " is unlocked at " + assignment['unlock_at'])
+                # assignmentObj['startDate'] = assignment['unlock_at'][:-4]
+                assignDate = assignment['unlock_at'][:-1]
+                assignDate = assignDate.replace('T', " ")
+                
+                # METHOD 2: Auto-detect zones:
+                from_zone = tz.tzutc()
+                to_zone = tz.tzlocal()
+            
+                utc = datetime.strptime(assignDate, '%Y-%m-%d %H:%M:%S')
+            
+                # Tell the datetime object that it's in UTC time zone since 
+                # datetime objects are 'naive' by default
+                utc = utc.replace(tzinfo=from_zone)
+            
+                # Convert time zone
+                unlockTimeFinal = str(utc.astimezone(to_zone))
+
+                # splits unlock time so I can append them to the correct format 
+                unlockDateNew = unlockTimeFinal[0:10]
+                unlockTimeEnd = unlockTimeFinal[13:16]
+                unlockTimeChange = unlockTimeFinal[11:13]
+                
+                    # splits unlock time so I can append them to the correct format 
+                unlockDateFinal = (unlockDateNew + "T" + unlockTimeChange + unlockTimeEnd)
+                #print(assignmentNameCheck + " unlocks at " + unlockDateFinal)
+                assignmentObj['startDate'] = unlockDateFinal
+            
+            assignmentObj['link'] = assignment['html_url']
+            assignmentObj['relatedLinks'] = ''
+            assignmentObj['googleLocation'] = ''
+            assignmentObj['canvasLocation'] = courseName
+            assignmentObj['complete'] = False
+            assignmentObj['notes'] = ''
+            # assignmentObj['notes'] = ''
+            # descrip = "<h2><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534984/download?verifier=1lviDEMOpbDLX3Z9OkQQtnVxqNSJoga5lGamNUvT\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534984\" data-api-returntype=\"File\">Week 1 Discussion</strong></h2><p>This discussion is meant to introduce you to the discussion process and to your peers. It is set up similar to the weekly discussion, but mostly you will get points just for participating. You will be split into groups of 10–15 other students in the class, this selection is random, and you will be kept with your same group members from week to week, so get to know your new friends/colleagues.&nbsp;</p><p>&nbsp;</p><h3><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534966/download?verifier=luLPvdhYbR8Z4pJaQh5nL2y0gWM2jdoJKU1tdANk\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534966\" data-api-returntype=\"File\">Guidelines</strong></h3><p><span style=\"font-size: 14pt;\">To receive credit for the week:</span></p><ul><li><strong><span style=\"font-size: 14pt;\">note, the following dates are adjusted for this first week, initial responses will normally be due </span><span style=\"font-size: 18.6667px;\">Wednesdays</span><span style=\"font-size: 14pt;\"> and </span><span style=\"font-size: 18.6667px;\">replies</span><span style=\"font-size: 14pt;\"> on Fridays<br></span></strong></li><li><span style=\"background-color: #f1c40f;\"><strong><span style=\"font-size: large;\">Also note, in all future discussions you will be required to copy and paste your initial post into a&nbsp;separate assignment in the modules to check it with TurnItIn. I do not require that for this discussion.</span></strong></span></li><li><span style=\"font-size: 14pt;\"><span style=\"text-decoration: underline;\"><strong>by Friday Jan. 21 11:59pm</strong></span> respond to the prompt below in at least 150 words<br></span></li><li><span style=\"font-size: 14pt;\"><span style=\"text-decoration: underline;\"><strong>by Monday Jan. 24 11:59pm</strong></span> reply to at least two (2) other students' response (no word min.) with a thoughtful response to their reply</span><ul><li><span style=\"font-size: 14pt;\">Perhaps, a classmate asks a question, and you know the answer, you can respond. </span></li><li><span style=\"font-size: 14pt;\">Perhaps you classmate makes a good or interesting point, expand on that.&nbsp;</span></li><li><span style=\"font-size: 14pt;\">Try to respond to to someone that does not have a reply yet.</span></li></ul></li></ul><p>I will also monitor these discussions, and answer questions where I see a need. There are 300 of you in this course though, so I will not be able to respond to everyone each week. If you have a specific question about a topic, feel free to email me or come to my virtual office hours! I am always happy to talk more geology :)</p><p><br>BE RESPECTFUL of everyone. I will have no tolerance for rude, discriminatory, or <span>condescension</span>. If I see this behavior at all, that student will receive a zero credit for this discussion. See full statement in the syllabus.</p><p><strong><span style=\"font-size: 18pt;\">Rubric</span></strong></p><p>To see the Rubric for grading click the radio button in the upper right and \"Show Rubric.\" This will be the same rubric from week to week, but since this is \"about you\" this week, you will earn full points as long as you say something about yourself in at least 150 words and respond to two peers.&nbsp;</p><p><img src=\"https://canvas.tamu.edu/courses/133720/files/36909942/preview?verifier=t7neDCfzXxtdhtwQSBmBmzEnR1ZqZu4athYQwXX7\" alt=\"Select rubric using radio button in upper right corner of discussion page\" width=\"1309\" height=\"361\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36909942\" data-api-returntype=\"File\"></p><p>&nbsp;</p><p><img id=\"716858\" src=\"https://canvas.tamu.edu/courses/133720/files/36534950/preview?verifier=O8bwdnTElOhtFG6p1PZXcgSB1RzZLU5Z8dG0JsAu\" alt=\"magnifying-glass.png\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534950\" data-api-returntype=\"File\"><strong><span style=\"font-size: 18pt;\">The Prompt</span></strong></p><p><span style=\"font-size: 14pt;\">I want to treat this week as a \"get to know each other\" week. This class may be asynchronous, but you still have a community that you belong to, discussions help us remember that. Since you will be working with this group of peers for the next few weeks (I might change up groups half-way through the semester if needed) you should get to know one another. So in 150 or more words, tell us about yourself in as much or as little detail as you wish to provide. Some things you could to talk about:</span></p><ul><li><span style=\"font-size: 14pt;\">your major</span></li><li><span style=\"font-size: 14pt;\">hobbies</span></li><li><span style=\"font-size: 14pt;\">pets</span></li><li><span style=\"font-size: 14pt;\">do you have a favorite rock/mineral?</span></li><li><span style=\"font-size: 14pt;\">what are you looking forward to most in this class?<br></span></li><li><span style=\"font-size: 14pt;\">is this your first asynchronous class? </span><ul><li><span style=\"font-size: 14pt;\">If not, do you have tips for staying on track?</span></li></ul></li><li><span style=\"font-size: 14pt;\">something else?</span></li><li><span style=\"font-size: 14pt;\">Please include a picture, of yourself, your pet, your favorite meme (keep it clean), something that helps us get to know YOU!</span><ul><li><span style=\"font-size: 14pt;\"><span>at the top of the text box will be a little icon of mountains and a sun that says \"images\" when you mouse over</span></span></li><li><span style=\"font-size: 14pt;\"><span>this is used to show you how to upload an image for future discussions</span></span></li><li><a class=\"inline_disabled\" href=\"https://community.canvaslms.com/t5/Student-Guide/How-do-I-embed-an-image-in-a-discussion-reply-as-a-student/ta-p/313\" target=\"_blank\"><span style=\"font-size: 14pt;\"><span>Canvas Guide on How to Embed an image in a post/reply</span></span></a></li></ul></li><li><span style=\"font-size: 14pt;\">ASK a question! What do you want to know about your peers? Do you want advice for studying? Do you want advice for a good coffee place in town?&nbsp;</span></li></ul><p>&nbsp;</p><h3><strong><img src=\"https://canvas.tamu.edu/courses/133720/files/36534892/download?verifier=i47lB0P1Vf0QQvhJTig99hRn5Ct3p1ywJNA06P8F\" alt=\"\" width=\"45\" height=\"45\" data-decorative=\"true\" data-api-endpoint=\"https://canvas.tamu.edu/api/v1/courses/133720/files/36534892\" data-api-returntype=\"File\">Technical Support</strong></h3><p>Need help using Canvas Discussions? If so, please review the following guide:</p><ul><li><a class=\"external\" title=\"\" href=\"https://community.canvaslms.com/docs/DOC-10701#jive_content_id_Discussions\" target=\"_blank\"><span>Canvas Student Guide - Discussions</span></a></li></ul>"
+            # descrip = "<p><strong>Consider 1</strong> of the 7 principles to universal design from the video.&nbsp;</p><p><iframe title="YouTube video player" src="https://www.youtube.com/embed/G-tHuD7R8cs/" width="560" height="315" allowfullscreen="allowfullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></p><p><span style="text-decoration: underline;">7 Principles of Universal Design:</span></p><ol><li>Equitable use</li><li>Flexibility in use</li><li>Simple and intuitive use</li><li>Perceptible information</li><li>Tolerance for error</li><li>Low physical effort</li><li>Size and space for approach and use</li></ol><p><strong>Discuss</strong> how this principle applies to software.&nbsp; You can support your discussion with a specific example.</p>"
+            # if (assignment['description'] == None):
+            #     assignmentObj['notes'] = ""
+            # else:
+                # desc = replaceQuote(assignment['description'])
+            # print("DESC: " + desc)
+                # assignmentObj['notes'] = desc
+            #assignment['description']
+            
+
+            #check if the assignment has a submission
+            # submission = assignment['has_submitted_submissions']
+            # if(submission == False):
+            #     assignmentObj['complete'] = False
+            # else:    
+            #     assignmentObj['complete'] = True
+            # dueDate = date(dueDateYear, dueDateMonth, dueDateDay)
+
+            # assignmentObj['complete'] = False
+            if (dueDate != None):
+                delta = dueDate - date.today()
+                # print("Delta is " + delta)
+                ##checks if assignment is less than one day overdue, if not then displays
+                isNotPastAssignment = delta > timedelta(days = 1)
+                if(isNotPastAssignment):
+                    assignmentList.append(assignmentObj)
+                else:
+                    pass
+                    #print("PAST ASSIGNMENT IS: " + assignmentObj['name'])
+            else:
+                assignmentList.append(assignmentObj)
+
+    # create classobj for each class
+
+        classObj = {}
+        classObj['name'] = checkInvalidChar(courseName)
+        classObj['color'] = 'rgb(162, 214, 161);'
+        classObj['assignments'] = assignmentList
+        order += 1
+        classObj['order'] = order
+
+        classList.append(classObj)
+    # courseNameUnderScores = courseName.replace(' ','_')
+    ##write classObj to JSON file
+    # with open("./static/Scripts/Canvas"+courseNameUnderScores+".json", "w") as outfile:
+    #     json.dump(classObj, outfile) 
+    # session.pop("courseINFO", None)
+    # jsonStr = json.dumps(classObj)
+    # print(classList)
+    return classList
 
 
 ##create signup form
@@ -1211,7 +1534,7 @@ def checkInvalidChar(assignmentName):
     assignmentName = assignmentName.replace('|',' ')
     # assignmentName = assignmentName.replace('@','')
 
-    print("checkInvalidChar return: " + assignmentName)
+    # print("checkInvalidChar return: " + assignmentName)
     return assignmentName
 
 def replaceQuote(description):
