@@ -598,8 +598,15 @@ function FinalizeCanvas(){
 
 }
 
-function PopulateImporterOptions(){
+function PopulateImporterOptions(Canvas, Google){
     //todo
+    if(Canvas != ''){
+
+    }
+    if(Google === true){
+
+    }
+
     
 }
 function CreateOptionPannel(info, locationType){
@@ -665,8 +672,18 @@ function CreateOptionPannel(info, locationType){
     document.getElementById('info'+ id).innerText = Data;
 }
 
+function GoogleDelete(){
+    
+}
+function GoogleForceImport(){
 
+}
+function CanvasDelete(){
 
+}
+function CanvaseForceIport(){
+
+}
 
 
 /**
