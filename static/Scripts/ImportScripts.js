@@ -681,7 +681,15 @@ function CreateOptionPannel(info, Type, deleteFunctionName, RequestFuctionName){
  * This function is desinged to forcfully make a server side update of the content comming from this source
  */
 function GoogleDelete(){
-
+    $.ajax({
+        url:"/bgDeleteCurrUserGoogleData",
+        type: "GET",
+        async: false,
+        contentType: "application/json",
+        success: function (response){
+            location.reload();
+        }
+    });
 }
 /**
  * this function is used to send a request to the server to stop the import from this location and delete all related information to the process 
