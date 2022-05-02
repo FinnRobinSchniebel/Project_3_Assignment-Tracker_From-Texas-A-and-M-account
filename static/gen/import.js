@@ -1174,19 +1174,9 @@ function FinalizeCanvas(){
 
 }
 
-<<<<<<< HEAD
-=======
-
-function getCanvasToken(){
-}
-
-function isGoogleImportValid(){
-    return 0
-}
-
->>>>>>> 9a756364988e6c9211665a1db3da1aad572e7f32
 function PopulateImporterOptions(){
     //todo
+    
 }
 function CreateOptionPannel(info, locationType){
 
@@ -1318,21 +1308,20 @@ function AddNumberButton(){
             // classList = JSON.parse(response);
             // assignmentGooglePop(classList);
             // storeGoogleImports(classList);
-            console.log("SMS Sent Successfully");
+            console.log("Phone Number Updated Successfully");
         }
     });
-    $.ajax({
-        url:"/bgSendSMS",
-        type: "POST",
-        async: false,
-        contentType: "application/json",
-        success: function (){
-            // classList = JSON.parse(response);
-            // assignmentGooglePop(classList);
-            // storeGoogleImports(classList);
-            console.log("SMS Sent Successfully");
-        }
-    });
+    // $.ajax({
+    //     url:"/bgSendSMS",
+    //     type: "POST",
+    //     contentType: "application/json",
+    //     success: function (){
+    //         // classList = JSON.parse(response);
+    //         // assignmentGooglePop(classList);
+    //         // storeGoogleImports(classList);
+    //         console.log("SMS Sent Successfully");
+    //     }
+    // });
 
 }
 
@@ -1401,10 +1390,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
 
     var isQuick =0; //is this a quick view item
     if(Location == ""){
-<<<<<<< HEAD
-=======
-        console.log(ClassNameAssignment);
->>>>>>> 9a756364988e6c9211665a1db3da1aad572e7f32
         document.getElementById(ClassNameAssignment+'Assignments').appendChild(NewHTML);
     }
     else{
@@ -1412,7 +1397,9 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         document.getElementById(Location).appendChild(NewHTML);
         isQuick =1;
     }
-    
+
+    //collapse all other assignments on opening
+    document.getElementById('Overview'+ NameToAddForID).setAttribute('onclick', 'closeallOtherAssignments()');
 
 
     //set up the button to link to the right dropdown on the page
@@ -1428,7 +1415,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     else{
         document.getElementById('CheckBoxComplete'+ NameToAddForID).onclick = function(){completeButton(assignmentName, className)};
     }
-<<<<<<< HEAD
     if(isComplete === true){
         document.getElementById('CheckBoxComplete'+ NameToAddForID).complete =true;
         document.getElementById('CheckBoxComplete'+ NameToAddForID).checked =true;
@@ -1437,8 +1423,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
         document.getElementById('CheckBoxComplete'+ NameToAddForID).complete =false;
         document.getElementById('CheckBoxComplete'+ NameToAddForID).checked =false;
     }
-=======
->>>>>>> 9a756364988e6c9211665a1db3da1aad572e7f32
 
     //remove button
     document.getElementById('removeButton'+ NameToAddForID).setAttribute('onclick', "removeAssignment('" + className + "','" + assignmentName +"','Assignment" + NameToAddForID +"')");
@@ -1536,10 +1520,6 @@ function AssignmentAddHTML(className, assignmentName, assignmentPriority, assign
     document.getElementById('Due_'+ NameToAddForID).innerText= ''+ TimeToString(assignmentDueDate);
     //bar stuff
     var widthProgress = getDatePercent(assignmentStartDate, assignmentDueDate);
-<<<<<<< HEAD
-=======
-    console.log(widthProgress);
->>>>>>> 9a756364988e6c9211665a1db3da1aad572e7f32
     document.getElementById('ProgressBar' + NameToAddForID).setAttribute("style", "width: " + widthProgress + '%' + "; background-color: purple;");
     if(parseInt(widthProgress) > 90){
         document.getElementById('TimeLeftBarText2' + NameToAddForID).innerText = getTimeLeftLargestNonZero(assignmentDueDate);
@@ -1703,15 +1683,16 @@ function TimeToString(time){
     }
     return newTime;
 }
+
+function closeallOtherAssignments(){
+        jQuery('.assignmentCollapse').collapse('hide');
+}
 function addAssignment(className, classID){
     // inputs taken from user 
     // to make it dynamic, takes className from Parameter and is used to find the -
     // associated ID for variables
     var newAssignmentDisplay = document.getElementById(''+classID+'Name').value;
-<<<<<<< HEAD
     newAssignmentDisplay = newAssignmentDisplay.trim();
-=======
->>>>>>> 9a756364988e6c9211665a1db3da1aad572e7f32
     // takes the space away to ensure variables are properly named
     var startTime = document.getElementById(''+classID+'Start').value; //"`+inputClassName+`Start"
     var endTime = document.getElementById(''+classID+'End').value;
@@ -1725,13 +1706,8 @@ function addAssignment(className, classID){
     var relatedLinks = document.getElementById(''+classID+'RelatedLinks').value;
     var link = document.getElementById(''+classID+'Link').value;
 
-<<<<<<< HEAD
     if(newAssignmentDisplay.includes('_') === true || newAssignmentDisplay == ""){
         alert("This is not a valid Assignment name. Please make sure the name contains no '_' in it or is an empty name");
-=======
-    if(newAssignmentDisplay.includes('_') === true){
-        alert("This is not a valid Assignment name. Please make sure the name contains no '_' in it");
->>>>>>> 9a756364988e6c9211665a1db3da1aad572e7f32
         return;
     }
     if(getAssignment(className, newAssignmentDisplay) != null){
@@ -1879,11 +1855,7 @@ function PopulateClass(className, closest, assignmentcount){
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed
     newDiv.innerHTML += `
-<<<<<<< HEAD
-    <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`" >
-=======
-    <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`">
->>>>>>> 9a756364988e6c9211665a1db3da1aad572e7f32
+    <button class="ClassSection" id="`+inputClassName+`Section" type="button" data-bs-toggle="collapse" data-bs-target="#Collapse`+inputClassName+`" aria-expanded="false" aria-controls="Collapse`+inputClassName+`" data-parent="#classList" onclick=''>
         <div class="ClassName Font2">
             `+inputClassNameDisplay+`
         </div>
@@ -1896,11 +1868,7 @@ function PopulateClass(className, closest, assignmentcount){
     </button>
 
 
-<<<<<<< HEAD
-    <div class="collapse" id="Collapse`+inputClassName+`" data-parent="#classList">
-=======
     <div class="collapse" id="Collapse`+inputClassName+`">
->>>>>>> 9a756364988e6c9211665a1db3da1aad572e7f32
         <div class="ClassAssignmentsOutline" id = "`+inputClassName+`AssignmentsOutline">
             <div class="ClassAssignments" id= "`+inputClassName+`ClassAssignments">
                 <div align="right" >
@@ -2001,8 +1969,20 @@ function PopulateClass(className, closest, assignmentcount){
         </div>
     </div>`;
     var ClassesDiv = document.getElementById("classList");
+
+    // var $classList = $('#classList');
+    // $classList.on('show.bs.collapse','.collapse', function() {
+    //     $myGroup.find('.collapse.in').collapse('hide');
+    // });
+
     ClassesDiv.innerHTML += newDiv.innerHTML;
+
+    document.getElementById(inputClassName+'Section').setAttribute('onclick', 'collapseOther()');
 } 
+
+function collapseOther(){
+    jQuery('.collapse').collapse('hide');
+}
 
 
 //Generates todays date and converts it to ISO keeping its timezone offset
