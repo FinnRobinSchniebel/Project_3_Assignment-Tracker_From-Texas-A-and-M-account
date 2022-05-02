@@ -1240,6 +1240,7 @@ def getCanvasCourses():
     # print(token)
     if(token == ''):
         return 'INVALID CANVAS TOKEN'
+    
 
     headers = {'Authorization' : 'Bearer '+ token}
 
@@ -1296,8 +1297,11 @@ def get_post_json():
     else:
         # print("token false")
         # print(tokenDictionary['token'])
-        Users.query.filter_by(id = current_user.id).first().canvasBearer = ''
-        db.session.commit()
+        tokenCheck = Users.query.filter_by(id = current_user.id).first().canvasBearer 
+        if (tokenCheck == ''):
+            db.session.commit()
+        else:
+            db.session.commit() 
         #return jsonify(status="error")
 
     return jsonify(status="success")
