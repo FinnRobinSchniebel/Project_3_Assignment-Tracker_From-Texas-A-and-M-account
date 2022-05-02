@@ -120,7 +120,14 @@
                 });
 
 
-                
+                var number = returnUserPhoneNumber();
+                number = number.trim();
+                if(number != ''){
+                    number = number.slice(0,3) + '-'+ number.slice(3,6) + '-' + number.slice(6,10);  
+                }
+               
+                document.getElementById('PhoneNumberField').setAttribute('value', number);
+
 
 
                 CreateOptionPannel('info', 'locationType');
