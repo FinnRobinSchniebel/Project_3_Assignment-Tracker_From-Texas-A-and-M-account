@@ -843,6 +843,37 @@ def sendToken():
 
     return json.dumps(tokens)
 
+@app.route('/bgDeleteCurrUserCanvasData', methods=['GET', 'POST'])
+def deleteCanvasInfo():
+    Users.query.filter_by(id = current_user.id).first().canvasBearer = ''
+
+    userClassList = getUserClasses(current_user.id)
+
+    for classObj in userClassList:
+        assignmentList = classObj['assignments']
+        updatedAssignmentList = []
+        #iterate through assignments and remove all assignments with a canvasLocation
+        for assignmentObj in assignmentList:
+            if(assignmentObj['canvasLocation'] == ''):
+                updatedAssignmentList.append(assignmentObj)
+        #reassign classList object with updated list
+        classObj['assignments'] = updatedAssignmentList
+
+    # check for empty classes
+    updatedUserClassList = []
+
+    for classObj in userClassList:
+        if(classObj['assignments'] != []):
+            updatedUserClassList.append(classObj)
+
+
+
+    Users.query.filter_by(id = current_user.id).first().classes = json.dumps(updatedUserClassList)
+    db.session.commit()
+
+    return json.dumps(userClassList)
+
+
 
 
 #will call for all courses of a user

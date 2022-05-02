@@ -1263,15 +1263,24 @@ function GoogleForceImport(){
 
 }
 
-/**
- * This function is desinged to forcfully make a server side update of the content comming from this source
- */
-function CanvasDelete(){
-
-}
 
 /**
  * this function is used to send a request to the server to stop the import from this location and delete all related information to the process 
+ */
+function CanvasDelete(importType, token){
+    $.ajax({
+        url:"/bgDeleteCurrUserCanvasData",
+        type: "GET",
+        async: false,
+        contentType: "application/json",
+        success: function (response){
+            location.reload();
+        }
+    });
+}
+
+/**
+ * This function is desinged to forcfully make a server side update of the content comming from this source
  */
 function CanvaseForceImport(){
 
