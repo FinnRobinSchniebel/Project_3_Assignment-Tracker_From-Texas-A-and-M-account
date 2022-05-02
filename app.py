@@ -68,7 +68,7 @@ SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly', 'https:/
 
 #initialize database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://nzoefbsssbcbtw:dfc8f7ca8eb6b2d581d3e7dc9905687a9652f2450e27c4b08b7bc385d94c97db@ec2-35-168-194-15.compute-1.amazonaws.com:5432/d5gat15d3a9otf'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ipnwjsunpreakc:893cfd8d5ea47c4bda19be8286789b4bbb105634ead9b253f00ac82b069b38ca@ec2-52-3-200-138.compute-1.amazonaws.com:5432/d6p1pfuav0bals'
 app.config['SECRET_KEY'] = "Superduper secret key NOBODY KNOWS WHAT IT IS"
 db = SQLAlchemy(app)
 
@@ -100,7 +100,7 @@ class Users(db.Model, UserMixin):
 ############# Queries needed for refreshing DB ####################
 
 
-@app.route('/TESTING', methods = ['GET', 'POST'])
+@app.route('/refreshGoogleClasses', methods = ['GET', 'POST'])
 def refreshGoogleDB():
     #get a list of all existing users
     userList = Users.query.all()
@@ -1347,4 +1347,36 @@ def deleteBundles():
 
 if __name__ == '__main__':
     app.run(debug = True)
+
+
+###Threading: This code will be uncommented for heroku deployment
+
+# def while_function():
+#     i = 1
+#     while i > 0:
+#         time.sleep(1)
+#         print(i)
+#         sys.stdout.flush()
+#         i+=1
+#     return 0
+
+# @app.before_first_request
+# def thread_start():
+#     # # start a thread that will perform motion detection
+#     t = threading.Thread(target=while_function)
+#     t.daemon = True
+#     t.start()
+#     print(t.is_alive())
+#     if os.path.exists('./static/.webassets-cache'):
+#         shutil.rmtree('./static/.webassets-cache')
+
+#     if os.path.exists('./static/gen'):
+#         shutil.rmtree('./static/gen')
+    
+
+
+# if __name__ == '__main__':
+#     app.run(debug=False, threaded=True, use_reloader=False)
+
+
 

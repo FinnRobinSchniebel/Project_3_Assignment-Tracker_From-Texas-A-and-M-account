@@ -695,7 +695,15 @@ function GoogleDelete(){
  * this function is used to send a request to the server to stop the import from this location and delete all related information to the process 
  */
 function GoogleForceImport(){
-
+    $.ajax({
+        url:"/refreshGoogleClasses",
+        type: "GET",
+        async: false,
+        contentType: "application/json",
+        success: function (response){
+            location.reload();
+        }
+    });
 }
 
 
