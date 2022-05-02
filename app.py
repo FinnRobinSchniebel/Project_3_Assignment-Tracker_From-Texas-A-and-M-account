@@ -4,6 +4,7 @@ from getpass import getuser
 
 import os.path
 import sys
+import shutil
 
 import json
 from datetime import date
@@ -1309,8 +1310,13 @@ def sendSMS():
 # def removeEndTime(date):
 
 
+@app.before_first_request
+def deleteBundles():
+    if os.path.exists('./static/.webassets-cache'):
+        shutil.rmtree('./static/.webassets-cache')
 
-
+    if os.path.exists('./static/gen'):
+        shutil.rmtree('./static/gen')
 
 if __name__ == '__main__':
     app.run(debug = True)
