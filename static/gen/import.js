@@ -1245,6 +1245,9 @@ function CreateOptionPannel(info, Type, deleteFunctionName, RequestFuctionName){
     
 
     document.getElementById('LocationType'+ id).innerText = Type;
+    if(Data.length >35){
+        Data =Data.substr(0, 35);
+    }
     document.getElementById('info'+ id).innerText = Data;
 }
 
