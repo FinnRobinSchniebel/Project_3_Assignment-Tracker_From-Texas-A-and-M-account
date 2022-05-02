@@ -832,10 +832,10 @@ def getGoogleJSONs():
 @app.route('/bgGetCurrUserTokens', methods=['GET', 'POST'])
 def sendToken():
     canvasToken = Users.query.filter_by(id = current_user.id).first().canvasBearer
-    hasValidGoogleToken = False
+    hasValidGoogleToken = 0
 
     if(Users.query.filter_by(id = current_user.id).first().googleToken != ''):
-        hasValidGoogleToken = True
+        hasValidGoogleToken = 1
 
     tokens = {}
     tokens['canvas'] = canvasToken
