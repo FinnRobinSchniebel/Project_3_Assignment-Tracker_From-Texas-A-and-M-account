@@ -835,7 +835,7 @@ def sendToken():
     canvasToken = Users.query.filter_by(id = current_user.id).first().canvasBearer
     hasValidGoogleToken = 0
 
-    if(Users.query.filter_by(id = current_user.id).first().googleToken != ''):
+    if(Users.query.filter_by(id = current_user.id).first().googleToken != '{}'):
         hasValidGoogleToken = 1
 
     tokens = {}
@@ -876,7 +876,7 @@ def deleteCanvasInfo():
 
 @app.route('/bgDeleteCurrUserGoogleData', methods=['GET', 'POST'])
 def deleteGoogleInfo():
-    Users.query.filter_by(id = current_user.id).first().googleToken = ''
+    Users.query.filter_by(id = current_user.id).first().googleToken = '{}'
 
     userClassList = getUserClasses(current_user.id)
 

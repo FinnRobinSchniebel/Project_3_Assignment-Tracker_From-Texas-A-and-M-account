@@ -1179,7 +1179,7 @@ function PopulateImporterOptions(Canvas, Google){
     if(Canvas != ''){
         CreateOptionPannel(Canvas, 'Canvas', 'CanvasDelete', 'CanvaseForceImport');
     }
-    if(Google === true){
+    if(Google == 1){
         CreateOptionPannel('Google Account Linked', 'Google Classroom', 'GoogleDelete', 'CanvaseForceImport')
     }
 
