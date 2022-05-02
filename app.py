@@ -763,7 +763,8 @@ def AddImportedAssignments():
     for i in range(len(classList)):
         if(classList[i] == classObj):
             #app.logger.info(classObj)
-            classList[i]['assignments'] = assignments
+            for x in range(len(assignments)):
+                classList[i]['assignments'].append(assignments[x])
 
     Users.query.filter_by(id = current_user.id).first().classes = json.dumps(classList)
     db.session.commit()
