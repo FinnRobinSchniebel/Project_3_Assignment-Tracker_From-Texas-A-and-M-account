@@ -653,7 +653,7 @@ function CreateOptionPannel(info, Type, deleteFunctionName, RequestFuctionName){
 
 
     if(typeof(onclick) != "function"){
-        document.getElementById('RequestB'+ id).setAttribute('onclick', ""+RequestFuctionName+"('" + id + "','" + Data +"')");
+        document.getElementById('RequestB'+ id).setAttribute('onclick', ""+RequestFuctionName+"()");
     }
     // else{
     //     document.getElementById('RequestB'+ id).onclick = function(){ForceRequest(id, Data)};
@@ -734,13 +734,6 @@ function CanvasDelete(importType, token){
             location.reload();
         }
     });
-}
-
-/**
- * This function is desinged to forcfully make a server side update of the content comming from this source
- */
-function CanvasForceImport(){
-
 }
 
 
