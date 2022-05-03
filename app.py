@@ -171,12 +171,16 @@ def refreshCanvasDB():
                 # print()
                 for j in range(len(existingClassList)):
                     existingAssignments = existingClassList[j]['assignments']
+                    currentClass = existingClassList[j]['name']
+                    # print("currentclass")
+                    # print(currentClass)
+                    # print()
                     # print("existing assignments List")
                     # print(existingAssignments)
                     # print()
                     #this calls function that returns a list of all canvasClasses contained in a class
                     containedCanvasClasses = getAllCanvasClassesInExistingClass(existingClassList[j])
-                    refreshedAssignments = refreshCanvasAssignmentList(existingAssignments, incomingAssignmentList, containedCanvasClasses)
+                    refreshedAssignments = refreshCanvasAssignmentList(existingAssignments, incomingAssignmentList, containedCanvasClasses, currentClass)
                     # print("Refreshed assignments")
                     # print(str(refreshedAssignments))
                     sys.stdout.flush()
@@ -272,9 +276,9 @@ def getAllCanvasClassesInExistingClass(classObj):
     return canvasClasses       
 
 #it returns an updated list of assignments for that class 
-def refreshCanvasAssignmentList(existingAssignments, incomingAssignmentList, canvasLocations): 
+def refreshCanvasAssignmentList(existingAssignments, incomingAssignmentList, canvasLocations, className): 
     updatedAssignments = [] #result list
-
+    
     #iterate through all existing assignments
     for i in range (len(existingAssignments)):
         #add all manual assignments first
@@ -289,6 +293,7 @@ def refreshCanvasAssignmentList(existingAssignments, incomingAssignmentList, can
     for i in range (len(incomingAssignmentList)):
         #check if this class is stored within this class
         if incomingAssignmentList[i]['canvasLocation'] in canvasLocations:
+            incomingAssignmentList[i]['class'] = className
             # check existing assignments for completetion / pass over info 
             for j in range (len(existingAssignments)):
                 if (incomingAssignmentList[i]['name'] == existingAssignments[j]['name']):
@@ -302,8 +307,6 @@ def refreshCanvasAssignmentList(existingAssignments, incomingAssignmentList, can
                 completeCheck = False
                 continue
             updatedAssignments.append(incomingAssignmentList[i])
-
-    #print(updatedAssignments)
     return updatedAssignments
 
 #this function takes a list of classes and returns a list of assignments
@@ -1352,7 +1355,7 @@ def getCanvasAssignments():
     # grabs courseINFO that was passed in
     time.sleep(1)
     courseINFO = session.get("courseINFO")
-    courseName = (courseINFO['name'])[0:15]
+    courseName = (courseINFO['name'])
     courseID = courseINFO['id']
 
     # was used before change, may not be needed anymore
@@ -1706,6 +1709,3 @@ if __name__ == '__main__':
 
 # if __name__ == '__main__':
 #     app.run(debug=False, threaded=True, use_reloader=False)
-
-
-

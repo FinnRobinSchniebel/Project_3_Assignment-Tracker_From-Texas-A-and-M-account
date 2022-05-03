@@ -601,7 +601,7 @@ function FinalizeCanvas(){
 function PopulateImporterOptions(Canvas, Google){
     //todo
     if(Canvas != ''){
-        CreateOptionPannel(Canvas, 'Canvas', 'CanvasDelete', 'CanvaseForceImport');
+        CreateOptionPannel(Canvas, 'Canvas', 'CanvasDelete', 'CanvasForceImport');
     }
     if(Google == 1){
         CreateOptionPannel('Google Account Linked', 'Google Classroom', 'GoogleDelete', 'GoogleForceImport');
@@ -722,13 +722,17 @@ function CanvasDelete(importType, token){
     });
 }
 
-/**
- * This function is desinged to forcfully make a server side update of the content comming from this source
- */
-function CanvaseForceImport(){
-
+function CanvasForceImport(importType, token){
+    $.ajax({
+        url:"/refreshCanvasClasses",
+        type: "GET",
+        async: false,
+        contentType: "application/json",
+        success: function (response){
+            location.reload();
+        }
+    });
 }
-
 
 /**
  * This function is called by the remove phone number button
