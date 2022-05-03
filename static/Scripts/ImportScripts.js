@@ -601,7 +601,7 @@ function FinalizeCanvas(){
 function PopulateImporterOptions(Canvas, Google){
     //todo
     if(Canvas != ''){
-        CreateOptionPannel(Canvas, 'Canvas', 'CanvasDelete', 'CanvaseForceImport');
+        CreateOptionPannel(Canvas, 'Canvas', 'CanvasDelete', 'CanvasForceImport');
     }
     if(Google == 1){
         CreateOptionPannel('Google Account Linked', 'Google Classroom', 'GoogleDelete', 'GoogleForceImport');
@@ -653,7 +653,7 @@ function CreateOptionPannel(info, Type, deleteFunctionName, RequestFuctionName){
 
 
     if(typeof(onclick) != "function"){
-        document.getElementById('RequestB'+ id).setAttribute('onclick', ""+RequestFuctionName+"()");
+        document.getElementById('RequestB'+ id).setAttribute('onclick', ""+RequestFuctionName+"('" + id + "','" + Data +"')");
     }
     // else{
     //     document.getElementById('RequestB'+ id).onclick = function(){ForceRequest(id, Data)};
@@ -722,6 +722,17 @@ function CanvasDelete(importType, token){
     });
 }
 
+function CanvasForceImport(importType, token){
+    $.ajax({
+        url:"/refreshCanvasClasses",
+        type: "GET",
+        async: false,
+        contentType: "application/json",
+        success: function (response){
+            location.reload();
+        }
+    });
+}
 
 /**
  * This function is called by the remove phone number button
