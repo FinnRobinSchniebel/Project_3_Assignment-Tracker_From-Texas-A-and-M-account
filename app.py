@@ -124,9 +124,10 @@ def refreshGoogleDB():
                 existingClassList = getUserClasses(userID)
                 for j in range(len(existingClassList)):
                     existingAssignments = existingClassList[j]['assignments']
+                    currentClass = existingClassList[j]['name']
                     #this calls function that returns a list of all googleClasses contained in a class
                     containedGoogleClasses = getAllGoogleLocationsInExistingClass(existingClassList[j])
-                    refreshedAssignments = refreshGoogleAssignmentList(existingAssignments, incomingAssignmentList, containedGoogleClasses)
+                    refreshedAssignments = refreshGoogleAssignmentList(existingAssignments, incomingAssignmentList, containedGoogleClasses, currentClass)
                     print(str(refreshedAssignments))
                     sys.stdout.flush()
                     #replace the existing class' assignmentList with the refreshedAssignments
@@ -184,7 +185,7 @@ def getAllGoogleLocationsInExistingClass(classObj):
 #this function takes in a list of incoming assignments, a list of a class' existing assignments,
     # and a list of all of the googleClasses stored in that class
 #it returns an updated list of assignments for that class 
-def refreshGoogleAssignmentList(existingAssignments, incomingAssignmentList, googleLocations): 
+def refreshGoogleAssignmentList(existingAssignments, incomingAssignmentList, googleLocations, className): 
     updatedAssignments = [] #result list
 
     #iterate through all existing assignments
@@ -197,6 +198,7 @@ def refreshGoogleAssignmentList(existingAssignments, incomingAssignmentList, goo
     for i in range (len(incomingAssignmentList)):
         #check if this class is stored within this class
         if incomingAssignmentList[i]['googleLocation'] in googleLocations:
+            incomingAssignmentList[i]['class'] = className
             updatedAssignments.append(incomingAssignmentList[i])
 
     #print(updatedAssignments)
