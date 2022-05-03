@@ -158,10 +158,10 @@ function PopulateClass(className, closest, assignmentcount){
     var upcoming= "No Upcoming Assignments";
     
     if(assignmentcount > 1){
-        upcoming = "There Are <strong>" + assignmentcount + "</strong> Upcoming Assingments";
+        upcoming = "There Are <strong>" + assignmentcount + "</strong> Upcoming Assignment";
     }
     else if(assignmentcount > 0){
-        upcoming = "There Is <strong>" + assignmentcount + "</strong> Upcoming Assingment";
+        upcoming = "There Is <strong>" + assignmentcount + "</strong> Upcoming Assignment";
     }
     // add code into new div need to use `` as quotes 
     // need to input dynamic info where needed
