@@ -38,8 +38,7 @@ function  ImportAPICanvas(){
     // getCanvasCoursesJSON();
     storeUserToken();
     getCanvasCourses();
-    //populate options here (with json results) 
-
+    //populate options here (with json results)
     
 }
 
@@ -527,6 +526,7 @@ function FinalizeGoogle(){
     }
     //clear content when done
     document.getElementById('SelectLocation').innerHTML ='';
+    generatePopulateGets();
 }
 
 
@@ -595,7 +595,7 @@ function FinalizeCanvas(){
     }
     //clear content when done
     document.getElementById('SelectLocation').innerHTML ='';
-
+    generatePopulateGets();
 }
 
 function PopulateImporterOptions(Canvas, Google){
@@ -706,6 +706,20 @@ function GoogleForceImport(){
     });
 }
 
+/**
+ * this function is used to send a request to the server to stop the import from this location and delete all related information to the process 
+ */
+ function CanvasForceImport(){
+    $.ajax({
+        url:"/refreshCanvasClasses",
+        type: "GET",
+        async: false,
+        contentType: "application/json",
+        success: function (response){
+            location.reload();
+        }
+    });
+}
 
 /**
  * this function is used to send a request to the server to stop the import from this location and delete all related information to the process 
@@ -814,4 +828,22 @@ window.onbeforeunload = function(){
     temp = getTempClassObjs();
     //console.log("leaving");
 }
-
+function generatePopulateGets(){
+    var canvasToken;
+    var hasValidGoogleToken;
+    $.ajax({
+        url:"/bgGetCurrUserTokens",
+        type: "GET",
+        async: false,
+        contentType: "application/json",
+        success: function (response){
+            tokens = JSON.parse(response);
+            canvasToken = tokens.canvas;
+            hasValidGoogleToken = tokens.google;
+            // alert(JSON.stringify(tokens));
+            // console.log("Google Status: ", hasValidGoogleToken);
+            // console.log("Canvas Token: ", canvasToken);
+        }
+    });
+    PopulateImporterOptions(canvasToken, hasValidGoogleToken);
+}
