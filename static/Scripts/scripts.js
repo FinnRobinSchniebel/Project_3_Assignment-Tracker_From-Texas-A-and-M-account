@@ -228,9 +228,8 @@ function PopulateClass(className, closest, assignmentcount){
                                 <div class="NewAssignmentInfoRightSideAreas leftside">
                                     <p class="Font2">
                                         Start date/ time: 
-                                        <input class="genericWrittingBox" id="`+inputClassName+`Start" type="datetime-local"> 
+                                        <input class="genericWrittingBox" id="`+inputClassName+`Start" type="datetime-local" style="width=50px;"> 
                                                             
-                                        </input>
                                     </p>
                                 </div>
                                 <div class="NewAssignmentInfoRightSideAreas rightside">
@@ -238,7 +237,7 @@ function PopulateClass(className, closest, assignmentcount){
                                         End date/ time: 
                                         <input class="genericWrittingBox" id="`+inputClassName+`End" type="datetime-local"> 
                                                             
-                                        </input>
+
                                     </p>
                                 </div>
                                 <div class="NewAssignmentNotes">

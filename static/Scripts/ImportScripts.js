@@ -673,7 +673,7 @@ function CreateOptionPannel(info, Type, deleteFunctionName, RequestFuctionName){
     if(Data.length >35){
         Data =Data.substr(0, 35);
     }
-    document.getElementById('info'+ id).innerText = Data;
+    document.getElementById('info'+ id).innerHTML =Data;
 }
 
 

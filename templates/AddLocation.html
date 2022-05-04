@@ -45,13 +45,15 @@
             </div>
 
             <div class="PhoneNumberArea" id="phoneNotificationsSection">
-
-                <div class="PhoneArea Font2" id="LocationType">
-                    PhoneNumber to Message: 
+                <div class="topdownDiv">
+                    <div class="PhoneArea Font2" id="LocationType">
+                        PhoneNumber to Message: 
+                    </div>
+                    <input class="PhoneNumberField Font1" id="PhoneNumberField" onblur="" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="'Format:[111-111-1111]'" value="">
+                    <button class="SubmitNumber Font2" id="SubmitNumberButton" onclick="AddNumberButton()">Submit</button>
+                    <button class="OptOut Font1" id="RemovephoneButton" onclick="RemovePhoneNumberButton()">Remove Number</button>
                 </div>
-                <input class="PhoneNumberField Font1" id="PhoneNumberField" onblur="" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="'Add Your Number Here Format:[111-111-1111]'" value="">
-                <button class="SubmitNumber Font2" id="SubmitNumberButton" onclick="AddNumberButton()">Submit</button>
-                <button class="OptOut Font1" id="RemovephoneButton" onclick="RemovePhoneNumberButton()">Remove Number</button>
+                <div class="topdownDiv"><p class="DiscriptionPhone Font1">By submitting your number, you will recive daily text messages with the next 3 days assignments.</p></div>
             </div>
 
         
@@ -210,7 +212,7 @@
                 Location type
             </div>
             <div class="LocViewInfo Font2" id="info">
-                Token info
+                <p style="text-overflow: clip;">Token info</p>
             </div>
 
         </button>
