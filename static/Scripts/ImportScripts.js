@@ -819,6 +819,7 @@ window.onbeforeunload = function(){
     //console.log("leaving");
 }
 function generatePopulateGets(){
+    document.getElementById('Locations').innerHTML='';
     var canvasToken;
     var hasValidGoogleToken;
     $.ajax({
@@ -830,10 +831,11 @@ function generatePopulateGets(){
             tokens = JSON.parse(response);
             canvasToken = tokens.canvas;
             hasValidGoogleToken = tokens.google;
+            PopulateImporterOptions(canvasToken, hasValidGoogleToken);
             // alert(JSON.stringify(tokens));
             // console.log("Google Status: ", hasValidGoogleToken);
             // console.log("Canvas Token: ", canvasToken);
         }
     });
-    PopulateImporterOptions(canvasToken, hasValidGoogleToken);
+    
 }
